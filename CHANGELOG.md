@@ -1,5 +1,9 @@
 # Changelog — Celestial Sky (Glass)
 
+## 1.3.9
+- Time scrubber: hover + wheel/touchpad scroll only (no drag)
+- Click scrubber to reset to present; default mouse cursor on hover
+
 ## 1.3.8
 - All bodies hide during their night cycle
 - Tabloids always visible; night shows last set (blue) then next rise (orange)

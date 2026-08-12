@@ -1,4 +1,4 @@
-# Celestial Sky (Glass) — `com.riderlook.celestialsky` v1.3.8
+# Celestial Sky (Glass) — `com.riderlook.celestialsky` v1.3.9
 
 Plasma **6** desktop widget: planetary sky with liquid-glass frame (RiderLook).
 
@@ -13,9 +13,9 @@ Plasma **6** desktop widget: planetary sky with liquid-glass frame (RiderLook).
 
 ## Install
 ```bash
-kpackagetool6 -t Plasma/Applet -i com.riderlook.celestialsky-1.3.8.plasmoid
+kpackagetool6 -t Plasma/Applet -i com.riderlook.celestialsky-1.3.9.plasmoid
 # upgrade:
-kpackagetool6 -t Plasma/Applet -u com.riderlook.celestialsky-1.3.8.plasmoid
+kpackagetool6 -t Plasma/Applet -u com.riderlook.celestialsky-1.3.9.plasmoid
 ```
 Then: Desktop → Add Widgets → “Celestial Sky (Glass)”.
 

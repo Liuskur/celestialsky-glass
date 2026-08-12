@@ -469,10 +469,9 @@ PlasmoidItem {
                 }
             }
 
-            // Inconspicuous glass time scrubber: −72 h … +72 h, 1 h steps
-            // Center = present. Auto-snaps to present 60 s after last move.
-            // Exclusive pointer grab + swallow press-and-hold so Plasma does not
-            // open applet edit/move handles mid-scrub.
+            // Glass time scrubber: −72 h … +72 h, 1 h steps
+            // Hover + mouse wheel / touchpad scroll only (no click-drag).
+            // Center = present; auto-snaps after 60 s idle.
             Item {
                 id: scrubBar
                 z: 10
@@ -484,37 +483,23 @@ PlasmoidItem {
                 anchors.bottomMargin: 2
                 height: 28
 
-                property bool active: scrubMouse.pressed || scrubMouse.containsMouse || scrubDrag.active
+                property bool hovered: scrubHover.containsMouse
                 property int hours: root.timeOffsetHours
-                property bool scrubbing: false
-
-                function hoursFromX(x) {
-                    var w = Math.max(1, width)
-                    var t = Math.max(0, Math.min(1, x / w))
-                    return Math.round(t * 144 - 72)  // -72 … +72
-                }
 
                 function applyHours(h) {
-                    root.setTimeOffsetHours(h)
+                    var v = Math.round(h)
+                    if (v < -72) v = -72
+                    if (v > 72) v = 72
+                    root.setTimeOffsetHours(v)
                     skyCanvas.requestPaint()
-                    if (h === 0)
+                    if (v === 0)
                         snapBackTimer.stop()
                     else
                         snapBackTimer.restart()
                 }
 
-                function beginScrub(x) {
-                    scrubbing = true
-                    full.cancelAppletEdit()
-                    applyHours(hoursFromX(x))
-                }
-
-                function endScrub(x) {
-                    if (x !== undefined && x !== null)
-                        applyHours(hoursFromX(x))
-                    scrubbing = false
-                    // Drop edit mode if press-and-hold still fired under us
-                    Qt.callLater(full.cancelAppletEdit)
+                function nudgeHours(delta) {
+                    applyHours(root.timeOffsetHours + delta)
                 }
 
                 // Soft glass track
@@ -524,8 +509,8 @@ PlasmoidItem {
                     anchors.right: parent.right
                     height: 3
                     radius: 1.5
-                    color: Qt.rgba(1, 1, 1, scrubBar.active ? 0.22 : 0.10)
-                    border.color: Qt.rgba(1, 1, 1, scrubBar.active ? 0.18 : 0.06)
+                    color: Qt.rgba(1, 1, 1, scrubBar.hovered ? 0.22 : 0.10)
+                    border.color: Qt.rgba(1, 1, 1, scrubBar.hovered ? 0.18 : 0.06)
                     border.width: 1
                 }
 
@@ -538,7 +523,7 @@ PlasmoidItem {
                     color: Qt.rgba(1, 1, 1, 0.20)
                 }
 
-                // Handle
+                // Handle (position only — not draggable)
                 Rectangle {
                     id: scrubHandle
                     width: 12
@@ -549,80 +534,90 @@ PlasmoidItem {
                         var t = (scrubBar.hours + 72) / 144
                         return t * (scrubBar.width - width)
                     }
-                    color: Qt.rgba(1, 1, 1, scrubBar.active ? 0.55 : 0.28)
+                    color: Qt.rgba(1, 1, 1, scrubBar.hovered ? 0.45 : 0.28)
                     border.color: Qt.rgba(1, 1, 1, 0.35)
                     border.width: 1
-                    opacity: scrubBar.active ? 0.95 : 0.55
+                    opacity: scrubBar.hovered ? 0.95 : 0.55
                 }
 
+                // Hover + wheel; click resets to present (0). No custom cursor.
                 MouseArea {
-                    id: scrubMouse
+                    id: scrubHover
                     anchors.fill: parent
                     hoverEnabled: true
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
                     preventStealing: true
                     propagateComposedEvents: false
-                    acceptedButtons: Qt.LeftButton
-                    cursorShape: Qt.PointingHandCursor
-                    // Swallow long-press so ItemContainer AfterPressAndHold never wins
+                    cursorShape: Qt.ArrowCursor
                     pressAndHoldInterval: 1000000
-
-                    onPressed: function(mouse) {
-                        scrubBar.beginScrub(mouse.x)
-                        mouse.accepted = true
-                    }
-                    onPositionChanged: function(mouse) {
-                        if (pressed)
-                            scrubBar.applyHours(scrubBar.hoursFromX(mouse.x))
-                    }
-                    onReleased: function(mouse) {
-                        scrubBar.endScrub(mouse.x)
-                        mouse.accepted = true
-                    }
-                    onCanceled: scrubBar.endScrub()
+                    onPressed: function(mouse) { mouse.accepted = true }
+                    onReleased: function(mouse) { mouse.accepted = true }
                     onPressAndHold: function(mouse) {
-                        // Never allow Plasma edit-mode long-press through the scrubber
                         mouse.accepted = true
                         full.cancelAppletEdit()
                     }
-                    onExited: {
-                        if (pressed)
-                            full.cancelAppletEdit()
+                    onClicked: function(mouse) {
+                        // Single click → now (same as idle snap, immediate)
+                        scrubBar.applyHours(0)
+                        mouse.accepted = true
                     }
-                }
-
-                // Extra exclusive grab while dragging (covers cases MouseArea loses)
-                DragHandler {
-                    id: scrubDrag
-                    target: null
-                    acceptedButtons: Qt.LeftButton
-                    grabPermissions: PointerHandler.CanTakeOverFromItems
-                                     | PointerHandler.CanTakeOverFromHandlersOfDifferentType
-                                     | PointerHandler.ApprovesTakeOverByAnything
-                    xAxis.enabled: true
-                    yAxis.enabled: false
-                    onActiveChanged: {
-                        if (active) {
-                            scrubBar.scrubbing = true
-                            full.cancelAppletEdit()
-                            scrubBar.applyHours(scrubBar.hoursFromX(centroid.position.x))
-                        } else if (scrubBar.scrubbing) {
-                            scrubBar.endScrub()
+                    onDoubleClicked: function(mouse) { mouse.accepted = true }
+                    onWheel: function(wheel) {
+                        // Fallback path (some stacks deliver wheel to MouseArea)
+                        var dy = wheel.angleDelta.y !== 0 ? wheel.angleDelta.y
+                               : (wheel.pixelDelta.y !== 0 ? wheel.pixelDelta.y : 0)
+                        if (dy === 0) {
+                            wheel.accepted = false
+                            return
                         }
-                    }
-                    // centroid.position is in scrubBar coordinates (handler parent)
-                    property real _cx: centroid.position.x
-                    on_CxChanged: {
-                        if (active)
-                            scrubBar.applyHours(scrubBar.hoursFromX(_cx))
+                        // Scroll up / finger up → later time (+h); down → earlier (−h)
+                        var steps = dy > 0 ? 1 : -1
+                        if (Math.abs(dy) >= 120)
+                            steps = Math.round(dy / 120)
+                        if (steps === 0)
+                            steps = dy > 0 ? 1 : -1
+                        scrubBar.nudgeHours(steps)
+                        wheel.accepted = true
                     }
                 }
 
-                // Brief offset label when scrubbing
+                // Preferred: WheelHandler (mouse wheel + touchpad scroll while hovered)
+                WheelHandler {
+                    id: scrubWheel
+                    // active only when pointer is over the bar
+                    enabled: scrubBar.hovered
+                    acceptedDevices: PointerDevice.Mouse
+                                     | PointerDevice.TouchPad
+                    orientation: Qt.Vertical
+                    property real _accum: 0
+                    onWheel: function(event) {
+                        // angleDelta: 120 per notch; pixelDelta: touchpad pixels
+                        var dy = event.angleDelta.y
+                        if (dy === 0)
+                            dy = event.pixelDelta.y
+                        if (dy === 0)
+                            return
+                        // Accumulate fractional touchpad motion into 1 h steps
+                        scrubWheel._accum += dy
+                        var stepUnit = event.pixelDelta.y !== 0 ? 40 : 120
+                        while (scrubWheel._accum >= stepUnit) {
+                            scrubBar.nudgeHours(1)
+                            scrubWheel._accum -= stepUnit
+                        }
+                        while (scrubWheel._accum <= -stepUnit) {
+                            scrubBar.nudgeHours(-1)
+                            scrubWheel._accum += stepUnit
+                        }
+                        event.accepted = true
+                    }
+                }
+
+                // Offset label while hovering with non-zero offset
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.top
                     anchors.bottomMargin: 1
-                    visible: scrubBar.active && scrubBar.hours !== 0
+                    visible: scrubBar.hovered && scrubBar.hours !== 0
                     text: (scrubBar.hours > 0 ? "+" : "") + scrubBar.hours + " h"
                     color: Qt.rgba(1, 1, 1, 0.55)
                     font.pixelSize: 10
@@ -636,21 +631,6 @@ PlasmoidItem {
                     onTriggered: {
                         root.snapTimeToPresent()
                         skyCanvas.requestPaint()
-                    }
-                }
-
-                // If Plasma still opened edit handles, clear them shortly after scrub
-                Timer {
-                    id: scrubEditGuard
-                    interval: 80
-                    repeat: false
-                    onTriggered: full.cancelAppletEdit()
-                }
-                Connections {
-                    target: scrubBar
-                    function onScrubbingChanged() {
-                        if (!scrubBar.scrubbing)
-                            scrubEditGuard.restart()
                     }
                 }
             }
