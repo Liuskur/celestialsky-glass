@@ -319,17 +319,13 @@ PlasmoidItem {
                         ctx.lineWidth = 1
                         ctx.stroke()
 
-                        // Sun/Moon: only on-sky while frac in [0,1]. Do not clamp to
-                        // rise/set ends — that left them stuck at the horizon all night.
-                        var isLuminary = (o.name === "Sun" || o.name === "Moon")
-                        if (isLuminary && (o.frac < 0 || o.frac > 1))
+                        // Night cycle: body fully off the sky (no horizon stick / ghost dots)
+                        if (!o.aboveHorizon || o.frac < 0 || o.frac > 1)
                             continue
 
                         var riseAngle  = Math.PI / 2 + altRad
                         var setAngle   = Math.PI / 2 - altRad
-                        var renderFrac = isLuminary
-                            ? Math.max(0, Math.min(1, o.frac))
-                            : Math.max(-0.15, Math.min(1.15, o.frac))
+                        var renderFrac = Math.max(0, Math.min(1, o.frac))
                         var angle = riseAngle + (setAngle - riseAngle) * renderFrac
                         var ox = cx + R * Math.cos(angle)
                         var oy = acy - R * Math.sin(angle)
@@ -347,7 +343,7 @@ PlasmoidItem {
                         if (oy > hy - 2) oy = hy - 2
                         drawn.push({
                             o: o, ox: ox, oy: oy, sz: sz,
-                            above: oy < hy + 15, pathAlt: pathAlt
+                            above: true, pathAlt: pathAlt
                         })
                     }
 
@@ -359,14 +355,6 @@ PlasmoidItem {
                         var ox2 = d.ox
                         var oy2 = d.oy
                         var sz2 = d.sz
-
-                        if (!d.above) {
-                            ctx.beginPath()
-                            ctx.arc(ox2, oy2, sz2 * 0.5, 0, Math.PI * 2)
-                            ctx.fillStyle = "rgba(255,255,255,0.10)"
-                            ctx.fill()
-                            continue
-                        }
 
                         if (o2.mode === "image") {
                             var src = (o2.images && o2.images.length > 0)
@@ -680,52 +668,117 @@ PlasmoidItem {
                 onYChanged: skyCanvas.requestPaint()
                 onHeightChanged: skyCanvas.requestPaint()
 
-                // Live-bind tabloid times to scrubbed sky time
+                // Always show all body tabloids (day and night); times reorder by cycle
                 property var skyObjects: root.objects
+                // Layout: equal gaps, equal side margins, never overflow right edge.
+                // Ideal gap 5px — if sparse, shrink every gap by the same amount first.
+                readonly property int tabloidMinSide: 16
+                readonly property int tabloidIdealGap: 5
+                readonly property int tabloidIdealCardW: 112
+                readonly property int tabloidCount: skyObjects ? skyObjects.length : 0
+
+                readonly property int tabloidGap: {
+                    var n = tabloidCount
+                    var W = width
+                    if (n <= 1 || W <= 0)
+                        return 0
+                    var maxInner = Math.max(0, W - 2 * tabloidMinSide)
+                    var cardW = tabloidIdealCardW
+                    var gap = tabloidIdealGap
+                    var need = n * cardW + (n - 1) * gap
+                    if (need > maxInner)
+                        gap = Math.max(0, Math.floor((maxInner - n * cardW) / (n - 1)))
+                    return gap
+                }
+
+                readonly property int tabloidCardW: {
+                    var n = tabloidCount
+                    var W = width
+                    if (n <= 0 || W <= 0)
+                        return tabloidIdealCardW
+                    var maxInner = Math.max(0, W - 2 * tabloidMinSide)
+                    var gap = tabloidGap
+                    var cardW = tabloidIdealCardW
+                    if (n === 1)
+                        return Math.min(cardW, maxInner)
+                    var need = n * cardW + (n - 1) * gap
+                    if (need > maxInner)
+                        cardW = Math.max(36, Math.floor((maxInner - (n - 1) * gap) / n))
+                    return cardW
+                }
+
+                readonly property int tabloidRowW: {
+                    var n = tabloidCount
+                    if (n <= 0)
+                        return 0
+                    return n * tabloidCardW + Math.max(0, n - 1) * tabloidGap
+                }
+
+                // Clip so nothing paints past the glass edge
+                clip: true
 
                 Row {
-                    anchors.centerIn: parent
-                    spacing: 10
+                    id: tabloidRow
+                    anchors.verticalCenter: parent.verticalCenter
+                    // Equal left/right remainder (always ≥ tabloidMinSide when fit math holds)
+                    x: Math.max(0, Math.floor((infoPanel.width - infoPanel.tabloidRowW) / 2))
+                    spacing: infoPanel.tabloidGap
+                    width: infoPanel.tabloidRowW
+                    height: 92
 
                     Repeater {
-                        model: infoPanel.skyObjects.filter(function(o) { return o.frac >= 0 && o.frac <= 1 })
+                        model: infoPanel.skyObjects
 
                         delegate: Item {
-                            width: 112
+                            width: infoPanel.tabloidCardW
                             height: 92
+                            // Day: rise (orange) then set (blue)
+                            // Night: last set (blue) then next rise (orange)
+                            readonly property bool night: modelData.aboveHorizon === false
+                            readonly property var topTime: night ? modelData.setTime : modelData.riseTime
+                            readonly property var botTime: night ? modelData.riseTime : modelData.setTime
+                            readonly property color topColor: night ? "#7ec8ff" : "#ffc864"
+                            readonly property color botColor: night ? "#ffc864" : "#7ec8ff"
 
-                            // Per-tabloid tint plate (alpha shared via root.tabloidTintAlpha)
                             Rectangle {
                                 anchors.fill: parent
-                                radius: 14
+                                radius: Math.min(14, width * 0.12)
                                 color: Qt.rgba(root.tabloidTint.r, root.tabloidTint.g,
                                                root.tabloidTint.b, root.tabloidTintAlpha)
-                                border.color: "#55ffffff"
+                                border.color: night ? "#44a0ff88" : "#55ffffff"
                                 border.width: 1
                             }
 
                             Column {
                                 anchors.centerIn: parent
                                 spacing: 4
+                                width: parent.width - 8
 
                                 Text {
                                     anchors.horizontalCenter: parent.horizontalCenter
+                                    width: parent.width
+                                    horizontalAlignment: Text.AlignHCenter
+                                    elide: Text.ElideRight
                                     text: modelData.name
-                                    color: "#f2ffffff"
-                                    font.pixelSize: 18
+                                    color: night ? "#c8d0d8" : "#f2ffffff"
+                                    font.pixelSize: Math.max(12, Math.min(18, infoPanel.tabloidCardW * 0.16))
                                     font.bold: true
                                 }
                                 Text {
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    text: modelData.riseTime ? formatTime(modelData.riseTime) : "--:--"
-                                    color: "#ffc864"
-                                    font.pixelSize: 16
+                                    width: parent.width
+                                    horizontalAlignment: Text.AlignHCenter
+                                    text: topTime ? formatTime(topTime) : "--:--"
+                                    color: topColor
+                                    font.pixelSize: Math.max(11, Math.min(16, infoPanel.tabloidCardW * 0.14))
                                 }
                                 Text {
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    text: modelData.setTime ? formatTime(modelData.setTime) : "--:--"
-                                    color: "#7ec8ff"
-                                    font.pixelSize: 16
+                                    width: parent.width
+                                    horizontalAlignment: Text.AlignHCenter
+                                    text: botTime ? formatTime(botTime) : "--:--"
+                                    color: botColor
+                                    font.pixelSize: Math.max(11, Math.min(16, infoPanel.tabloidCardW * 0.14))
                                 }
                             }
                         }
@@ -757,30 +810,47 @@ PlasmoidItem {
             var eq  = Astronomy.Equator(body, date, observer, true, true)
             var hor = Astronomy.Horizon(date, observer, eq.ra, eq.dec, "normal")
             var alt = hor.altitude
+            var aboveHorizon = alt >= 0
 
-            var rise, set, frac = 0
+            // Times for tabloids + arc frac:
+            // Day:  riseTime = last rise, setTime = next set
+            // Night: riseTime = next rise, setTime = last set  (UI swaps order + colors)
+            var rise = null
+            var set  = null
+            var frac = 0
 
-            if (alt >= 0) {
+            if (aboveHorizon) {
                 rise = Astronomy.SearchRiseSet(body, observer, +1, date, -1)
                 set  = Astronomy.SearchRiseSet(body, observer, -1, date, +1)
-                if (rise && set)
-                    frac = (date.getTime() - rise.date.getTime()) /
-                           (set.date.getTime()  - rise.date.getTime())
+                if (rise && set) {
+                    var span = set.date.getTime() - rise.date.getTime()
+                    frac = span > 0
+                        ? (date.getTime() - rise.date.getTime()) / span
+                        : 0.5
+                } else {
+                    frac = 0.5
+                }
             } else {
                 var lastSet  = Astronomy.SearchRiseSet(body, observer, -1, date, -1)
                 var nextRise = Astronomy.SearchRiseSet(body, observer, +1, date, +1)
-                var dtLastSet  = lastSet  ? date.getTime() - lastSet.date.getTime()  : Infinity
-                var dtNextRise = nextRise ? nextRise.date.getTime() - date.getTime() : Infinity
-                if (dtLastSet <= dtNextRise && lastSet) {
-                    rise = Astronomy.SearchRiseSet(body, observer, +1, lastSet.date, -1)
-                    set  = lastSet
+                set  = lastSet
+                rise = nextRise
+                // Frac outside [0,1] so paint skips the body (true night)
+                if (lastSet) {
+                    var prevRise = Astronomy.SearchRiseSet(body, observer, +1, lastSet.date, -1)
+                    if (prevRise && lastSet) {
+                        var daySpan = lastSet.date.getTime() - prevRise.date.getTime()
+                        frac = daySpan > 0
+                            ? (date.getTime() - prevRise.date.getTime()) / daySpan
+                            : 1.5
+                    } else {
+                        frac = 1.5
+                    }
                 } else if (nextRise) {
-                    rise = nextRise
-                    set  = Astronomy.SearchRiseSet(body, observer, -1, nextRise.date, +1)
+                    frac = -0.5
+                } else {
+                    frac = 1.5
                 }
-                if (rise && set)
-                    frac = (date.getTime() - rise.date.getTime()) /
-                           (set.date.getTime()  - rise.date.getTime())
             }
 
             var transit = Astronomy.SearchHourAngle(body, observer, 0, date, +1)
@@ -824,6 +894,7 @@ PlasmoidItem {
             result.push({
                 name: name,
                 maxAlt: maxAlt,
+                aboveHorizon: aboveHorizon,
                 riseTime: rise ? rise.date : null,
                 setTime:  set  ? set.date  : null,
                 frac: frac,

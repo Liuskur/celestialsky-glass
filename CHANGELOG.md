@@ -1,5 +1,14 @@
 # Changelog — Celestial Sky (Glass)
 
+## 1.3.8
+- All bodies hide during their night cycle
+- Tabloids always visible; night shows last set (blue) then next rise (orange)
+- Equal tabloid gaps (ideal 5px, shrink evenly); left/right margins; no right overflow
+
+## 1.3.7
+- Planets hide at night like Sun/Moon
+- Tabloids always shown with day/night time order
+
 ## 1.3.6
 - Sun/Moon fully leave the sky at night (no stuck-at-set)
 
