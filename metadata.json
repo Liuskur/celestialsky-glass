@@ -1,0 +1,24 @@
+{
+    "KPlugin": {
+        "Name": "Celestial Sky (Glass)",
+        "Description": "Planetary sky widget with liquid-glass frame for Plasma 6. Shows Sun, Moon and planets on rise\u2013set arcs, live rise/set times, glass time scrubber (\u00b172 h), and macOS-style frosted look.",
+        "Icon": "weather-clear-night",
+        "Id": "com.riderlook.celestialsky",
+        "Version": "1.3.6",
+        "Website": "https://store.kde.org",
+        "Authors": [
+            {
+                "Name": "Tam\u00e1s M\u00e1t\u00e9",
+                "Email": "royalpython132@gmail.com"
+            },
+            {
+                "Name": "RiderLook",
+                "Email": ""
+            }
+        ],
+        "Category": "Astronomy",
+        "License": "MIT"
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

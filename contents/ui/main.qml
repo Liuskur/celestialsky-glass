@@ -1,0 +1,871 @@
+import QtQuick
+import QtQuick.Layouts
+import "astronomy.js" as Astronomy
+import "components"
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
+
+PlasmoidItem {
+    id: root
+    Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
+    preferredRepresentation: fullRepresentation
+
+    // ── Location / appearance ─────────────────────────────────────────
+    property real userLat: Plasmoid.configuration.userLat
+    property real userLon: Plasmoid.configuration.userLon
+    property real planetScale: Plasmoid.configuration.planetScale
+    property real bgOpacity: Plasmoid.configuration.bgOpacity
+
+    onUserLatChanged: refreshSky()
+    onUserLonChanged: refreshSky()
+    onPlanetScaleChanged: refreshSky()
+    onBgOpacityChanged: { if (typeof skyCanvas !== "undefined" && skyCanvas) skyCanvas.requestPaint() }
+
+    property var iconConfig: ({
+        "Sun":     { mode: "image", image: "Sun.png",     size: 30 },
+        // Moon ~30% smaller than prior (was 18)
+        "Moon":    { mode: "image", size: 13,
+                     images: ["Moon0.png","Moon1.png","Moon2.png","Moon3.png",
+                              "Moon4.png","Moon5.png","Moon6.png","Moon7.png"] },
+        "Mercury": { mode: "image", image: "Mercury.png", size: 7 },
+        "Venus":   { mode: "image", image: "Venus.png",   size: 8 },
+        "Mars":    { mode: "image", image: "Mars.png",    size: 8 },
+        "Jupiter": { mode: "image", size: 11,
+                     images: ["Jupiter0.png","Jupiter1.png","Jupiter2.png",
+                              "Jupiter3.png","Jupiter4.png"] },
+        "Saturn":  { mode: "image", size: 12,
+                     images: ["Saturn0.png","Saturn1.png","Saturn2.png",
+                              "Saturn3.png","Saturn4.png"] },
+        "Uranus":  { mode: "image", image: "Uranus.png",  size: 7 },
+        "Neptune": { mode: "image", image: "Neptune.png", size: 7 }
+    })
+
+    function iconUrl(name) {
+        return Qt.resolvedUrl("icons/" + name)
+    }
+
+    property var objects: []
+    // Hours from present; driven by glass time scrubber (−72…+72, 1 h steps)
+    property int timeOffsetHours: 0
+    // Shared by every rise/set tabloid (each card has its own fill area)
+    property real tabloidTintAlpha: 0.5
+    property color tabloidTint: "#000000"
+
+    function recomputeObjects() {
+        try { objects = computeObjects() } catch (e) {
+            console.log("computeObjects failed:", e)
+            objects = []
+        }
+    }
+
+    function refreshSky() {
+        recomputeObjects()
+        // full repaints via Connections (skyCanvas lives inside fullRepresentation)
+        skyPaintTick++
+    }
+
+    // Bumped whenever sky must redraw (scrub / timer / config)
+    property int skyPaintTick: 0
+
+    function setTimeOffsetHours(h) {
+        var v = Math.round(Number(h))
+        if (v < -72) v = -72
+        if (v > 72) v = 72
+        if (timeOffsetHours !== v)
+            timeOffsetHours = v
+        recomputeObjects()
+        skyPaintTick++
+    }
+
+    function snapTimeToPresent() {
+        setTimeOffsetHours(0)
+    }
+
+    onTimeOffsetHoursChanged: skyPaintTick++
+
+    fullRepresentation: Item {
+        id: full
+        Layout.preferredWidth: 500
+        Layout.preferredHeight: 340
+        Layout.minimumWidth: 280
+        Layout.minimumHeight: 220
+
+        // Desktop edit mode (widget rearrange). Outside it, block empty-area drags
+        // from moving the applet so the time scrubber stays usable.
+        readonly property bool desktopEditMode: {
+            try {
+                return !!(Plasmoid.containment && Plasmoid.containment.corona
+                          && Plasmoid.containment.corona.editMode)
+            } catch (e) { return false }
+        }
+
+        // ── Same liquid-glass frame as calendar / weather widgets ────
+        LiquidGlass {
+            id: glass
+            anchors.fill: parent
+            radius: Plasmoid.configuration.glassRadius
+            roundness: 7.5
+            refractThickness: 35
+            refractIOR: 1.7
+            refractScale: 65
+            tint: "#000000"
+            tintAlpha: Plasmoid.configuration.glassTintAlpha
+            chromaStrength: 0.28
+            specStrength: 0.70
+            blurRadius: Plasmoid.configuration.glassBlur
+            realtimeRefraction: false
+            fallbackOpacity: 0.45
+            solidMode: false
+            solidColor: "#1A1B1E"
+            solidColorBottom: "transparent"
+        }
+
+        // Cancel parent applet edit/drag if containment opened handles after a hold.
+        function cancelAppletEdit() {
+            try {
+                var p = full.parent
+                var guard = 0
+                while (p && guard++ < 12) {
+                    if (typeof p.cancelEdit === "function")
+                        p.cancelEdit()
+                    if (p.editMode === true)
+                        p.editMode = false
+                    p = p.parent
+                }
+                if (Plasmoid.containment && Plasmoid.containment.corona
+                        && Plasmoid.containment.corona.editMode)
+                    Plasmoid.containment.corona.editMode = false
+            } catch (e) { /* ignore */ }
+        }
+
+        // Absorb presses on empty glass so desktop press-and-hold can't enter
+        // applet edit mode (outside corona edit mode). Scrubber sits above this.
+        MouseArea {
+            anchors.fill: parent
+            z: 1
+            enabled: !full.desktopEditMode
+            preventStealing: true
+            hoverEnabled: false
+            propagateComposedEvents: false
+            onPressed: function(mouse) { mouse.accepted = true }
+            onPressAndHold: function(mouse) { mouse.accepted = true }
+            onReleased: function(mouse) {
+                mouse.accepted = true
+                full.cancelAppletEdit()
+            }
+            onCanceled: full.cancelAppletEdit()
+        }
+
+        // Clip content to rounded frame (no layer cache — Canvas must repaint live)
+        Item {
+            id: content
+            anchors.fill: parent
+            anchors.margins: 2
+            clip: true
+            z: 2
+
+            // Full-area canvas: clear pixels so LiquidGlass shows through
+            // (including under/around rise-set tabloids — no bottom band).
+            Canvas {
+                id: skyCanvas
+                anchors.fill: parent
+                z: 0
+                // Ensure paint sees latest offset even if objects ref is stale
+                property int tick: root.skyPaintTick
+                property int hours: root.timeOffsetHours
+
+                onWidthChanged:  requestPaint()
+                onHeightChanged: requestPaint()
+                onImageLoaded:   requestPaint()
+                onTickChanged:   requestPaint()
+                onHoursChanged:  requestPaint()
+
+                Component.onCompleted: {
+                    root.recomputeObjects()
+                    loadAllImages(skyCanvas)
+                    requestPaint()
+                }
+
+                Timer {
+                    interval: 60000
+                    running: true
+                    repeat: true
+                    onTriggered: root.refreshSky()
+                }
+
+                Connections {
+                    target: root
+                    function onObjectsChanged() { skyCanvas.requestPaint() }
+                    function onSkyPaintTickChanged() { skyCanvas.requestPaint() }
+                    function onTimeOffsetHoursChanged() { skyCanvas.requestPaint() }
+                }
+
+                onPaint: {
+                    var ctx = getContext("2d")
+                    var W = width
+                    var H = height
+                    ctx.clearRect(0, 0, W, H)
+
+                    // Optional fill — default 0 = fully transparent glass
+                    if (root.bgOpacity > 0.001) {
+                        ctx.fillStyle = "rgba(17,24,39," + root.bgOpacity + ")"
+                        ctx.beginPath()
+                        if (typeof ctx.roundRect === "function")
+                            ctx.roundRect(0, 0, W, H, 10)
+                        else
+                            ctx.rect(0, 0, W, H)
+                        ctx.fill()
+                    }
+
+                    if (W < 40 || H < 40) return
+
+                    // Horizon sits just above the time scrubber / tabloid strip
+                    var stripTop = scrubBar.y
+                    if (!(stripTop > 0 && stripTop < H))
+                        stripTop = infoPanel.y
+                    if (!(stripTop > 0 && stripTop < H))
+                        stripTop = H - infoPanel.height - 30
+
+                    var cx = W / 2
+                    // Horizon above scrubber/tabloids; peak sized so Sun top edge meets canvas top
+                    var arcBottomMargin = 14
+                    var hy = stripTop - arcBottomMargin
+                    var sidePad = 28
+                    // Iterate once so sun radius fits: peak center y = sunSz ⇒ top edge @ y=0
+                    var bodyScale = 1
+                    var sunSz = 30
+                    var R = 48
+                    for (var fit = 0; fit < 3; fit++) {
+                        R = Math.min(cx - sidePad, Math.max(48, hy - sunSz))
+                        R = Math.max(48, R)
+                        bodyScale = R / 130
+                        sunSz = 30 * bodyScale
+                    }
+                    // Outer arc peaks at y = hy - R; sun (90°) center sits there → top at ~0
+                    var sunPeakY = hy - R
+
+                    ctx.save()
+                    // Clip sky drawing to above tabloids (glass continues below)
+                    // Allow 1px bleed so sun edge can touch the top border cleanly
+                    ctx.beginPath()
+                    ctx.rect(0, 0, W, stripTop)
+                    ctx.clip()
+
+                    // Horizon line (above tabloid strip by arcBottomMargin)
+                    ctx.beginPath()
+                    ctx.moveTo(cx - R - 8, hy)
+                    ctx.lineTo(cx + R + 8, hy)
+                    ctx.strokeStyle = "rgba(255,255,255,0.30)"
+                    ctx.lineWidth = 1.5
+                    ctx.stroke()
+
+                    ctx.beginPath()
+                    ctx.moveTo(cx - R, hy - 7)
+                    ctx.lineTo(cx - R, hy + 7)
+                    ctx.strokeStyle = "rgba(255,255,255,0.25)"
+                    ctx.lineWidth = 1.5
+                    ctx.stroke()
+                    ctx.beginPath()
+                    ctx.moveTo(cx + R, hy - 7)
+                    ctx.lineTo(cx + R, hy + 7)
+                    ctx.strokeStyle = "rgba(255,255,255,0.25)"
+                    ctx.lineWidth = 1.5
+                    ctx.stroke()
+
+                    // Zenith tick at outer-arc peak (sun center at noon)
+                    ctx.beginPath()
+                    ctx.moveTo(cx, sunPeakY - 6)
+                    ctx.lineTo(cx, sunPeakY + 6)
+                    ctx.strokeStyle = "rgba(255,255,255,0.22)"
+                    ctx.lineWidth = 1
+                    ctx.stroke()
+
+                    // Outer sky arc — bottom on horizon; peak under widget top for sun disk
+                    ctx.beginPath()
+                    ctx.arc(cx, hy, R, Math.PI, 0, false)
+                    ctx.strokeStyle = "rgba(255,255,255,0.20)"
+                    ctx.lineWidth = 1.5
+                    ctx.stroke()
+
+                    // Arc lanes: Sun at max height, planets lower, Moon between them
+                    var bodies = root.objects.slice()
+                    var maxPlanetAlt = 0
+                    for (var j = 0; j < bodies.length; j++) {
+                        var bn = bodies[j].name
+                        if (bn !== "Sun" && bn !== "Moon")
+                            maxPlanetAlt = Math.max(maxPlanetAlt, bodies[j].maxAlt)
+                    }
+                    if (maxPlanetAlt < 5)
+                        maxPlanetAlt = 5
+                    var sunDisplayAlt = 90
+                    var moonDisplayAlt = (sunDisplayAlt + maxPlanetAlt) * 0.5
+
+                    // Precompute screen positions, then draw large bodies first so
+                    // smaller ones (e.g. Jupiter next to Moon/Sun) are not clipped under them.
+                    var drawn = []
+                    for (var i = 0; i < bodies.length; i++) {
+                        var o = bodies[i]
+                        var pathAlt = o.maxAlt
+                        if (o.name === "Sun")
+                            pathAlt = sunDisplayAlt
+                        else if (o.name === "Moon")
+                            pathAlt = moonDisplayAlt
+                        var altRad = pathAlt * Math.PI / 180
+                        var acy = hy + R * Math.cos(altRad)
+
+                        ctx.beginPath()
+                        ctx.arc(cx, acy, R, Math.PI, 0, false)
+                        ctx.strokeStyle = "rgba(200,215,235,0.13)"
+                        ctx.lineWidth = 1
+                        ctx.stroke()
+
+                        // Sun/Moon: only on-sky while frac in [0,1]. Do not clamp to
+                        // rise/set ends — that left them stuck at the horizon all night.
+                        var isLuminary = (o.name === "Sun" || o.name === "Moon")
+                        if (isLuminary && (o.frac < 0 || o.frac > 1))
+                            continue
+
+                        var riseAngle  = Math.PI / 2 + altRad
+                        var setAngle   = Math.PI / 2 - altRad
+                        var renderFrac = isLuminary
+                            ? Math.max(0, Math.min(1, o.frac))
+                            : Math.max(-0.15, Math.min(1.15, o.frac))
+                        var angle = riseAngle + (setAngle - riseAngle) * renderFrac
+                        var ox = cx + R * Math.cos(angle)
+                        var oy = acy - R * Math.sin(angle)
+                        var sz = o.size * bodyScale
+                        // Lateral pad only; Sun may sit with top edge on canvas top (y≈0)
+                        var edgePad = sz + 2
+                        if (ox < edgePad) ox = edgePad
+                        if (ox > W - edgePad) ox = W - edgePad
+                        if (o.name !== "Sun") {
+                            if (oy < edgePad) oy = edgePad
+                        } else {
+                            // Keep exact peak geometry: center at sunPeakY when high
+                            if (oy < sunSz) oy = sunSz
+                        }
+                        if (oy > hy - 2) oy = hy - 2
+                        drawn.push({
+                            o: o, ox: ox, oy: oy, sz: sz,
+                            above: oy < hy + 15, pathAlt: pathAlt
+                        })
+                    }
+
+                    drawn.sort(function(a, b) { return b.sz - a.sz })
+
+                    for (var k = 0; k < drawn.length; k++) {
+                        var d = drawn[k]
+                        var o2 = d.o
+                        var ox2 = d.ox
+                        var oy2 = d.oy
+                        var sz2 = d.sz
+
+                        if (!d.above) {
+                            ctx.beginPath()
+                            ctx.arc(ox2, oy2, sz2 * 0.5, 0, Math.PI * 2)
+                            ctx.fillStyle = "rgba(255,255,255,0.10)"
+                            ctx.fill()
+                            continue
+                        }
+
+                        if (o2.mode === "image") {
+                            var src = (o2.images && o2.images.length > 0)
+                                ? iconUrl(o2.images[o2.imageIndex || 0])
+                                : iconUrl(o2.image)
+                            // Draw full PNG with its own alpha — no circular clip
+                            function paintBody(alpha) {
+                                ctx.save()
+                                if (alpha < 1)
+                                    ctx.globalAlpha = alpha
+                                if (o2.imageFlip) {
+                                    ctx.translate(ox2, oy2)
+                                    ctx.scale(-1, 1)
+                                    ctx.drawImage(src, -sz2, -sz2, sz2 * 2, sz2 * 2)
+                                } else {
+                                    ctx.drawImage(src, ox2 - sz2, oy2 - sz2, sz2 * 2, sz2 * 2)
+                                }
+                                ctx.restore()
+                            }
+                            paintBody(1)
+
+                            // Sun: red/dark at rise & set ↔ bright/yellow at zenith
+                            if (o2.name === "Sun") {
+                                var elev = Math.max(0, Math.min(1, (hy - oy2) / Math.max(1, R)))
+                                // Also bias by day-frac (near 0 = rise, 1 = set)
+                                var dayF = Math.max(0, Math.min(1, o2.frac))
+                                var edgeDay = Math.max(0, 1 - Math.min(dayF, 1 - dayF) * 4) // 1 at ends
+                                var low = Math.max(1 - elev * 1.35, edgeDay * 0.85)
+                                low = Math.max(0, Math.min(1, low))
+
+                                ctx.save()
+                                ctx.beginPath()
+                                ctx.arc(ox2, oy2, sz2 * 0.98, 0, Math.PI * 2)
+                                ctx.clip()
+
+                                if (low > 0.04) {
+                                    // Darken + deep red/orange near horizon
+                                    ctx.globalCompositeOperation = "source-atop"
+                                    ctx.fillStyle = "rgba(40,8,0," + (low * 0.42) + ")"
+                                    ctx.fillRect(ox2 - sz2, oy2 - sz2, sz2 * 2, sz2 * 2)
+                                    ctx.fillStyle = "rgba(220,45,5," + (low * 0.55) + ")"
+                                    ctx.fillRect(ox2 - sz2, oy2 - sz2, sz2 * 2, sz2 * 2)
+                                    ctx.fillStyle = "rgba(255,100,20," + (low * 0.22) + ")"
+                                    ctx.fillRect(ox2 - sz2, oy2 - sz2, sz2 * 2, sz2 * 2)
+                                }
+
+                                if (elev > 0.35 && low < 0.5) {
+                                    // Yellow-bright lift toward zenith
+                                    var boost = ((elev - 0.35) / 0.65) * (1 - low)
+                                    ctx.globalCompositeOperation = "lighter"
+                                    ctx.globalAlpha = 0.12 + 0.38 * boost
+                                    ctx.drawImage(src, ox2 - sz2, oy2 - sz2, sz2 * 2, sz2 * 2)
+                                    // Warm yellow wash at peak
+                                    ctx.globalAlpha = 0.08 + 0.18 * boost
+                                    ctx.fillStyle = "rgba(255,230,120,1)"
+                                    ctx.fillRect(ox2 - sz2, oy2 - sz2, sz2 * 2, sz2 * 2)
+                                }
+                                ctx.restore()
+                            }
+
+                            // Soft horizon tint for Moon
+                            if (o2.name === "Moon") {
+                                var horizonDist = (hy - oy2) / R
+                                var tint = Math.max(0, 1 - horizonDist * 4)
+                                if (tint > 0.05) {
+                                    ctx.save()
+                                    ctx.beginPath()
+                                    ctx.arc(ox2, oy2, sz2 * 0.92, 0, Math.PI * 2)
+                                    ctx.clip()
+                                    ctx.fillStyle = "rgba(200,40,10," + (tint * 0.35) + ")"
+                                    ctx.fillRect(ox2 - sz2, oy2 - sz2, sz2 * 2, sz2 * 2)
+                                    ctx.restore()
+                                }
+                            }
+                        } else {
+                            var g2 = ctx.createRadialGradient(ox2, oy2, 0, ox2, oy2, sz2 * 3.5)
+                            g2.addColorStop(0, o2.halo || "rgba(255,255,255,0.15)")
+                            g2.addColorStop(1, "rgba(0,0,0,0)")
+                            ctx.beginPath()
+                            ctx.arc(ox2, oy2, sz2 * 3.5, 0, Math.PI * 2)
+                            ctx.fillStyle = g2
+                            ctx.fill()
+                            ctx.beginPath()
+                            ctx.arc(ox2, oy2, sz2, 0, Math.PI * 2)
+                            ctx.fillStyle = o2.color
+                            ctx.fill()
+                        }
+                    }
+
+                    ctx.restore()
+                    // No below-horizon fill — glass continues uninterrupted into tabloid strip
+                }
+            }
+
+            // Live clock (Text, not Canvas) so it always tracks scrub offset
+            Text {
+                id: skyClock
+                z: 5
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.topMargin: 16
+                anchors.rightMargin: 16
+                color: "#ebffffff"
+                font.pixelSize: Math.max(22, Math.round(Math.min(parent.width, parent.height) * 0.07))
+                font.weight: Font.DemiBold
+                text: {
+                    var _ = root.skyPaintTick  // rebind on every scrub tick
+                    var d = new Date(Date.now() + root.timeOffsetHours * 3600000)
+                    var hh = d.getHours()
+                    var mm = d.getMinutes()
+                    return (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm
+                }
+            }
+
+            // Inconspicuous glass time scrubber: −72 h … +72 h, 1 h steps
+            // Center = present. Auto-snaps to present 60 s after last move.
+            // Exclusive pointer grab + swallow press-and-hold so Plasma does not
+            // open applet edit/move handles mid-scrub.
+            Item {
+                id: scrubBar
+                z: 10
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: infoPanel.top
+                anchors.leftMargin: 28
+                anchors.rightMargin: 28
+                anchors.bottomMargin: 2
+                height: 28
+
+                property bool active: scrubMouse.pressed || scrubMouse.containsMouse || scrubDrag.active
+                property int hours: root.timeOffsetHours
+                property bool scrubbing: false
+
+                function hoursFromX(x) {
+                    var w = Math.max(1, width)
+                    var t = Math.max(0, Math.min(1, x / w))
+                    return Math.round(t * 144 - 72)  // -72 … +72
+                }
+
+                function applyHours(h) {
+                    root.setTimeOffsetHours(h)
+                    skyCanvas.requestPaint()
+                    if (h === 0)
+                        snapBackTimer.stop()
+                    else
+                        snapBackTimer.restart()
+                }
+
+                function beginScrub(x) {
+                    scrubbing = true
+                    full.cancelAppletEdit()
+                    applyHours(hoursFromX(x))
+                }
+
+                function endScrub(x) {
+                    if (x !== undefined && x !== null)
+                        applyHours(hoursFromX(x))
+                    scrubbing = false
+                    // Drop edit mode if press-and-hold still fired under us
+                    Qt.callLater(full.cancelAppletEdit)
+                }
+
+                // Soft glass track
+                Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 3
+                    radius: 1.5
+                    color: Qt.rgba(1, 1, 1, scrubBar.active ? 0.22 : 0.10)
+                    border.color: Qt.rgba(1, 1, 1, scrubBar.active ? 0.18 : 0.06)
+                    border.width: 1
+                }
+
+                // Center tick (present)
+                Rectangle {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 1
+                    height: 8
+                    color: Qt.rgba(1, 1, 1, 0.20)
+                }
+
+                // Handle
+                Rectangle {
+                    id: scrubHandle
+                    width: 12
+                    height: 12
+                    radius: 6
+                    anchors.verticalCenter: parent.verticalCenter
+                    x: {
+                        var t = (scrubBar.hours + 72) / 144
+                        return t * (scrubBar.width - width)
+                    }
+                    color: Qt.rgba(1, 1, 1, scrubBar.active ? 0.55 : 0.28)
+                    border.color: Qt.rgba(1, 1, 1, 0.35)
+                    border.width: 1
+                    opacity: scrubBar.active ? 0.95 : 0.55
+                }
+
+                MouseArea {
+                    id: scrubMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    preventStealing: true
+                    propagateComposedEvents: false
+                    acceptedButtons: Qt.LeftButton
+                    cursorShape: Qt.PointingHandCursor
+                    // Swallow long-press so ItemContainer AfterPressAndHold never wins
+                    pressAndHoldInterval: 1000000
+
+                    onPressed: function(mouse) {
+                        scrubBar.beginScrub(mouse.x)
+                        mouse.accepted = true
+                    }
+                    onPositionChanged: function(mouse) {
+                        if (pressed)
+                            scrubBar.applyHours(scrubBar.hoursFromX(mouse.x))
+                    }
+                    onReleased: function(mouse) {
+                        scrubBar.endScrub(mouse.x)
+                        mouse.accepted = true
+                    }
+                    onCanceled: scrubBar.endScrub()
+                    onPressAndHold: function(mouse) {
+                        // Never allow Plasma edit-mode long-press through the scrubber
+                        mouse.accepted = true
+                        full.cancelAppletEdit()
+                    }
+                    onExited: {
+                        if (pressed)
+                            full.cancelAppletEdit()
+                    }
+                }
+
+                // Extra exclusive grab while dragging (covers cases MouseArea loses)
+                DragHandler {
+                    id: scrubDrag
+                    target: null
+                    acceptedButtons: Qt.LeftButton
+                    grabPermissions: PointerHandler.CanTakeOverFromItems
+                                     | PointerHandler.CanTakeOverFromHandlersOfDifferentType
+                                     | PointerHandler.ApprovesTakeOverByAnything
+                    xAxis.enabled: true
+                    yAxis.enabled: false
+                    onActiveChanged: {
+                        if (active) {
+                            scrubBar.scrubbing = true
+                            full.cancelAppletEdit()
+                            scrubBar.applyHours(scrubBar.hoursFromX(centroid.position.x))
+                        } else if (scrubBar.scrubbing) {
+                            scrubBar.endScrub()
+                        }
+                    }
+                    // centroid.position is in scrubBar coordinates (handler parent)
+                    property real _cx: centroid.position.x
+                    on_CxChanged: {
+                        if (active)
+                            scrubBar.applyHours(scrubBar.hoursFromX(_cx))
+                    }
+                }
+
+                // Brief offset label when scrubbing
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.top
+                    anchors.bottomMargin: 1
+                    visible: scrubBar.active && scrubBar.hours !== 0
+                    text: (scrubBar.hours > 0 ? "+" : "") + scrubBar.hours + " h"
+                    color: Qt.rgba(1, 1, 1, 0.55)
+                    font.pixelSize: 10
+                    font.bold: true
+                }
+
+                Timer {
+                    id: snapBackTimer
+                    interval: 60000
+                    repeat: false
+                    onTriggered: {
+                        root.snapTimeToPresent()
+                        skyCanvas.requestPaint()
+                    }
+                }
+
+                // If Plasma still opened edit handles, clear them shortly after scrub
+                Timer {
+                    id: scrubEditGuard
+                    interval: 80
+                    repeat: false
+                    onTriggered: full.cancelAppletEdit()
+                }
+                Connections {
+                    target: scrubBar
+                    function onScrubbingChanged() {
+                        if (!scrubBar.scrubbing)
+                            scrubEditGuard.restart()
+                    }
+                }
+            }
+
+            // Rise/set info strip (~2× card + type size)
+            Item {
+                id: infoPanel
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 104
+                anchors.bottomMargin: 10
+                z: 1
+
+                onYChanged: skyCanvas.requestPaint()
+                onHeightChanged: skyCanvas.requestPaint()
+
+                // Live-bind tabloid times to scrubbed sky time
+                property var skyObjects: root.objects
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 10
+
+                    Repeater {
+                        model: infoPanel.skyObjects.filter(function(o) { return o.frac >= 0 && o.frac <= 1 })
+
+                        delegate: Item {
+                            width: 112
+                            height: 92
+
+                            // Per-tabloid tint plate (alpha shared via root.tabloidTintAlpha)
+                            Rectangle {
+                                anchors.fill: parent
+                                radius: 14
+                                color: Qt.rgba(root.tabloidTint.r, root.tabloidTint.g,
+                                               root.tabloidTint.b, root.tabloidTintAlpha)
+                                border.color: "#55ffffff"
+                                border.width: 1
+                            }
+
+                            Column {
+                                anchors.centerIn: parent
+                                spacing: 4
+
+                                Text {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    text: modelData.name
+                                    color: "#f2ffffff"
+                                    font.pixelSize: 18
+                                    font.bold: true
+                                }
+                                Text {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    text: modelData.riseTime ? formatTime(modelData.riseTime) : "--:--"
+                                    color: "#ffc864"
+                                    font.pixelSize: 16
+                                }
+                                Text {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    text: modelData.setTime ? formatTime(modelData.setTime) : "--:--"
+                                    color: "#7ec8ff"
+                                    font.pixelSize: 16
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // ── Astronomy ─────────────────────────────────────────────────────
+
+    function computeObjects() {
+        var date = new Date(new Date().getTime() + root.timeOffsetHours * 3600000)
+        try {
+            var observer = new Astronomy.Observer(userLat, userLon, 0)
+        } catch (e) {
+            console.log("Astronomy not available:", e)
+            return []
+        }
+
+        var bodyNames = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Uranus","Neptune"]
+        var result = []
+
+        for (var i = 0; i < bodyNames.length; i++) {
+            var name = bodyNames[i]
+            var body = Astronomy.Body[name]
+            var cfg  = iconConfig[name] || { mode: "color", color: "#ffffff", halo: "#33ffffff", size: 7 }
+
+            var eq  = Astronomy.Equator(body, date, observer, true, true)
+            var hor = Astronomy.Horizon(date, observer, eq.ra, eq.dec, "normal")
+            var alt = hor.altitude
+
+            var rise, set, frac = 0
+
+            if (alt >= 0) {
+                rise = Astronomy.SearchRiseSet(body, observer, +1, date, -1)
+                set  = Astronomy.SearchRiseSet(body, observer, -1, date, +1)
+                if (rise && set)
+                    frac = (date.getTime() - rise.date.getTime()) /
+                           (set.date.getTime()  - rise.date.getTime())
+            } else {
+                var lastSet  = Astronomy.SearchRiseSet(body, observer, -1, date, -1)
+                var nextRise = Astronomy.SearchRiseSet(body, observer, +1, date, +1)
+                var dtLastSet  = lastSet  ? date.getTime() - lastSet.date.getTime()  : Infinity
+                var dtNextRise = nextRise ? nextRise.date.getTime() - date.getTime() : Infinity
+                if (dtLastSet <= dtNextRise && lastSet) {
+                    rise = Astronomy.SearchRiseSet(body, observer, +1, lastSet.date, -1)
+                    set  = lastSet
+                } else if (nextRise) {
+                    rise = nextRise
+                    set  = Astronomy.SearchRiseSet(body, observer, -1, nextRise.date, +1)
+                }
+                if (rise && set)
+                    frac = (date.getTime() - rise.date.getTime()) /
+                           (set.date.getTime()  - rise.date.getTime())
+            }
+
+            var transit = Astronomy.SearchHourAngle(body, observer, 0, date, +1)
+            var maxAlt  = (transit && transit.hor) ? transit.hor.altitude : Math.max(alt, 10)
+            maxAlt = Math.max(5, Math.min(90, maxAlt))
+
+            var moonImageIndex = 0
+            if (name === "Moon") {
+                var phase = Astronomy.MoonPhase(date)
+                var phaseMap = [4, 3, 2, 1, 0, 7, 6, 5]
+                moonImageIndex = phaseMap[Math.floor(phase / 45) % 8]
+            }
+
+            var saturnImageIndex = 4
+            var saturnFlip = false
+            if (name === "Saturn") {
+                var illum = Astronomy.Illumination(body, date)
+                var tilt = illum.ring_tilt || 0
+                saturnFlip = tilt > 0
+                saturnImageIndex = 4 - Math.min(4, Math.floor(Math.abs(tilt) / 6))
+            }
+
+            var jupiterImageIndex = 0
+            var jupiterFlip = false
+            if (name === "Jupiter") {
+                var periodMs = 9.925 * 3600000
+                var epochOffset = 9.5
+                var epoch = new Date("2000-01-01T12:00:00Z").getTime() + epochOffset * 3600000
+                var elapsed = date.getTime() - epoch
+                var cml = ((-(elapsed % periodMs) / periodMs * 360) + 360) % 360
+                var grsDist = Math.min(cml, 360 - cml)
+                var pos = grsDist / 180
+                if (pos < 0.5) {
+                    var spotPos = pos * 2
+                    var step = Math.floor(spotPos * 4)
+                    jupiterImageIndex = 4 - step
+                    jupiterFlip = cml > 180
+                }
+            }
+
+            result.push({
+                name: name,
+                maxAlt: maxAlt,
+                riseTime: rise ? rise.date : null,
+                setTime:  set  ? set.date  : null,
+                frac: frac,
+                mode: cfg.mode,
+                size: cfg.size * root.planetScale,
+                color: cfg.color  || "#ffffff",
+                halo:  cfg.halo   || "#33ffffff",
+                image: cfg.image  || (cfg.images ? cfg.images[0] : ""),
+                images: cfg.images || null,
+                imageIndex: name === "Moon"    ? moonImageIndex
+                          : name === "Saturn"  ? saturnImageIndex
+                          : name === "Jupiter" ? jupiterImageIndex
+                          : 0,
+                imageFlip: name === "Jupiter" ? jupiterFlip
+                         : name === "Saturn"  ? saturnFlip
+                         : false
+            })
+        }
+        return result
+    }
+
+    function formatTime(d) {
+        var local = new Date(d.getTime())
+        var hh = local.getHours()
+        var mm = local.getMinutes()
+        return (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm
+    }
+
+    function loadAllImages(canvas) {
+        if (!canvas) return
+        var allImages = [
+            "Sun.png", "Mercury.png", "Venus.png",
+            "Mars.png", "Uranus.png", "Neptune.png"
+        ]
+        var multi  = ["Moon", "Jupiter", "Saturn"]
+        var counts = { Moon: 8, Jupiter: 5, Saturn: 5 }
+        for (var m = 0; m < multi.length; m++) {
+            var nm = multi[m]
+            for (var k = 0; k < counts[nm]; k++)
+                allImages.push(nm + k + ".png")
+        }
+        for (var n = 0; n < allImages.length; n++)
+            canvas.loadImage(iconUrl(allImages[n]))
+    }
+}

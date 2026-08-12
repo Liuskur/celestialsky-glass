@@ -1,0 +1,7 @@
+*.plasmoid
+*.tar
+*.tar.*
+*~
+*.bak
+.DS_Store
+contents/ui/icons-flat-backup/
