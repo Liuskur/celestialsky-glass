@@ -4,6 +4,9 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import "../org/koollook/location"
+
+Item {
+    id: root
     implicitWidth: Kirigami.Units.gridUnit * 28
     implicitHeight: Kirigami.Units.gridUnit * 18
 
@@ -58,12 +61,13 @@ import "../org/koollook/location"
             onLongitudeChanged: if (root._ready) root.cfg_longitude = longitude
         }
 
-        PlasmaComponentsPlaceholder {}
-    }
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
             opacity: 0.7
             text: i18n("Periods start at local sunrise. Glass settings are on the Appearance tab.")
         }
+    }
+
+    Component.onCompleted: _ready = true
 }
