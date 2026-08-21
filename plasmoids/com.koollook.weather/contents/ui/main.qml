@@ -108,12 +108,10 @@ PlasmoidItem {
                 Layout.fillWidth: true
                 spacing: Kirigami.Units.largeSpacing
 
-                Kirigami.Icon {
-                    source: wx.iconName
-                    Layout.preferredWidth: Kirigami.Units.iconSizes.huge
-                    Layout.preferredHeight: Kirigami.Units.iconSizes.huge
-                    isMask: colors.useLightGlyphs
-                    color: colors.foreground
+                WeatherIcon {
+                    iconName: wx.iconName
+                    Layout.preferredWidth: Kirigami.Units.iconSizes.huge * 1.5
+                    Layout.preferredHeight: Kirigami.Units.iconSizes.huge * 1.5
                 }
 
                 ColumnLayout {
