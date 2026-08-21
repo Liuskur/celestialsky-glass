@@ -39,7 +39,6 @@ PlasmoidItem {
         function onSourceChanged() { wx.refresh() }
         function onTemperatureUnitChanged() { wx.refresh() }
     }
-    }
 
     Component.onCompleted: wx.refresh()
 
