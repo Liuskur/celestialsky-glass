@@ -20,6 +20,8 @@ ColumnLayout {
     property alias cfg_blurRadiusPx: blurRadiusSpin.value
     property alias cfg_realtimeRefraction: realtimeCheck.checked
     property alias cfg_hideFrame: hideFrameCheck.checked
+
+    function _serialize() {
         return JSON.stringify({
             s: styleCombo.currentIndex,
             a: appearanceCombo.currentIndex,
@@ -35,7 +37,6 @@ ColumnLayout {
             rr: realtimeCheck.checked,
             hf: hideFrameCheck.checked
         })
-        })
     }
 
     function _deserialize(text) {
@@ -50,13 +51,12 @@ ColumnLayout {
             if (o.rs !== undefined) scaleSpin.value               = o.rs
             if (o.ta !== undefined) tintSpin.value                = o.ta
             if (o.ca !== undefined) chromaSpin.value              = o.ca
+            if (o.ss !== undefined) specStrengthSpin.value        = o.ss
             if (o.br !== undefined) blurRadiusSpin.value          = o.br
             if (o.rr !== undefined) realtimeCheck.checked         = o.rr
             if (o.hf !== undefined) hideFrameCheck.checked        = o.hf
             pasteStatus.text = i18n("Applied!")
-            if (o.rr !== undefined) realtimeCheck.checked         = o.rr
-            pasteStatus.text = i18n("Applied!")
-        } catch(e) {
+        } catch (e) {
             pasteStatus.text = i18n("Invalid config string")
         }
         pasteStatus.visible = true
@@ -112,7 +112,6 @@ ColumnLayout {
             opacity: 0.7
         }
 
-        Kirigami.Separator {
         ComboBox {
             id: styleCombo
             Kirigami.FormData.label: i18n("Style:")
@@ -159,10 +158,6 @@ ColumnLayout {
         Layout.fillWidth: true
         visible: styleCombo.currentIndex === 0 || styleCombo.currentIndex === 4 || styleCombo.currentIndex === 6
 
-        Kirigami.Separator {
-            Kirigami.FormData.isSection: true
-            Kirigami.FormData.label: i18n("Glass effect")
-        }
         Kirigami.Separator {
             Kirigami.FormData.isSection: true
             Kirigami.FormData.label: i18n("Glass effect")
