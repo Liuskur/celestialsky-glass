@@ -34,12 +34,11 @@ PlasmoidItem {
         repeat: true
         onTriggered: wx.refresh()
     }
-
     Connections {
         target: Plasmoid.configuration
-        function onLatitudeChanged() { wx.refresh() }
-        function onLongitudeChanged() { wx.refresh() }
+        function onSourceChanged() { wx.refresh() }
         function onTemperatureUnitChanged() { wx.refresh() }
+    }
     }
 
     Component.onCompleted: wx.refresh()
