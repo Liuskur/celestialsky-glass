@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Koollook Hora</title>
+  <link rel="stylesheet" href="css/koollook.css"/>
+</head>
+<body>
+  <h1>Koollook Hora</h1>
+  <p class="sub">Planetary hours (hora): 12 from sunrise to sunset, 12 from sunset to the next sunrise. The first daytime hora is the weekday lord; then Saturn–Jupiter–Mars–Sun–Venus–Mercury–Moon.</p>
+  <div class="now">
+    <p class="name" id="now-name">—</p>
+    <p class="meta" id="now-meta"></p>
+    <div class="bar"><i id="bar"></i></div>
+    <p class="meta" id="sun"></p>
+  </div>
+  <div class="loc">
+    <input id="lat" type="text" value="59.437" aria-label="Latitude"/>
+    <input id="lon" type="text" value="24.754" aria-label="Longitude"/>
+    <button type="button" id="go">Update</button>
+    <button type="button" id="geo">Use my location</button>
+  </div>
+  <table>
+    <thead><tr><th>#</th><th>Hora</th><th>Tone</th><th>Local time</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <p class="foot">Koollook · <a href="../muhurta/index.html">Muhurta</a></p>
+  <script src="js/koollook-time.js"></script>
+  <script src="js/page.js"></script>
+  <script>KoollookTimePage.start({ kind: "hora" })</script>
+</body>
+</html>
