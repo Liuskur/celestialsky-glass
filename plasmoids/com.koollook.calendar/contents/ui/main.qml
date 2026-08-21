@@ -307,7 +307,6 @@ PlasmoidItem {
             }
         }
     }
-    }
 
     Component {
         id: eventDelegate
