@@ -15,7 +15,7 @@
 
 ## KDE Store / distro
 
-- [ ] One Store entry per plasmoid (`com.koollook.*`) plus separate theme pieces (colors, icons, Aurorae, Dotted, splash, SDDM, Plymouth, each wallpaper).
+- [ ] One Store entry per plasmoid (`com.koollook.*`) plus separate theme pieces (colors, icons, title bar, Dotted, splash, SDDM, Plymouth, each wallpaper).
 - [ ] Accessibility pack as a separate Store item (STT helper is not a plasmoid-only zip).
 - [ ] Short Store blurbs; required Plasma 6; MIT except Willow Aurorae GPL-3.0.
 - [ ] Distro: split packages per piece; also ship `koollook` metapackage / suite tarball. Theme install must not overwrite the user’s color scheme unless they opt in.
