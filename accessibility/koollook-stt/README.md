@@ -4,7 +4,7 @@ Local **English** speech-to-text into a **clip buffer** (`~/.local/state/koolloo
 The **Koollook STT Clip** desktop widget shows that buffer.
 
 - Say **delete clip** — empty the buffer.
-- Say **send clip** — actualize: copy + type the buffer into the focused field, then clear.
+- Say **send clip** — type the buffer into the currently focused field (`wtype`), then clear the widget. If the compositor rejects virtual-keyboard, AT-SPI insert is used; clipboard is always filled as backup.
 
 ```bash
 ./accessibility/koollook-stt/install.sh
