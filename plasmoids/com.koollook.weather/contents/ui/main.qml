@@ -95,7 +95,7 @@ PlasmoidItem {
                     source: wx.iconName
                     Layout.preferredWidth: Kirigami.Units.iconSizes.huge
                     Layout.preferredHeight: Kirigami.Units.iconSizes.huge
-                    isMask: colors.isGlass
+                    isMask: colors.useLightGlyphs
                     color: colors.foreground
                 }
 
