@@ -70,9 +70,12 @@ QtObject {
             loading = false
             return
         }
-        engine.disconnectSource(source)
-        engine.removeSource(source)
-        engine.connectSource(source)
+        try {
+            engine.disconnectSource(source)
+            engine.removeSource(source)
+            engine.connectSource(source)
+        } catch (e) {
+        }
         if (source.indexOf("bbcukmet|") === 0)
             _fetchBbc()
         fallbackTimer.restart()
