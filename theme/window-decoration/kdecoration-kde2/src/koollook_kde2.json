@@ -1,6 +1,8 @@
 {
     "KPlugin": {
-        "Id": "org.kde.kde2",
+        "Id": "org.koollook.kde2",
+        "Name": "Koollook KDE 2",
+        "Description": "KDE 2 window decoration ported to Plasma 6 for Koollook",
         "ServiceTypes": [
             "org.kde.kdecoration2"
         ]
@@ -8,7 +10,6 @@
     "org.kde.kdecoration2": {
         "blur": true,
         "kcmodule": false,
-
         "themes": true,
         "themeListKeyword": "themes",
         "defaultTheme": "KDE 2"
