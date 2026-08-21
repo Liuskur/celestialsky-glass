@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Koollook STT: local English dictation → local clip buffer → widget.
-# "delete clip" clears the buffer. "send clip" types/copies it (actualize).
+# Koollook STT: local English dictation → clip buffer → Plasma 6 widget.
 set -euo pipefail
 
 RESONIDER="${RESONIDER:-/opt/Grok/ResoNider}"
@@ -13,23 +12,21 @@ LOG="${KOOLLOOK_STT_LOG:-$RUNTIME/koollook-stt.log}"
 STATE="${XDG_STATE_HOME:-$HOME/.local/state}/koollook"
 CLIP="$STATE/clip.txt"
 STATUS_FILE="$STATE/status"
-CONF="${XDG_CONFIG_HOME:-$HOME/.config}/koollook/stt.conf"
 COMMANDS_JSON="${XDG_CONFIG_HOME:-$HOME/.config}/koollook/stt-commands.json"
 
-mkdir -p "$STATE" "$(dirname "$CONF")"
+mkdir -p "$STATE" "$(dirname "$COMMANDS_JSON")"
 [[ -f "$CLIP" ]] || : >"$CLIP"
 
 usage() {
+  cat <<'U'
 Usage: koollook-stt [--start|--stop|--status|--toggle|--list-sources]
                     [--clear-clip|--send-clip|--ingest TEXT]
                     [--write-commands-json JSON]
-Clip file: ~/.local/state/koollook/clip.txt
+Clip: ~/.local/state/koollook/clip.txt
 Commands: ~/.config/koollook/stt-commands.json
-Clip file: ~/.local/state/koollook/clip.txt
 U
 }
 
-load_phrases() {
 ensure_commands_json() {
   mkdir -p "$(dirname "$COMMANDS_JSON")"
   if [[ ! -f "$COMMANDS_JSON" ]]; then
@@ -50,15 +47,13 @@ do_write_commands_json() {
 }
 
 match_command() {
-  local uttered="$1"
-  python3 - "$COMMANDS_JSON" "$uttered" <<'PY'
+  python3 - "$COMMANDS_JSON" "$1" <<'PY'
 import json, re, sys
 from pathlib import Path
 path, uttered = sys.argv[1], sys.argv[2]
 def norm(s):
-    s = s.lower()
-    s = re.sub(r'[^a-z0-9 ]+', ' ', s)
-    return re.sub(r' +', ' ', s).strip()
+    s = re.sub(r"[^a-z0-9 ]+", " ", s.lower())
+    return re.sub(r" +", " ", s).strip()
 n = norm(uttered)
 try:
     data = json.loads(Path(path).read_text())
@@ -69,8 +64,7 @@ for item in data.get("hard") or []:
     m = norm(item.get("match") or "")
     if m and m in n:
         print("BUILTIN", item.get("builtin") or "")
-        rest = n.replace(m, " ", 1)
-        print("REST", rest.strip())
+        print("REST", n.replace(m, " ", 1).strip())
         raise SystemExit(0)
 for item in data.get("custom") or []:
     m = norm(item.get("match") or "")
@@ -79,9 +73,6 @@ for item in data.get("custom") or []:
         raise SystemExit(0)
 print("NONE")
 PY
-}
-norm() {
-  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9 ]/ /g;s/  */ /g;s/^ //;s/ $//'
 }
 
 list_sources() {
@@ -96,54 +87,38 @@ pick_source() {
     printf '%s' "$want"
     return 0
   fi
-  pactl list sources short 2>/dev/null | awk '{print $2}' \
-    | grep -iE 'kdeconnect' | head -1 || true
+  pactl list sources short 2>/dev/null | awk '{print $2}' | grep -iE 'kdeconnect' | head -1 || true
 }
 
 type_text() {
   local t="$1"
   [[ -z "$t" ]] && return 0
-  if command -v wtype >/dev/null; then
-    wtype -- "$t"
-    return 0
-  fi
-  if command -v ydotool >/dev/null; then
-    ydotool type -- "$t"
-    return 0
-  fi
-  if command -v xdotool >/dev/null; then
-    xdotool type --delay 8 -- "$t"
-    return 0
-  fi
+  if command -v wtype >/dev/null; then wtype -- "$t"; return 0; fi
+  if command -v ydotool >/dev/null; then ydotool type -- "$t"; return 0; fi
+  if command -v xdotool >/dev/null; then xdotool type --delay 8 -- "$t"; return 0; fi
   if command -v wl-copy >/dev/null; then
     printf '%s' "$t" | wl-copy
     notify-send -a Koollook "STT" "Clip copied (install wtype to type it)" 2>/dev/null || true
     return 0
   fi
-  printf 'stt: no wtype/ydotool/xdotool/wl-copy\n' >&2
   return 1
-do_set_phrases() {
-  ensure_commands_json
-  python3 - "$COMMANDS_JSON" "${1:-delete clip}" "${2:-send clip}" <<'PY'
-import json, sys
-from pathlib import Path
-p, d, s = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
-data = json.loads(p.read_text()) if p.exists() else {"hard": [], "custom": []}
-hard = data.get("hard") or []
-for item in hard:
-    if item.get("builtin") == "clear-clip":
-        item["match"] = d
-    if item.get("builtin") == "send-clip":
-        item["match"] = s
-data["hard"] = hard
-p.write_text(json.dumps(data, indent=2) + "\n")
-print(f"phrases: delete=[{d}] send=[{s}]")
-PY
 }
+
+clip_write() {
+  local tmp
+  tmp="$(mktemp "$STATE/clip.XXXXXX")"
+  printf '%s' "$1" >"$tmp"
+  mv -f "$tmp" "$CLIP"
 }
 
 clip_read() {
   [[ -f "$CLIP" ]] && cat "$CLIP" || true
+}
+
+clip_append() {
+  local add="$1" cur
+  cur="$(clip_read)"
+  if [[ -z "$cur" ]]; then clip_write "$add"; else clip_write "$cur $add"; fi
 }
 
 do_clear_clip() {
@@ -152,11 +127,35 @@ do_clear_clip() {
   echo "clip cleared"
   notify-send -a Koollook "STT" "Clip deleted" 2>/dev/null || true
 }
+
+do_send_clip() {
+  local t
+  t="$(clip_read)"
+  t="${t%"${t##*[![:space:]]}"}"
+  if [[ -z "$t" ]]; then echo "clip empty"; return 0; fi
+  printf '%s' "$t" >"$STATE/last-sent.txt"
+  command -v wl-copy >/dev/null && printf '%s' "$t" | wl-copy || true
+  type_text "$t" || true
+  clip_write ""
+  echo "sent" >"$STATUS_FILE"
+  echo "clip sent"
+  notify-send -a Koollook "STT" "Clip sent" 2>/dev/null || true
+}
+
+keep_text() {
+  local t="$1"
+  t="$(printf '%s' "$t" | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+  [[ -z "$t" ]] && return 1
+  case "$t" in
+    "[Start speaking]"|"[BLANK_AUDIO]"|"[blank audio]"|"[Music]"|"[music]"|"[Silence]"|"[BLANK]") return 1 ;;
+  esac
+  [[ "$t" =~ ^\[.*\]$ ]] && return 1
+  printf '%s' "$t"
+}
+
 handle_utterance() {
-  local out="$1"
+  local out="$1" result kind payload rest=""
   ensure_commands_json
-  local kind payload rest=""
-  local result
   result="$(match_command "$out" || true)"
   kind="$(printf '%s\n' "$result" | awk 'NR==1{print $1}')"
   payload="$(printf '%s\n' "$result" | awk 'NR==1{ $1=""; sub(/^ /,""); print }')"
@@ -178,60 +177,8 @@ handle_utterance() {
         notify-send -a Koollook "STT" "Ran command" 2>/dev/null || true
       fi
       ;;
-    *)
-      clip_append "$out"
-      ;;
+    *) clip_append "$out" ;;
   esac
-}
-  local s="${2:-send clip}"
-  mkdir -p "$(dirname "$CONF")"
-  printf 'delete_clip=%q\nsend_clip=%q\n' "$d" "$s" >"$CONF"
-  echo "phrases: delete=[$d] send=[$s]"
-}
-
-clip_append() {
-  local add="$1"
-  local cur
-  cur="$(clip_read)"
-  if [[ -z "$cur" ]]; then
-    clip_write "$add"
-  else
-    clip_write "$cur $add"
-  fi
-}
-
-keep_text() {
-  local t="$1"
-  t="$(printf '%s' "$t" | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-  [[ -z "$t" ]] && return 1
-  case "$t" in
-    "[Start speaking]"|"[BLANK_AUDIO]"|"[blank audio]"|"[Music]"|"[music]"|"[Silence]"|"[BLANK]") return 1 ;;
-  esac
-  [[ "$t" =~ ^\[.*\]$ ]] && return 1
-  printf '%s' "$t"
-}
-
-handle_utterance() {
-  local out="$1"
-  load_phrases
-  local n dn sn rest
-  n="$(norm "$out")"
-  dn="$(norm "$DELETE_CLIP")"
-  sn="$(norm "$SEND_CLIP")"
-  if [[ -n "$dn" && "$n" == *"$dn"* ]]; then
-    do_clear_clip
-    return 0
-  fi
-  if [[ -n "$sn" && "$n" == *"$sn"* ]]; then
-    rest="${n%%"$sn"*}"
-    rest="$(printf '%s' "$rest" | sed 's/^ //;s/ $//')"
-    if [[ -n "$rest" ]]; then
-      clip_append "$rest"
-    fi
-    do_send_clip
-    return 0
-  fi
-  clip_append "$out"
 }
 
 is_running() {
@@ -252,34 +199,30 @@ do_stop() {
 
 do_status() {
   if is_running; then
-    echo "running pid=$(cat "$PIDFILE") source=${PULSE_SOURCE:-default}"
-cmd="${1:---start}"
-ensure_commands_json
-case "$cmd" in
-  -h|--help) usage ;;
-  --list-sources) list_sources ;;
-  --stop) do_stop ;;
-  --status) do_status ;;
-  --clear-clip|--delete-clip) do_clear_clip ;;
-  --send-clip) do_send_clip ;;
-  --set-phrases) do_set_phrases "${2:-delete clip}" "${3:-send clip}" ;;
-  --write-commands-json) do_write_commands_json "${2:-}" ;;
-  --ingest) handle_utterance "${2:-}" ;;
-  --toggle)
-    if is_running; then do_stop; else do_start; fi
-    ;;
-  --start|start) do_start ;;
-  *) usage; exit 2 ;;
-esac
+    echo "running pid=$(cat "$PIDFILE")"
+    echo "listening" >"$STATUS_FILE"
+    return 0
+  fi
+  echo "stopped"
+  echo "stopped" >"$STATUS_FILE"
+  return 1
+}
+
+do_start() {
+  if is_running; then
+    echo "already running pid=$(cat "$PIDFILE")"
+    return 0
+  fi
+  [[ -x "$WHISPER_BIN" ]] || { echo "missing $WHISPER_BIN" >&2; exit 1; }
+  [[ -f "$MODEL" ]] || { echo "missing model $MODEL" >&2; exit 1; }
   local src
   src="$(pick_source || true)"
   if [[ -n "$src" ]]; then
     export PULSE_SOURCE="$src"
-    echo "audio source: $src (KDE Connect / Pulse)"
+    echo "audio source: $src"
   else
     echo "audio source: default Pulse/PipeWire input"
   fi
-
   export LD_LIBRARY_PATH="$(dirname "$WHISPER_BIN"):${LD_LIBRARY_PATH:-}"
   mkdir -p "$(dirname "$PIDFILE")" "$STATE"
   echo "listening" >"$STATUS_FILE"
@@ -289,9 +232,7 @@ esac
       --threads "${KOOLLOOK_STT_THREADS:-4}" \
       2>>"$LOG" | while IFS= read -r line; do
         if [[ "$line" == "### Transcription "*START* ]]; then
-          in_block=1
-          buf=""
-          continue
+          in_block=1; buf=""; continue
         fi
         if [[ "$line" == "### Transcription "*END* ]]; then
           in_block=0
@@ -301,19 +242,17 @@ esac
             handle_utterance "$out" || true
             printf 'clip: %s\n' "$out" >>"$LOG"
           fi
-          buf=""
-          continue
+          buf=""; continue
         fi
-        if [[ $in_block -eq 1 ]]; then
-          buf+="$line"
-        fi
+        if [[ $in_block -eq 1 ]]; then buf+="$line"; fi
       done
   ) &
   echo $! >"$PIDFILE"
-  echo "koollook-stt started pid=$(cat "$PIDFILE") log=$LOG clip=$CLIP"
+  echo "koollook-stt started pid=$(cat "$PIDFILE") clip=$CLIP"
   notify-send -a Koollook "STT" "Listening — buffer in STT clip widget" 2>/dev/null || true
 }
 
+ensure_commands_json
 cmd="${1:---start}"
 case "$cmd" in
   -h|--help) usage ;;
@@ -321,12 +260,10 @@ case "$cmd" in
   --stop) do_stop ;;
   --status) do_status ;;
   --clear-clip|--delete-clip) do_clear_clip ;;
-  --set-phrases) do_set_phrases "${2:-delete clip}" "${3:-send clip}" ;;
+  --send-clip) do_send_clip ;;
+  --write-commands-json) do_write_commands_json "${2:-}" ;;
   --ingest) handle_utterance "${2:-}" ;;
-  --set-phrases) do_set_phrases "${2:-delete clip}" "${3:-send clip}" ;;
-  --toggle)
-    if is_running; then do_stop; else do_start; fi
-    ;;
+  --toggle) if is_running; then do_stop; else do_start; fi ;;
   --start|start) do_start ;;
   *) usage; exit 2 ;;
 esac
