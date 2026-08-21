@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build Koollook plasmoids, theme, STT helper, and a distro/store archive.
+# Build Koollook plasmoids, one tarball per piece, and one suite bundle.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DIST="$ROOT/dist"
@@ -18,6 +18,17 @@ fi
 
 rm -rf "$DIST"
 mkdir -p "$DIST"
+
+pack_zst() {
+  local out="$1"
+  shift
+  rm -f "$out"
+  tar -C "$ROOT" \
+    --exclude 'theme/window-decoration/kdecoration-kde2/build' \
+    --exclude 'theme/window-decoration/kdecoration-kde2/.git' \
+    -c "$@" | zstd -19 -o "$out"
+  echo "wrote $out"
+}
 
 package_one() {
   local id="$1"
@@ -46,22 +57,32 @@ package_one com.koollook.stt
 package_one com.koollook.audioviz
 package_one com.koollook.muhurta
 package_one com.koollook.hora
-# --- three product packs ---
-tar -C "$ROOT" --exclude 'theme/window-decoration/kdecoration-kde2/build' -c theme \
-  | zstd -19 -o "$DIST/koollook-theme-${SUITE_VER}.tar.zst"
-echo "wrote $DIST/koollook-theme-${SUITE_VER}.tar.zst"
 
-WID="$DIST/stage-widgets"
-mkdir -p "$WID"
-cp -a "$DIST"/com.koollook.*.plasmoid "$WID"/
-cp -a "$ROOT/LICENSE" "$ROOT/README.md" "$WID"/
-tar -C "$WID" -c . | zstd -19 -o "$DIST/koollook-widgets-${SUITE_VER}.tar.zst"
-rm -rf "$WID"
-echo "wrote $DIST/koollook-widgets-${SUITE_VER}.tar.zst"
+pack_zst "$DIST/koollook-colors-${SUITE_VER}.tar.zst" theme/color-schemes
+pack_zst "$DIST/koollook-icons-${SUITE_VER}.tar.zst" theme/icons/Koollook
+pack_zst "$DIST/koollook-aurorae-${SUITE_VER}.tar.zst" \
+  theme/window-decoration/Koollook theme/kwin-aurorae theme/kwin
+pack_zst "$DIST/koollook-dotted-${SUITE_VER}.tar.zst" \
+  theme/window-decoration/KoollookDotted \
+  theme/window-decoration/org.koollook.dotted \
+  theme/window-decoration/kdecoration-kde2
+pack_zst "$DIST/koollook-splash-${SUITE_VER}.tar.zst" theme/look-and-feel
+pack_zst "$DIST/koollook-sddm-${SUITE_VER}.tar.zst" theme/sddm
+pack_zst "$DIST/koollook-plymouth-${SUITE_VER}.tar.zst" theme/plymouth
 
-tar -C "$ROOT" -c accessibility \
-  | zstd -19 -o "$DIST/koollook-accessibility-${SUITE_VER}.tar.zst"
-echo "wrote $DIST/koollook-accessibility-${SUITE_VER}.tar.zst"
+for d in "$ROOT"/theme/wallpapers/*; do
+  [[ -d "$d" ]] || continue
+  name="$(basename "$d")"
+  if [[ "$name" == "Koollook" ]]; then
+    pack_zst "$DIST/koollook-wallpaper-${SUITE_VER}.tar.zst" "theme/wallpapers/$name"
+  elif [[ "$name" =~ ^Koollook-([0-9]+)$ ]]; then
+    pack_zst "$DIST/koollook-wallpaper-${BASH_REMATCH[1]}-${SUITE_VER}.tar.zst" "theme/wallpapers/$name"
+  else
+    pack_zst "$DIST/koollook-wallpaper-${name}-${SUITE_VER}.tar.zst" "theme/wallpapers/$name"
+  fi
+done
+
+pack_zst "$DIST/koollook-accessibility-${SUITE_VER}.tar.zst" accessibility
 
 cp -a "$ROOT/README.md" "$DIST/README.md"
 cp -a "$ROOT/LICENSE" "$DIST/LICENSE"
@@ -72,14 +93,13 @@ chmod 755 "$DIST/install.sh"
 
 (
   cd "$DIST"
-  sha256sum -- com.koollook*.plasmoid koollook-theme-*.tar.zst koollook-widgets-*.tar.zst \
-    koollook-accessibility-*.tar.zst README.md LICENSE TESTERS.md RELEASE-NOTES.md install.sh > SHA256SUMS
+  sha256sum -- com.koollook*.plasmoid koollook-*.tar.zst \
+    README.md LICENSE TESTERS.md RELEASE-NOTES.md install.sh > SHA256SUMS
 )
 
 STAGE="$(mktemp -d)"
 mkdir -p "$STAGE/koollook-${SUITE_VER}"
-cp -a "$DIST"/com.koollook*.plasmoid "$DIST"/koollook-theme-*.tar.zst \
-  "$DIST"/koollook-widgets-*.tar.zst "$DIST"/koollook-accessibility-*.tar.zst \
+cp -a "$DIST"/com.koollook*.plasmoid "$DIST"/koollook-*.tar.zst \
   "$DIST/README.md" "$DIST/LICENSE" "$DIST/TESTERS.md" "$DIST/RELEASE-NOTES.md" \
   "$DIST/install.sh" "$DIST/SHA256SUMS" \
   "$STAGE/koollook-${SUITE_VER}/"
@@ -88,4 +108,8 @@ rm -f "$ARCHIVE"
 tar -C "$STAGE" -c "koollook-${SUITE_VER}" | zstd -19 -o "$ARCHIVE"
 rm -rf "$STAGE"
 echo "wrote $ARCHIVE"
+(
+  cd "$DIST"
+  sha256sum -- "koollook-${SUITE_VER}.tar.zst" >> SHA256SUMS
+)
 ls -1 "$DIST"
