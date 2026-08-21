@@ -131,8 +131,8 @@ ForegroundPositive=80,200,120
 ForegroundVisited=160,150,220
 
 [General]
-ColorScheme=KoollookLivonia
-Name=Koollook Livonia
+ColorScheme=KoollookLiwi
+Name=Koollook Liwi
 TitlebarIsAccentColored=true
 shadeSortColumn=true
 
