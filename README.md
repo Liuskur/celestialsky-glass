@@ -67,22 +67,15 @@ Color scheme **Koollook**, window decoration **Koollook**, KWin translucency + h
 Local English speech-to-text into the focused field. Reuses ResoNider whisper.cpp. Phone can start/stop via KDE Connect Run Command; audio source `auto` uses a `kdeconnect` Pulse source when present.
 
 ```bash
+Local English speech-to-text into a **clip buffer** shown by the STT Clip widget.
+Say **delete clip** to empty the buffer. Say **send clip** to type/copy it (actualize).
+
+```bash
 ./accessibility/koollook-stt/install.sh
 koollook-stt --toggle
 ```
 
-## Migrating from older IDs
-
-| Old | New |
-|-----|-----|
-| `com.riderlook.celestialsky` | `com.koollook.celestialsky` |
-| `com.jaxparrow07.macoswidgets.calendar` | `com.koollook.calendar` |
-| `com.jaxparrow07.macoswidgets.weather` | `com.koollook.weather` |
-
-Remove the old applet, then add the Koollook one. Configuration is not migrated.
-
-## Requirements
-
+Phone: KDE Connect Run Command (toggle/start/stop). `KOOLLOOK_STT_SOURCE=auto` uses a `kdeconnect` Pulse source when the phone is a mic.
 - KDE Plasma 6
 - Desktop containment (not panel)
 
