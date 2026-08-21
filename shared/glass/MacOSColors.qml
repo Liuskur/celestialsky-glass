@@ -121,7 +121,8 @@ QtObject {
     property string weatherGradientCategory: "clear"
 
     readonly property color weatherGradientTop: {
-        if (isGlass) return "transparent"
+        if (isGlass || isClear || isChameleon || isKoollook || isInverse || isPlasma)
+            return "transparent"
         var cat = weatherGradientCategory
         if (cat === "clear")       return "#5188BD"
         if (cat === "cloudy")      return "#8E9EAF"
@@ -134,31 +135,16 @@ QtObject {
         return "#5188BD"
     }
 
-    readonly property color weatherGradientBottom: {
-        if (isGlass) return "transparent"
-        var cat = weatherGradientCategory
-        if (cat === "clear")       return "#194E84"
-        if (cat === "cloudy")      return "#4A5568"
-        if (cat === "rain")        return "#2C3E50"
-        if (cat === "storm")       return "#1A1A2E"
-        if (cat === "snow")        return "#708090"
-        if (cat === "fog")         return "#6B7280"
-        if (cat === "nightclear")  return "#0D0D2B"
-        if (cat === "nightcloudy") return "#1A1E2A"
-        return "#194E84"
-    }
+    readonly property color weatherGradientBottom: weatherGradientTop
 
-    // Music widget — secondary text (artist name, time labels)
-    // Use explicit RGBA values here instead of deriving channels from another
-    // color property; QML can coerce those through a string path and collapse
-    // the channel reads to black in dark/glass modes.
-    readonly property color musicSecondary: (isGlass ? false : effectiveLight)
-        ? Qt.rgba(0.102, 0.106, 0.118, 0.55)
-        : Qt.rgba(1, 1, 1, 0.55)
+    readonly property color musicSecondary: useLightGlyphs
+        ? Qt.rgba(1, 1, 1, 0.55)
+        : Qt.rgba(0.102, 0.106, 0.118, 0.55)
 
-    readonly property color weatherForeground: "#ffffff"
-    readonly property string weatherIconSet: isGlass ? "mono-light" : "default"
-    readonly property color weatherSeparator: isGlass ? Qt.rgba(1, 1, 1, 0.15) : Qt.rgba(1, 1, 1, 0.20)
-    readonly property color weatherRangeBarBg: isGlass ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(1, 1, 1, 0.15)
-    readonly property color weatherRangeBarFill: isGlass ? Qt.rgba(1, 1, 1, 0.50) : Qt.rgba(1, 1, 1, 0.60)
+    readonly property color weatherForeground: foreground
+    readonly property string weatherIconSet: useLightGlyphs ? "mono-light" : "mono-dark"
+    readonly property color weatherSeparator: Qt.rgba(foreground.r, foreground.g, foreground.b, 0.18)
+    readonly property color weatherRangeBarBg: Qt.rgba(foreground.r, foreground.g, foreground.b, 0.12)
+    readonly property color weatherRangeBarFill: Qt.rgba(foreground.r, foreground.g, foreground.b, 0.55)
+}
 }
