@@ -1,5 +1,10 @@
 # Changelog — Koollook Widgets
 
+## 2.4.0
+
+- System tray applet `com.koollook.stt`: start/stop listening, send/delete clip, audio sources
+- Middle-click tray icon toggles listening
+
 ## 2.3.0
 
 - Shared `KoollookFrame`: Glass, Solid, Clear (see-through), Plasma, Chameleon, Inverse, Koollook
@@ -7,7 +12,6 @@
 - KDE 2 window decoration ported to Plasma 6 KDecoration3
 - Packs: `koollook-theme`, `koollook-widgets`, `koollook-accessibility`
 - Renamed `MacOSColors` → `KoollookColors`
-
 ## 2.2.0
 ## 2.2.0
 
