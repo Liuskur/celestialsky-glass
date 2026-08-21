@@ -28,7 +28,7 @@ QtObject {
     property var daily: []
     property var hourly: []
     property var todaySlots: []
-    readonly property var slotHours: [0, 3, 6, 9, 12, 15, 18, 21]
+    readonly property var slotHours: [6, 9, 12, 15, 18, 21]
     property int _reqId: 0
 
     function _isOm() {
