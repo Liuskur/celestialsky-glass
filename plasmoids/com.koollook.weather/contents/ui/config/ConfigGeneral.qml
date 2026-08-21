@@ -75,7 +75,6 @@ Item {
             onLatitudeChanged: if (root._ready) root.cfg_latitude = latitude
             onLongitudeChanged: if (root._ready) root.cfg_longitude = longitude
         }
-        }
 
         Kirigami.FormLayout {
             Layout.fillWidth: true
