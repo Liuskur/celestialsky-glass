@@ -1,0 +1,7 @@
+{
+  "hard": [
+    {"id": "clear-clip", "name": "Delete clip", "match": "delete clip", "builtin": "clear-clip"},
+    {"id": "send-clip", "name": "Send clip", "match": "send clip", "builtin": "send-clip"}
+  ],
+  "custom": []
+}
