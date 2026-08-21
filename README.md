@@ -90,7 +90,7 @@ Tray: after install, **Koollook STT** is in the system tray (Panel → System Tr
 
 ## License
 
-MIT for widgets and QML. Aurorae decoration SVGs are GPL-3.0 (Willow). See `LICENSE` and `theme/README.md`.
+MIT for widgets and QML. Title-bar SVGs (Willow) are GPL-3.0. See `LICENSE` and `theme/README.md`.
 
 ## Changelog
 
