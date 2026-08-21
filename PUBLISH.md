@@ -4,7 +4,7 @@
 
 - [ ] Rename repository to `koollook` (or `koollook-plasma`). Update clone URLs, website fields in every `metadata.json`.
 - [ ] Set description, topics: `kde`, `plasma-6`, `plasmoid`, `aurorae`.
-- [ ] Replace leftover Celestial Sky / RiderLook / MacOS wording in READMEs and plugin Website URLs.
+- [ ] Replace leftover RiderLook / MacOS wording in READMEs and plugin Website URLs. Sky widget is **Koollook Planisphere**.
 - [ ] Drop secrets and machine paths: no `/opt/Grok`, no `/home/rider`, no ResoNider absolute paths in shipped scripts (use env vars only).
 - [ ] `.gitignore`: `/dist/`, decoration `build/`, vendored `contents/ui/org/`, `error.txt`, screenshots of the local desktop.
 - [ ] Do not commit `.git` inside third-party tarballs (kdecoration2-kde2).
