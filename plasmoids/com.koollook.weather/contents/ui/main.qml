@@ -190,8 +190,6 @@ PlasmoidItem {
 
             ListView {
                 id: hourlyView
-            ListView {
-                id: hourlyView
                 visible: wx.hourly.length > 0
                 Layout.fillWidth: true
                 Layout.preferredHeight: Kirigami.Units.gridUnit * 5.2
