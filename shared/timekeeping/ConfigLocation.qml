@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: MIT
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import "../org/koollook/location"
-
-Item {
-    id: root
     implicitWidth: Kirigami.Units.gridUnit * 28
     implicitHeight: Kirigami.Units.gridUnit * 18
 
