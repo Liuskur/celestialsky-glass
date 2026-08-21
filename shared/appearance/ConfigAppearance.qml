@@ -50,8 +50,10 @@ ColumnLayout {
             if (o.rs !== undefined) scaleSpin.value               = o.rs
             if (o.ta !== undefined) tintSpin.value                = o.ta
             if (o.ca !== undefined) chromaSpin.value              = o.ca
-            if (o.ss !== undefined) specStrengthSpin.value        = o.ss
             if (o.br !== undefined) blurRadiusSpin.value          = o.br
+            if (o.rr !== undefined) realtimeCheck.checked         = o.rr
+            if (o.hf !== undefined) hideFrameCheck.checked        = o.hf
+            pasteStatus.text = i18n("Applied!")
             if (o.rr !== undefined) realtimeCheck.checked         = o.rr
             pasteStatus.text = i18n("Applied!")
         } catch(e) {
