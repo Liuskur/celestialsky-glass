@@ -1,5 +1,11 @@
 # Changelog — Koollook Widgets
 
+## 2.1.0
+
+- STT clip widget `com.koollook.sttclip`: live local transcription buffer
+- Spoken **delete clip** clears the buffer; **send clip** types/copies it
+- Release archive: all plasmoids + theme + STT (`./scripts/package.sh`)
+
 ## 2.0.0
 
 - Monorepo: Celestial Sky, Calendar, and Weather in one repo
@@ -8,11 +14,8 @@
 - Weather is original MIT code, Weather Report layout, Open-Meteo
 - Removed GPL macOS-widget sources
 - Rebrand to Koollook; plugin IDs `com.koollook.*`
-- `scripts/package.sh` and GitHub Actions build all three widgets at once
-- License: MIT for all widgets and QML
 - Theme: Koollook color scheme, Aurorae decoration, look-and-feel, KWin effects (from RiderLook)
-- Accessibility: local English STT (`koollook-stt`) via ResoNider whisper.cpp; KDE Connect runcommand + Pulse source hook for phone mic
-
+- Accessibility STT via ResoNider whisper.cpp; KDE Connect runcommand + Pulse source hook
 ## Celestial Sky 1.4.0
 
 - Appearance settings match Calendar/Weather (Copy/Paste style, glass/solid, tint %, blur, refraction…)
