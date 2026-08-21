@@ -54,7 +54,7 @@ kpackagetool6 -t Plasma/Applet -i dist/com.koollook.planisphere-0.7.0.plasmoid
 kpackagetool6 -t Plasma/Applet -i dist/com.koollook.calendar-0.7.0.plasmoid
 kpackagetool6 -t Plasma/Applet -i dist/com.koollook.weather-0.7.0.plasmoid
 kpackagetool6 -t Plasma/Applet -i dist/com.koollook.muhurta-0.7.0.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.hora-0.7.0.plasmoid
+scripts/package.sh             per-piece tarballs + suite bundle
 ```
 
 Then: Desktop → Add Widgets → search “Koollook”. Standalone sites: open `web/muhurta/index.html` or `web/hora/index.html`.
