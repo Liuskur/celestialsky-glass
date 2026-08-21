@@ -7,7 +7,7 @@ Plasma 6. Installs into **this user’s** `~/.local` (no root). You choose what 
 Download either:
 
 - `koollook-0.7.0.tar.zst` — everything + chooser `install.sh`
-- only the pieces you want (`com.koollook.*.plasmoid`, `koollook-theme-*.tar.zst`, `koollook-accessibility-*.tar.zst`)
+- only the pieces you want (`com.koollook.*.plasmoid`, `koollook-colors-*.tar.zst`, `koollook-splash-*.tar.zst`, wallpapers, …)
 
 ```bash
 tar -I zstd -xf koollook-0.7.0.tar.zst
@@ -17,11 +17,13 @@ chmod +x install.sh
 # or:
 ./install.sh --planisphere --weather
 ./install.sh --theme --dotted
+./install.sh --splash        # Plasma splash, wordmark KoollooK
 ./install.sh --all           # files only; does not restyle your session
 ./install.sh --all --apply   # also switch colors/icons/Koollook title bar
 ```
 
 `--apply` is optional. **Koollook Dotted** is a separate title bar (`--dotted`).
+Wallpapers 1–7 are large; skip them unless you want those images.
 
 Restart Plasma if the UI does not update:
 
