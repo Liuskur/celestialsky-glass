@@ -10,6 +10,8 @@
 - Rebrand to Koollook; plugin IDs `com.koollook.*`
 - `scripts/package.sh` and GitHub Actions build all three widgets at once
 - License: MIT for all widgets and QML
+- Theme: Koollook color scheme, Aurorae decoration, look-and-feel, KWin effects (from RiderLook)
+- Accessibility: local English STT (`koollook-stt`) via ResoNider whisper.cpp; KDE Connect runcommand + Pulse source hook for phone mic
 
 ## Celestial Sky 1.4.0
 
