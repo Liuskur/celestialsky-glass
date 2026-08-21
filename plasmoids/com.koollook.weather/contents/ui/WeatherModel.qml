@@ -102,6 +102,22 @@ QtObject {
         return Math.round(v) + "°"
     }
 
+    function formatHour(hour) {
+        var loc = Qt.locale()
+        var d = new Date(2000, 0, 1, hour, 0, 0)
+        var fmt = loc.timeFormat(Locale.ShortFormat)
+        var i, c, twelve
+        twelve = false
+        for (i = 0; i < fmt.length; i++) {
+            c = fmt.charAt(i)
+            if (c === "a" || c === "A" || c === "p" || c === "P")
+                twelve = true
+        }
+        if (!twelve)
+            return loc.toString(d, "HH")
+        return loc.toString(d, "h ap")
+    }
+
     function windArrow() {
         if (windDirText.length)
             return windDirText
