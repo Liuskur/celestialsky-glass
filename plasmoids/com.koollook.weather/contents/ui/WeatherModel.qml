@@ -106,15 +106,17 @@ QtObject {
 
     function _icon(code, night) {
         if (code === 0) return night ? "weather-clear-night" : "weather-clear"
-        if (code === 1 || code === 2) return night ? "weather-few-clouds-night" : "weather-few-clouds"
-        if (code === 3) return "weather-clouds"
+        if (code === 1) return night ? "weather-few-clouds-night" : "weather-few-clouds"
+        if (code === 2) return night ? "weather-clouds-night" : "weather-clouds"
+        if (code === 3) return night ? "weather-clouds-night" : "weather-clouds"
         if (code === 45 || code === 48) return "weather-fog"
-        if (code >= 51 && code <= 57) return "weather-showers-scattered"
-        if (code >= 61 && code <= 67) return "weather-showers"
-        if (code >= 71 && code <= 77) return "weather-snow"
-        if (code >= 80 && code <= 82) return "weather-showers"
-        if (code >= 85 && code <= 86) return "weather-snow"
-        if (code >= 95) return "weather-storm"
+        if (code >= 51 && code <= 57) return night ? "weather-showers-scattered-night" : "weather-showers-scattered"
+        if (code === 66 || code === 67) return "weather-freezing-rain"
+        if (code >= 61 && code <= 65) return night ? "weather-showers-night" : "weather-showers"
+        if (code >= 71 && code <= 77) return "weather-snow-scattered"
+        if (code >= 80 && code <= 82) return night ? "weather-showers-night" : "weather-showers"
+        if (code === 85 || code === 86) return "weather-snow"
+        if (code >= 95 && code <= 99) return night ? "weather-storm-night" : "weather-storm"
         return "weather-none-available"
     }
 
