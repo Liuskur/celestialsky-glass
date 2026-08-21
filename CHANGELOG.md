@@ -1,5 +1,11 @@
 # Changelog — Koollook Widgets
 
+## 0.7.1
+
+- Suite **0.7.1**: per-piece tarballs + bundle; title-bar pack renamed `koollook-titlebar`
+- User-facing Aurorae wording is KoollooK / title bar (KWin Aurorae engine kept)
+- Plasma splash wordmark **KoollooK**
+
 ## 0.7.0
 
 - Unified version **0.7.0** across widgets, theme, decorations, wallpapers, look-and-feel, SDDM
