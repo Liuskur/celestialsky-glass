@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Koollook STT: local English dictation → focused window.
-# Audio from PipeWire/Pulse default, or a KDE Connect / named source.
+# Koollook STT: local English dictation → local clip buffer → widget.
+# "delete clip" clears the buffer. "send clip" types/copies it (actualize).
 set -euo pipefail
 
 RESONIDER="${RESONIDER:-/opt/Grok/ResoNider}"
@@ -10,16 +10,39 @@ LANG="${KOOLLOOK_STT_LANG:-en}"
 RUNTIME="${XDG_RUNTIME_DIR:-/tmp}"
 PIDFILE="$RUNTIME/koollook-stt.pid"
 LOG="${KOOLLOOK_STT_LOG:-$RUNTIME/koollook-stt.log}"
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}/koollook"
+CLIP="$STATE/clip.txt"
+STATUS_FILE="$STATE/status"
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}/koollook/stt.conf"
+
+mkdir -p "$STATE" "$(dirname "$CONF")"
+[[ -f "$CLIP" ]] || : >"$CLIP"
 
 usage() {
   cat <<'U'
 Usage: koollook-stt [--start|--stop|--status|--toggle|--list-sources]
+                    [--clear-clip|--send-clip|--set-phrases DELETE SEND]
 Env:
-  KOOLLOOK_STT_SOURCE   Pulse/PipeWire source name, or "auto" (default)
-                        auto prefers a source whose name matches kdeconnect
+  KOOLLOOK_STT_SOURCE   Pulse/PipeWire source, or "auto" (kdeconnect if present)
   KOOLLOOK_STT_MODEL    whisper.cpp English model
-  RESONIDER             ResoNider tree (whisper.cpp + models)
+  RESONIDER             ResoNider tree
+Clip file: ~/.local/state/koollook/clip.txt
 U
+}
+
+load_phrases() {
+  DELETE_CLIP="${KOOLLOOK_STT_DELETE_CLIP:-delete clip}"
+  SEND_CLIP="${KOOLLOOK_STT_SEND_CLIP:-send clip}"
+  if [[ -f "$CONF" ]]; then
+    # shellcheck disable=SC1090
+    source "$CONF" 2>/dev/null || true
+    [[ -n "${delete_clip:-}" ]] && DELETE_CLIP="$delete_clip"
+    [[ -n "${send_clip:-}" ]] && SEND_CLIP="$send_clip"
+  fi
+}
+
+norm() {
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9 ]/ /g;s/  */ /g;s/^ //;s/ $//'
 }
 
 list_sources() {
@@ -42,24 +65,79 @@ type_text() {
   local t="$1"
   [[ -z "$t" ]] && return 0
   if command -v wtype >/dev/null; then
-    wtype -- "$t "
+    wtype -- "$t"
     return 0
   fi
   if command -v ydotool >/dev/null; then
-    ydotool type -- "$t "
+    ydotool type -- "$t"
     return 0
   fi
   if command -v xdotool >/dev/null; then
-    xdotool type --delay 8 -- "$t "
+    xdotool type --delay 8 -- "$t"
     return 0
   fi
   if command -v wl-copy >/dev/null; then
-    printf '%s' "$t " | wl-copy
-    notify-send -a Koollook "STT" "Copied (install wtype to type into the focused field)" 2>/dev/null || true
+    printf '%s' "$t" | wl-copy
+    notify-send -a Koollook "STT" "Clip copied (install wtype to type it)" 2>/dev/null || true
     return 0
   fi
   printf 'stt: no wtype/ydotool/xdotool/wl-copy\n' >&2
   return 1
+}
+
+clip_write() {
+  local tmp
+  tmp="$(mktemp "$STATE/clip.XXXXXX")"
+  printf '%s' "$1" >"$tmp"
+  mv -f "$tmp" "$CLIP"
+}
+
+clip_read() {
+  [[ -f "$CLIP" ]] && cat "$CLIP" || true
+}
+
+do_clear_clip() {
+  clip_write ""
+  echo "idle" >"$STATUS_FILE"
+  echo "clip cleared"
+  notify-send -a Koollook "STT" "Clip deleted" 2>/dev/null || true
+}
+
+do_send_clip() {
+  local t
+  t="$(clip_read)"
+  t="${t%"${t##*[![:space:]]}"}"
+  if [[ -z "$t" ]]; then
+    echo "clip empty"
+    return 0
+  fi
+  if command -v wl-copy >/dev/null; then
+    printf '%s' "$t" | wl-copy || true
+  fi
+  type_text "$t" || true
+  clip_write ""
+  echo "sent" >"$STATUS_FILE"
+  echo "clip sent"
+  notify-send -a Koollook "STT" "Clip sent" 2>/dev/null || true
+}
+
+do_set_phrases() {
+  local d="${1:-delete clip}"
+  local s="${2:-send clip}"
+  mkdir -p "$(dirname "$CONF")"
+  printf 'delete_clip=%q\nsend_clip=%q\n' "$d" "$s" >"$CONF"
+  echo "phrases: delete=[$d] send=[$s]"
+}
+
+clip_append() {
+  local add="$1"
+  local cur
+  cur="$(clip_read)"
+  if [[ -z "$cur" ]]; then
+    clip_write "$add"
+  else
+    clip_write "$cur $add"
+  fi
 }
 
 keep_text() {
@@ -71,6 +149,29 @@ keep_text() {
   esac
   [[ "$t" =~ ^\[.*\]$ ]] && return 1
   printf '%s' "$t"
+}
+
+handle_utterance() {
+  local out="$1"
+  load_phrases
+  local n dn sn rest
+  n="$(norm "$out")"
+  dn="$(norm "$DELETE_CLIP")"
+  sn="$(norm "$SEND_CLIP")"
+  if [[ -n "$dn" && "$n" == *"$dn"* ]]; then
+    do_clear_clip
+    return 0
+  fi
+  if [[ -n "$sn" && "$n" == *"$sn"* ]]; then
+    rest="${n%%"$sn"*}"
+    rest="$(printf '%s' "$rest" | sed 's/^ //;s/ $//')"
+    if [[ -n "$rest" ]]; then
+      clip_append "$rest"
+    fi
+    do_send_clip
+    return 0
+  fi
+  clip_append "$out"
 }
 
 is_running() {
@@ -85,16 +186,18 @@ do_stop() {
     pkill -P "$p" 2>/dev/null || true
     rm -f "$PIDFILE"
   fi
-  pkill -f "whisper-stream.*koollook-stt" 2>/dev/null || true
+  echo "stopped" >"$STATUS_FILE"
   echo "koollook-stt stopped"
 }
 
 do_status() {
   if is_running; then
     echo "running pid=$(cat "$PIDFILE") source=${PULSE_SOURCE:-default}"
+    echo "listening" >"$STATUS_FILE"
     return 0
   fi
   echo "stopped"
+  echo "stopped" >"$STATUS_FILE"
   return 1
 }
 
@@ -116,7 +219,8 @@ do_start() {
   fi
 
   export LD_LIBRARY_PATH="$(dirname "$WHISPER_BIN"):${LD_LIBRARY_PATH:-}"
-  mkdir -p "$(dirname "$PIDFILE")"
+  mkdir -p "$(dirname "$PIDFILE")" "$STATE"
+  echo "listening" >"$STATUS_FILE"
   (
     local buf="" in_block=0
     "$WHISPER_BIN" -m "$MODEL" -l "$LANG" --step 800 --length 5000 --keep 200 \
@@ -132,8 +236,8 @@ do_start() {
           local out
           out="$(keep_text "$buf" || true)"
           if [[ -n "$out" ]]; then
-            type_text "$out" || true
-            printf 'typed: %s\n' "$out" >>"$LOG"
+            handle_utterance "$out" || true
+            printf 'clip: %s\n' "$out" >>"$LOG"
           fi
           buf=""
           continue
@@ -144,8 +248,8 @@ do_start() {
       done
   ) &
   echo $! >"$PIDFILE"
-  echo "koollook-stt started pid=$(cat "$PIDFILE") log=$LOG"
-  notify-send -a Koollook "STT" "Listening (English, local)" 2>/dev/null || true
+  echo "koollook-stt started pid=$(cat "$PIDFILE") log=$LOG clip=$CLIP"
+  notify-send -a Koollook "STT" "Listening — buffer in STT clip widget" 2>/dev/null || true
 }
 
 cmd="${1:---start}"
@@ -154,6 +258,9 @@ case "$cmd" in
   --list-sources) list_sources ;;
   --stop) do_stop ;;
   --status) do_status ;;
+  --clear-clip|--delete-clip) do_clear_clip ;;
+  --send-clip) do_send_clip ;;
+  --set-phrases) do_set_phrases "${2:-delete clip}" "${3:-send clip}" ;;
   --toggle)
     if is_running; then do_stop; else do_start; fi
     ;;
