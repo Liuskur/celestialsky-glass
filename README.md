@@ -27,26 +27,26 @@ Writes `dist/`:
 
 - KDE Store: `com.koollook.*.plasmoid`
 - One tarball per piece (download only what you want):
-  - `koollook-colors-0.7.0.tar.zst`
-  - `koollook-icons-0.7.0.tar.zst`
-  - `koollook-titlebar-0.7.0.tar.zst` (KoollooK title bar)
-  - `koollook-dotted-0.7.0.tar.zst` (Koollook Dotted)
-  - `koollook-splash-0.7.0.tar.zst` (Plasma splash, wordmark **KoollooK**)
-  - `koollook-sddm-0.7.0.tar.zst`
-  - `koollook-plymouth-0.7.0.tar.zst`
-  - `koollook-wallpaper-0.7.0.tar.zst` plus `koollook-wallpaper-1` … `7`
-  - `koollook-accessibility-0.7.0.tar.zst`
-- Full bundle: `koollook-0.7.0.tar.zst` (every piece + `install.sh`)
+  - `koollook-colors-0.7.1.tar.zst`
+  - `koollook-icons-0.7.1.tar.zst`
+  - `koollook-titlebar-0.7.1.tar.zst` (KoollooK title bar)
+  - `koollook-dotted-0.7.1.tar.zst` (Koollook Dotted)
+  - `koollook-splash-0.7.1.tar.zst` (Plasma splash, wordmark **KoollooK**)
+  - `koollook-sddm-0.7.1.tar.zst`
+  - `koollook-plymouth-0.7.1.tar.zst`
+  - `koollook-wallpaper-0.7.1.tar.zst` plus `koollook-wallpaper-1` … `7`
+  - `koollook-accessibility-0.7.1.tar.zst`
+- Full bundle: `koollook-0.7.1.tar.zst` (every piece + `install.sh`)
 
 ```bash
 ./scripts/install.sh
 # or, from a downloaded bundle / piece dir:
 # ./install.sh --help
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.planisphere-0.7.0.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.calendar-0.7.0.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.weather-0.7.0.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.muhurta-0.7.0.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.hora-0.7.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.planisphere-0.7.1.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.calendar-0.7.1.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.weather-0.7.1.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.muhurta-0.7.1.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.hora-0.7.1.plasmoid
 ```
 
 Then: Desktop → Add Widgets → search “Koollook”. Standalone sites: open `web/muhurta/index.html` or `web/hora/index.html`.
