@@ -1,11 +1,11 @@
 # Changelog — Koollook Widgets
 
+## 2.6.0
+
+- Window decoration **Koollook Dotted**: KDE 2 stippled title bar (separate from Koollook)
+- Tester install pack with a single `install.sh`
+
 ## 2.5.0
-
-- Liwi-style griffin icon theme (`Koollook`): teal `#00d3b8` launcher, white, charcoal, symbolic
-- Color schemes: Koollook Dark, Aqua (light), Eesti, Liwi
-
-## 2.4.0
 
 - System tray applet `com.koollook.stt`: start/stop listening, send/delete clip, audio sources
 
