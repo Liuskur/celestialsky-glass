@@ -21,8 +21,12 @@ rm -rf "$HOME_SHARE/plasma/look-and-feel/org.koollook.desktop"
 cp -a "$ROOT/theme/look-and-feel/org.koollook.desktop" "$HOME_SHARE/plasma/look-and-feel/"
 rm -rf "$HOME_SHARE/icons/Koollook"
 cp -a "$ROOT/theme/icons/Koollook" "$HOME_SHARE/icons/Koollook"
-rm -rf "$HOME_SHARE/wallpapers/Koollook"
-cp -a "$ROOT/theme/wallpapers/Koollook" "$HOME_SHARE/wallpapers/Koollook"
+for d in "$ROOT/theme/wallpapers/"*; do
+  [[ -d "$d" ]] || continue
+  name="$(basename "$d")"
+  rm -rf "$HOME_SHARE/wallpapers/$name"
+  cp -a "$d" "$HOME_SHARE/wallpapers/$name"
+done
 rm -rf "$HOME_SHARE/sddm/themes/Koollook"
 cp -a "$ROOT/theme/sddm/Koollook" "$HOME_SHARE/sddm/themes/Koollook"
 
