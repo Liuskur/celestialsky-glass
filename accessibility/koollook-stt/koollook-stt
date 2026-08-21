@@ -20,13 +20,11 @@ mkdir -p "$STATE" "$(dirname "$CONF")"
 [[ -f "$CLIP" ]] || : >"$CLIP"
 
 usage() {
-  cat <<'U'
 Usage: koollook-stt [--start|--stop|--status|--toggle|--list-sources]
-                    [--clear-clip|--send-clip|--set-phrases DELETE SEND]
-Env:
-  KOOLLOOK_STT_SOURCE   Pulse/PipeWire source, or "auto" (kdeconnect if present)
-  KOOLLOOK_STT_MODEL    whisper.cpp English model
-  RESONIDER             ResoNider tree
+                    [--clear-clip|--send-clip|--ingest TEXT]
+                    [--write-commands-json JSON]
+Clip file: ~/.local/state/koollook/clip.txt
+Commands: ~/.config/koollook/stt-commands.json
 Clip file: ~/.local/state/koollook/clip.txt
 U
 }
