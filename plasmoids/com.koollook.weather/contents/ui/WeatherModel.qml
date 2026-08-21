@@ -39,7 +39,7 @@ QtObject {
             + "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,pressure_msl,wind_speed_10m,wind_direction_10m,is_day"
             + "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum"
             + "&hourly=temperature_2m,weather_code,is_day"
-            + "&forecast_days=6&forecast_hours=24&timezone=auto"
+            + "&forecast_days=7&timezone=auto"
         var xhr = new XMLHttpRequest()
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
