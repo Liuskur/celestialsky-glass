@@ -8,7 +8,9 @@ APPLY_LAYOUT="${APPLY_LAYOUT:-0}"
 mkdir -p "$HOME_SHARE/color-schemes" \
          "$HOME_SHARE/aurorae/themes" \
          "$HOME_SHARE/plasma/look-and-feel" \
-         "$HOME_SHARE/icons"
+         "$HOME_SHARE/icons" \
+         "$HOME_SHARE/wallpapers" \
+         "$HOME_SHARE/sddm/themes"
 
 cp -a "$ROOT/theme/color-schemes/"*.colors "$HOME_SHARE/color-schemes/"
 rm -rf "$HOME_SHARE/aurorae/themes/Koollook"
@@ -19,6 +21,10 @@ rm -rf "$HOME_SHARE/plasma/look-and-feel/org.koollook.desktop"
 cp -a "$ROOT/theme/look-and-feel/org.koollook.desktop" "$HOME_SHARE/plasma/look-and-feel/"
 rm -rf "$HOME_SHARE/icons/Koollook"
 cp -a "$ROOT/theme/icons/Koollook" "$HOME_SHARE/icons/Koollook"
+rm -rf "$HOME_SHARE/wallpapers/Koollook"
+cp -a "$ROOT/theme/wallpapers/Koollook" "$HOME_SHARE/wallpapers/Koollook"
+rm -rf "$HOME_SHARE/sddm/themes/Koollook"
+cp -a "$ROOT/theme/sddm/Koollook" "$HOME_SHARE/sddm/themes/Koollook"
 
 if command -v plasma-apply-colorscheme >/dev/null; then
   plasma-apply-colorscheme Koollook >/dev/null || true
