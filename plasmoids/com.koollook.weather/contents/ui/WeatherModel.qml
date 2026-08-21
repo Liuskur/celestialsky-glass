@@ -288,7 +288,7 @@ QtObject {
                 icon: icon,
                 high: t.length > 3 ? formatTemp(_toC(t[3], unit)) : "—",
                 low: t.length > 4 ? formatTemp(_toC(t[4], unit)) : "—",
-                slots: [{ hour: 12, label: "12", icon: icon, temp: t.length > 3 ? formatTemp(_toC(t[3], unit)) : "—" }]
+                slots: [{ hour: 12, label: formatHour(12), icon: icon, temp: t.length > 3 ? formatTemp(_toC(t[3], unit)) : "—" }]
             })
         }
         if (days.length)
