@@ -1,11 +1,9 @@
 (function () {
   function $(id) { return document.getElementById(id) }
-  function pad(n) { return n < 10 ? "0" + n : "" + n }
 
   window.KoollookTimePage = {
     start: function (opts) {
       var latEl = $("lat"), lonEl = $("lon")
-      var title = document.title
       function loc() {
         return {
           lat: parseFloat(latEl.value) || 59.437,
@@ -30,6 +28,8 @@
           + (day.dayLord ? " · Day lord " + day.dayLord : "")
         var tb = $("rows")
         tb.innerHTML = ""
+        for (var i = 0; i < day.periods.length; i++) {
+          var x = day.periods[i]
           var tr = document.createElement("tr")
           var cls = x.daypart || ""
           if (cur && x.index === cur.index) cls += (cls ? " " : "") + "current"
@@ -38,6 +38,7 @@
           tr.innerHTML = "<td>" + x.index + "</td><td>" + x.name + "</td><td class='" + qclass + "'>"
             + x.quality + "</td><td>" + x.label + "</td>"
           tb.appendChild(tr)
+        }
       }
       $("geo").onclick = function () {
         if (!navigator.geolocation) return
@@ -49,9 +50,9 @@
       }
       latEl.onchange = lonEl.onchange = paint
       $("go").onclick = paint
-      $("go").onclick = paint
       document.body.dataset.kind = opts.kind
       paint()
       setInterval(paint, 15000)
+    }
   }
 })()
