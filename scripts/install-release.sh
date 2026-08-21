@@ -23,7 +23,8 @@ Usage: ./install.sh [options]
   --theme            colors, icons, Koollook title bar, splash, default wallpaper
   --colors           color schemes
   --icons            griffin icon theme
-  --aurorae          Koollook title bar
+  --titlebar         KoollooK title bar
+  --aurorae          same as --titlebar (KWin engine name; kept as alias)
   --dotted           Koollook Dotted title bar (KDE 2 stipple)
   --splash           Plasma splash (KoollooK wordmark)
   --sddm             login theme
