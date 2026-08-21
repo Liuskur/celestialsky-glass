@@ -366,7 +366,7 @@ QtObject {
         credit = "BBC Weather"
         var todayYmd = _todayYmd()
         var todayPack = _bbcDay(forecasts, todayYmd)
-        var hours = _bbcSlotsFromReports(todayPack.reports, todayPack.sum.weatherType)
+        var hours = _bbcSlotsFromReports(todayPack.reports, todayPack.sum.weatherType, true)
         hourly = hours
         todaySlots = hours
         var days = []
