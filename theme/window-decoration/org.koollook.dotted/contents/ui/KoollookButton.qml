@@ -12,8 +12,9 @@ DecorationButton {
     implicitWidth: btnWidth
     implicitHeight: btnHeight
 
-    KSvg.FrameSvgItem {
         anchors.fill: parent
+        anchors.topMargin: -3
+        anchors.bottomMargin: 3
         enabledBorders: KSvg.FrameSvg.NoBorder
         imagePath: Qt.resolvedUrl(root.svgFile)
         prefix: {
