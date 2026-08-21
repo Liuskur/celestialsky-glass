@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Package and install all three Koollook Plasma applets.
+# Package and install all Koollook Plasma applets.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 "$ROOT/scripts/package.sh"
