@@ -260,7 +260,8 @@ case "$cmd" in
   --stop) do_stop ;;
   --status) do_status ;;
   --clear-clip|--delete-clip) do_clear_clip ;;
-  --send-clip) do_send_clip ;;
+  --set-phrases) do_set_phrases "${2:-delete clip}" "${3:-send clip}" ;;
+  --ingest) handle_utterance "${2:-}" ;;
   --set-phrases) do_set_phrases "${2:-delete clip}" "${3:-send clip}" ;;
   --toggle)
     if is_running; then do_stop; else do_start; fi
