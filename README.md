@@ -9,7 +9,7 @@ Plasma 6 widgets, theme, and local accessibility STT. Former Celestial Sky (Glas
 | Koollook Celestial Sky | `com.koollook.celestialsky` | 1.4.0 |
 | Koollook Calendar | `com.koollook.calendar` | 2.0.0 |
 | Koollook Weather | `com.koollook.weather` | 2.0.0 |
-
+| Koollook STT Clip | `com.koollook.sttclip` | 1.0.0 |
 `shared/glass` is QML module `org.koollook.glass`. `shared/location` is `org.koollook.location`.
 `shared/appearance/ConfigAppearance.qml` is the common Appearance page.
 `scripts/sync-shared.sh` vendors those files into each plasmoid so Store packages stay self-contained.
