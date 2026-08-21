@@ -31,6 +31,38 @@ Decoration {
         id: options
         deco: decoration
     }
+    readonly property bool koollookTheme: String(auroraeTheme.decorationPath || "").indexOf("Koollook") >= 0
+    readonly property bool dottedSpacer: {
+        if (!root.koollookTheme)
+            return false
+        function hasSp(list) {
+            if (!list)
+                return false
+            var i
+            for (i = 0; i < list.length; i++) {
+                if (list[i] === DecorationOptions.DecorationButtonExplicitSpacer)
+                    return true
+            }
+            return false
+        }
+        return hasSp(options.titleButtonsLeft) || hasSp(options.titleButtonsRight)
+    }
+    readonly property string dottedTile: {
+        var p = String(auroraeTheme.decorationPath || "")
+        var i = p.lastIndexOf("/")
+        return (i >= 0 ? p.substring(0, i) : "") + "/dots.svg"
+    }
+    readonly property real captionTextW: caption ? Math.min(caption.contentWidth, caption.width) : 0
+    readonly property real captionTextX: {
+        if (!caption)
+            return 0
+        if (caption.horizontalAlignment === Text.AlignRight)
+            return caption.x + caption.width - captionTextW
+        if (caption.horizontalAlignment === Text.AlignHCenter)
+            return caption.x + (caption.width - captionTextW) / 2
+        return caption.x
+    }
+
     Item {
         id: titleRect
         x: decoration.client.maximized ? maximizedBorders.left : borders.left
