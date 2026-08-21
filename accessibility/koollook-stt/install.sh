@@ -26,12 +26,10 @@ text = cfg_path.read_text()
 m = re.search(r'(?m)^commands=(.*)$', text)
 if not m:
     sys.exit(0)
-raw = m.group(1).strip()
 if raw.startswith('"') and raw.endswith('"'):
     raw = raw[1:-1]
-raw = raw.replace('\\"', '"')
 try:
-    data = json.loads(raw)
+    data = json.loads(bytes(raw, "utf-8").decode("unicode_escape"))
 except json.JSONDecodeError:
     sys.exit(0)
 wanted = {
