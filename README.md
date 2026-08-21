@@ -18,7 +18,7 @@ Plasma 6 widgets, theme, and local accessibility STT. Former Celestial Sky (Glas
 `shared/appearance/ConfigAppearance.qml` is the common Appearance page.
 `shared/timekeeping/koollook-time.js` is the Muhurta/Hora engine (browser + QML).
 `scripts/sync-shared.sh` vendors those files into each plasmoid so Store packages stay self-contained.
-## Package all widgets
+## Package
 
 ```bash
 ./scripts/package.sh
@@ -26,11 +26,27 @@ Plasma 6 widgets, theme, and local accessibility STT. Former Celestial Sky (Glas
 Writes `dist/`:
 
 - KDE Store: `com.koollook.*.plasmoid`
-- Theme pack: `koollook-theme-0.7.0.tar.zst`
-- Widgets pack: `koollook-widgets-0.7.0.tar.zst`
-- Accessibility pack: `koollook-accessibility-0.7.0.tar.zst`
-- Full: `koollook-0.7.0.tar.zst`
+- One tarball per piece (download only what you want):
+  - `koollook-colors-0.7.0.tar.zst`
+  - `koollook-icons-0.7.0.tar.zst`
+  - `koollook-aurorae-0.7.0.tar.zst` (Koollook title bar)
+  - `koollook-dotted-0.7.0.tar.zst` (Koollook Dotted)
+  - `koollook-splash-0.7.0.tar.zst` (Plasma splash, wordmark **KoollooK**)
+  - `koollook-sddm-0.7.0.tar.zst`
+  - `koollook-plymouth-0.7.0.tar.zst`
+  - `koollook-wallpaper-0.7.0.tar.zst` plus `koollook-wallpaper-1` … `7`
+  - `koollook-accessibility-0.7.0.tar.zst`
+- Full bundle: `koollook-0.7.0.tar.zst` (every piece + `install.sh`)
 
+```bash
+./scripts/install.sh
+# or, from a downloaded bundle / piece dir:
+# ./install.sh --help
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.planisphere-0.7.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.calendar-0.7.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.weather-0.7.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.muhurta-0.7.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.hora-0.7.0.plasmoid
 ```bash
 ./scripts/install.sh
 # or:
