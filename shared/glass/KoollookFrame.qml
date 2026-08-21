@@ -45,10 +45,9 @@ Item {
         anchors.fill: parent
         visible: pal.isPlasma && !pal.isClear
         color: Kirigami.Theme.backgroundColor
-        opacity: 0.82
+        opacity: frame.hideFrame ? 0 : 0.82
         radius: frame.hideFrame ? 0 : Math.min(width, height) * 0.08
-        border.width: frame.hideFrame ? 0 : 1
+        border.width: frame.hideFrame || pal.isClear ? 0 : 1
         border.color: Kirigami.Theme.highlightColor
-        opacity: frame.hideFrame ? 0.55 : 0.82
     }
 }
