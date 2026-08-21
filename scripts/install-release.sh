@@ -88,7 +88,6 @@ while [[ $# -gt 0 ]]; do
     --theme) want_theme_core; ANY_FLAG=1 ;;
     --colors) WANT_COLORS=1; ANY_FLAG=1 ;;
     --titlebar|--aurorae) WANT_AURORAE=1; ANY_FLAG=1 ;;
-    --aurorae) WANT_AURORAE=1; ANY_FLAG=1 ;;
     --dotted) WANT_DOTTED=1; ANY_FLAG=1 ;;
     --splash) WANT_SPLASH=1; ANY_FLAG=1 ;;
     --sddm) WANT_SDDM=1; ANY_FLAG=1 ;;
