@@ -55,8 +55,7 @@ Item {
 
     // Solid mode: skip wallpaper capture and refraction; render an opaque
     // squircle filled with `solidColor`. The squircle silhouette + corner
-    // specular still render via the same shader (tint forced opaque), so
-    // the macOS material feel is preserved.
+    // specular still render via the same shader (tint forced opaque).
     property bool solidMode: false
     property color solidColor: "#1A1B1E"
     property color solidColorBottom: "transparent"
