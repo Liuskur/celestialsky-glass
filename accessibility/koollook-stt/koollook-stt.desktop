@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Koollook STT
+Comment=Local English speech-to-text into the focused field
+Exec=koollook-stt --toggle
+Icon=audio-input-microphone
+Terminal=false
+Categories=Utility;Accessibility;
+StartupNotify=false
+X-KDE-Shortcuts=Meta+Alt+V
