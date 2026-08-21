@@ -469,11 +469,14 @@ QtObject {
                 at: hd
             }
         }
+        var ymd0 = _todayYmd()
         var days = []
         var i, dt, ymd, noon
-        for (i = 0; i < times.length && i < 7; i++) {
-            dt = new Date(times[i] + "T12:00:00")
+        for (i = 0; i < times.length && days.length < 7; i++) {
             ymd = times[i]
+            if (ymd === ymd0)
+                continue
+            dt = new Date(ymd + "T12:00:00")
             noon = byKey[ymd + "-12"] || byKey[ymd + "-15"]
             days.push({
                 name: _dayName(dt),
@@ -485,38 +488,8 @@ QtObject {
             })
         }
         daily = days
-        var hours = []
-        var now = Date.now()
-        var k, sh, today, ymd0, hit0
-        for (k = 0; k < slotHours.length; k++) {
-            sh = slotHours[k]
-            today = new Date()
-            ymd0 = today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2)
-                + "-" + ("0" + today.getDate()).slice(-2)
-            hit0 = byKey[ymd0 + "-" + sh]
-            if (!hit0)
-                continue
-            if (hit0.at.getTime() + 30 * 60 * 1000 < now)
-                continue
-            hours.push({
-                label: (sh < 10 ? "0" : "") + sh,
-                icon: hit0.icon,
-                temp: hit0.temp
-            })
-        }
-        if (hours.length < 4 && days.length > 1) {
-            var extra = days[1].slots
-            var e
-            for (e = 0; e < extra.length && hours.length < 6; e++) {
-                hours.push({
-                    label: extra[e].label,
-                    icon: extra[e].icon,
-                    temp: extra[e].temp
-                })
-            }
-        }
-        hourly = hours
-        todaySlots = hours
+        hourly = _omSlots(ymd0, byKey)
+        todaySlots = hourly
         hasData = true
         loading = false
         error = ""
