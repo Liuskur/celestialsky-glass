@@ -19,7 +19,7 @@ elif [[ -d "$HERE/theme" ]]; then
   mkdir -p "$SHARE/color-schemes" "$SHARE/aurorae/themes" "$SHARE/plasma/look-and-feel" "$SHARE/icons"
   cp -a "$HERE/theme/color-schemes/"*.colors "$SHARE/color-schemes/" 2>/dev/null || true
   [[ -d "$HERE/theme/window-decoration/Koollook" ]] && rm -rf "$SHARE/aurorae/themes/Koollook" && cp -a "$HERE/theme/window-decoration/Koollook" "$SHARE/aurorae/themes/Koollook"
-  [[ -d "$HERE/theme/window-decoration/KoollookDotted" ]] && rm -rf "$SHARE/aurorae/themes/KoollookDotted" && cp -a "$HERE/theme/window-decoration/KoollookDotted" "$SHARE/aurorae/themes/KoollookDotted"
+  rm -rf "$SHARE/aurorae/themes/KoollookDotted"
   [[ -d "$HERE/theme/look-and-feel/org.koollook.desktop" ]] && rm -rf "$SHARE/plasma/look-and-feel/org.koollook.desktop" && cp -a "$HERE/theme/look-and-feel/org.koollook.desktop" "$SHARE/plasma/look-and-feel/"
   [[ -d "$HERE/theme/icons/Koollook" ]] && rm -rf "$SHARE/icons/Koollook" && cp -a "$HERE/theme/icons/Koollook" "$SHARE/icons/Koollook"
 fi
