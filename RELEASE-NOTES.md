@@ -1,6 +1,7 @@
 # Koollook 0.7.0
 
-Plasma 6 only. Download `koollook-0.7.0.tar.zst`, extract, run `./install.sh` and pick pieces (or use flags). No root.
+Plasma 6 only. Each piece is its own tarball so you only download what you want.
+`koollook-0.7.0.tar.zst` is the full bundle (every piece + chooser `install.sh`).
 
 ```bash
 tar -I zstd -xf koollook-0.7.0.tar.zst
@@ -10,19 +11,29 @@ cd koollook-0.7.0
 ./install.sh --all            # all files, keep your current look
 ./install.sh --all --apply    # also switch to Koollook colors/icons/title bar
 ./install.sh --muhurta --hora
+./install.sh --splash --colors
 ```
+
+Splash wordmark: **KoollooK**.
 
 ## Assets
 
 | File | What |
 |------|------|
-| `koollook-0.7.0.tar.zst` | Full pack + chooser `install.sh` |
-| `koollook-widgets-0.7.0.tar.zst` | All plasmoids |
-| `koollook-theme-0.7.0.tar.zst` | Colors, icons, Koollook + Koollook Dotted |
-| `koollook-accessibility-0.7.0.tar.zst` | STT helper |
+| `koollook-0.7.0.tar.zst` | Full bundle + chooser `install.sh` |
 | `com.koollook.*.plasmoid` | Single widgets (Store-style) |
+| `koollook-colors-0.7.0.tar.zst` | Color schemes |
+| `koollook-icons-0.7.0.tar.zst` | Griffin icons |
+| `koollook-aurorae-0.7.0.tar.zst` | Koollook title bar |
+| `koollook-dotted-0.7.0.tar.zst` | Koollook Dotted title bar |
+| `koollook-splash-0.7.0.tar.zst` | Plasma splash (KoollooK) |
+| `koollook-sddm-0.7.0.tar.zst` | Login theme |
+| `koollook-plymouth-0.7.0.tar.zst` | Boot splash |
+| `koollook-wallpaper-0.7.0.tar.zst` | Default wallpaper |
+| `koollook-wallpaper-1` … `7` | Extra wallpapers (large) |
+| `koollook-accessibility-0.7.0.tar.zst` | STT helper |
 
 Widgets: Planisphere, Calendar, Weather, Muhurta, Hora, STT Clip, STT tray, Wavebar.
-Window decorations: **Koollook** (default bar) and **Koollook Dotted** (KDE 2 stipple) — install Dotted with `--dotted`, then pick it in System Settings.
+Window decorations: **Koollook** and **Koollook Dotted** (`--dotted`).
 
 After install: `kquitapp6 plasmashell; kstart plasmashell`
