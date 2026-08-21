@@ -23,7 +23,8 @@ QtObject {
     property string iconName: "weather-none-available"
     property var daily: []
     property var hourly: []
-    property string updatedAt: ""
+    property var todaySlots: []
+    readonly property var slotHours: [6, 9, 12, 15, 18, 21]
 
     property int _reqId: 0
 
