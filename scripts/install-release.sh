@@ -162,7 +162,9 @@ if [[ "$WANT_THEME" -eq 1 || "$WANT_DOTTED" -eq 1 ]]; then
   if [[ "$WANT_DOTTED" -eq 1 ]]; then
     echo "theme: Koollook Dotted title bar"
     rm -rf "$SHARE/aurorae/themes/KoollookDotted"
-    cp -a "$ROOT/theme/window-decoration/KoollookDotted" "$SHARE/aurorae/themes/KoollookDotted"
+    mkdir -p "$SHARE/kwin/decorations"
+    rm -rf "$SHARE/kwin/decorations/org.koollook.dotted"
+    cp -a "$ROOT/theme/window-decoration/org.koollook.dotted" "$SHARE/kwin/decorations/org.koollook.dotted"
   fi
 fi
 
