@@ -58,6 +58,10 @@ QtObject {
             if (root.source.indexOf("bbcukmet|") === 0)
                 root._fetchBbc()
             else
+                root.loading = false
+        }
+    }
+
     function refresh() {
         loading = true
         error = ""
@@ -81,7 +85,6 @@ QtObject {
         } catch (e) {
         }
         fallbackTimer.restart()
-    }
     }
 
     function formatTemp(celsius) {
