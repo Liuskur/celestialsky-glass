@@ -122,13 +122,24 @@ type_text() {
   fi
   printf 'stt: no wtype/ydotool/xdotool/wl-copy\n' >&2
   return 1
+do_set_phrases() {
+  ensure_commands_json
+  python3 - "$COMMANDS_JSON" "${1:-delete clip}" "${2:-send clip}" <<'PY'
+import json, sys
+from pathlib import Path
+p, d, s = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
+data = json.loads(p.read_text()) if p.exists() else {"hard": [], "custom": []}
+hard = data.get("hard") or []
+for item in hard:
+    if item.get("builtin") == "clear-clip":
+        item["match"] = d
+    if item.get("builtin") == "send-clip":
+        item["match"] = s
+data["hard"] = hard
+p.write_text(json.dumps(data, indent=2) + "\n")
+print(f"phrases: delete=[{d}] send=[{s}]")
+PY
 }
-
-clip_write() {
-  local tmp
-  tmp="$(mktemp "$STATE/clip.XXXXXX")"
-  printf '%s' "$1" >"$tmp"
-  mv -f "$tmp" "$CLIP"
 }
 
 clip_read() {
