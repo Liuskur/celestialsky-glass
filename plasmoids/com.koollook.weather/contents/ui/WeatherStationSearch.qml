@@ -62,7 +62,6 @@ ColumnLayout {
         currentIndex: 0
         onActivated: function (idx) { root.provider = ids[idx] }
     }
-    }
 
     RowLayout {
         Layout.fillWidth: true
