@@ -126,8 +126,8 @@ if [[ "$ANY_FLAG" -eq 0 ]]; then
     ask_yn "Wavebar?" n && WANT_WAVEBAR=1
     ask_yn "Color schemes?" n && WANT_COLORS=1
     ask_yn "Icons?" n && WANT_ICONS=1
-    ask_yn "Koollook title bar?" n && WANT_AURORAE=1
     ask_yn "KoollooK title bar?" n && WANT_AURORAE=1
+    ask_yn "KoollooK Dotted title bar?" n && WANT_DOTTED=1
     ask_yn "Plasma splash (KoollooK)?" n && WANT_SPLASH=1
     ask_yn "Default wallpaper?" n && WANT_WP+=(default)
     ask_yn "Extra wallpapers 1–7 (large)?" n && WANT_WP+=(1 2 3 4 5 6 7)
