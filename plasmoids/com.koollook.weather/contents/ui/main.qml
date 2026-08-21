@@ -245,9 +245,6 @@ PlasmoidItem {
                         }
                         Repeater {
                             model: modelData.slots
-                            Kirigami.Icon {
-                        Repeater {
-                            model: modelData.slots
                             WeatherIcon {
                                 iconName: modelData.icon
                                 Layout.preferredWidth: Kirigami.Units.iconSizes.small * 1.5
@@ -255,6 +252,8 @@ PlasmoidItem {
                                 Layout.fillWidth: true
                             }
                         }
+                        PlasmaComponents.Label {
+                            text: modelData.high
                             color: colors.foreground
                             font.weight: Font.DemiBold
                         }
