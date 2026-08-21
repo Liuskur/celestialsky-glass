@@ -57,3 +57,7 @@ MoveResize=63
 DropdownMenus=66
 PopupMenus=66
 TornOffMenus=67
+
+[Wallpaper]
+defaultWallpaperTheme=Koollook
+defaultFileSuffix=.png
