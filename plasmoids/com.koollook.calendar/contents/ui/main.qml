@@ -79,7 +79,13 @@ PlasmoidItem {
                     if (daysModel)
                         daysModel.setPluginsManager(eventPlugins)
                 }
-            }
+                Connections {
+                    target: eventPlugins
+                    function onPluginsChanged() {
+                        if (monthView.daysModel)
+                            monthView.daysModel.setPluginsManager(eventPlugins)
+                    }
+                }
 
             Kirigami.Separator {
                 Layout.fillWidth: true
