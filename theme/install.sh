@@ -13,6 +13,8 @@ mkdir -p "$HOME_SHARE/color-schemes" \
 cp -a "$ROOT/theme/color-schemes/"*.colors "$HOME_SHARE/color-schemes/"
 rm -rf "$HOME_SHARE/aurorae/themes/Koollook"
 cp -a "$ROOT/theme/window-decoration/Koollook" "$HOME_SHARE/aurorae/themes/Koollook"
+rm -rf "$HOME_SHARE/aurorae/themes/KoollookDotted"
+cp -a "$ROOT/theme/window-decoration/KoollookDotted" "$HOME_SHARE/aurorae/themes/KoollookDotted"
 rm -rf "$HOME_SHARE/plasma/look-and-feel/org.koollook.desktop"
 cp -a "$ROOT/theme/look-and-feel/org.koollook.desktop" "$HOME_SHARE/plasma/look-and-feel/"
 rm -rf "$HOME_SHARE/icons/Koollook"
