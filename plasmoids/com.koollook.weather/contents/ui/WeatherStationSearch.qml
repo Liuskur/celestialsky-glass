@@ -54,22 +54,14 @@ ColumnLayout {
         resultsModel.clear()
         valSrc.connectedSources = [root.provider + "|validate|" + q]
     }
-
     ComboBox {
         id: providerBox
         Layout.fillWidth: true
-        model: [
-            { t: i18n("BBC Weather"), id: "bbcukmet" },
-            { t: i18n("NOAA"), id: "noaa" },
-            { t: i18n("German Weather Service"), id: "dwd" },
-            { t: i18n("wetter.com"), id: "wettercom" },
-            { t: i18n("Environment Canada"), id: "envcan" }
-        ]
-        textRole: "t"
+        model: [i18n("BBC Weather"), i18n("NOAA"), i18n("German Weather Service"), i18n("wetter.com"), i18n("Environment Canada")]
+        property var ids: ["bbcukmet", "noaa", "dwd", "wettercom", "envcan"]
         currentIndex: 0
-        onActivated: function (idx) {
-            root.provider = model[idx].id
-        }
+        onActivated: function (idx) { root.provider = ids[idx] }
+    }
     }
 
     RowLayout {
