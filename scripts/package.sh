@@ -42,6 +42,7 @@ package_one com.koollook.celestialsky
 package_one com.koollook.calendar
 package_one com.koollook.weather
 package_one com.koollook.sttclip
+package_one com.koollook.audioviz
 
 # Theme (KDE store / local share)
 tar -C "$ROOT" -c theme | zstd -19 -o "$DIST/koollook-theme-${SUITE_VER}.tar.zst"
