@@ -54,7 +54,6 @@ Item {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing * 2
         spacing: Kirigami.Units.largeSpacing
-
         WeatherStationSearch {
             id: loc
             Layout.fillWidth: true
@@ -63,10 +62,19 @@ Item {
             locationName: root.cfg_location
             latitude: root.cfg_latitude
             longitude: root.cfg_longitude
-            onSourceChanged: if (root._ready) root.cfg_source = source
+            provider: root.cfg_provider
+            onSourceChanged: if (root._ready) {
+                root.cfg_source = source
+                var p = source.split("|")
+                if (p.length)
+                    root.cfg_provider = p[0]
+                if (p.length >= 3)
+                    root.cfg_placeInfo = p.slice(2).join("|")
+            }
             onLocationNameChanged: if (root._ready) root.cfg_location = locationName
             onLatitudeChanged: if (root._ready) root.cfg_latitude = latitude
             onLongitudeChanged: if (root._ready) root.cfg_longitude = longitude
+        }
         }
 
         Kirigami.FormLayout {
