@@ -10,8 +10,8 @@ PlasmoidItem {
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
     preferredRepresentation: fullRepresentation
 
-    // Appearance palette — same MacOSColors axes as calendar / weather
-    MacOSColors {
+    // Appearance palette — same KoollookColors axes as calendar / weather
+    KoollookColors {
         id: colors
         styleMode: Plasmoid.configuration.styleMode
         appearance: Plasmoid.configuration.appearance
