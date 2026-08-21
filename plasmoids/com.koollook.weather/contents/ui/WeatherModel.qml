@@ -6,7 +6,7 @@ import org.kde.plasma.plasma5support as Plasma5Support
 QtObject {
     id: root
 
-    property string source: "openmeteo"
+    property string source: "bbcukmet|weather|Tallinn, Estonia, EE|588409"
     property real latitude: 59.43696
     property real longitude: 24.75353
     property int temperatureUnit: 0
