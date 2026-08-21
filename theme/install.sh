@@ -37,6 +37,12 @@ kwriteconfig6 --file kdeglobals --group General --key ColorScheme Koollook
 kwriteconfig6 --file kdeglobals --group General --key AccentColor "0,211,184"
 kwriteconfig6 --file kdeglobals --group Icons --key Theme Koollook
 kwriteconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage org.koollook.desktop
+kwriteconfig6 --file ksplashrc --group KSplash --key Engine KSplashQML
+kwriteconfig6 --file ksplashrc --group KSplash --key Theme org.koollook.desktop
+WP="$HOME_SHARE/wallpapers/Koollook/contents/images/3840x2160.png"
+if command -v plasma-apply-wallpaperimage >/dev/null && [[ -f "$WP" ]]; then
+  plasma-apply-wallpaperimage "$WP" >/dev/null 2>&1 || true
+fi
 
 kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key library org.kde.kwin.aurorae.v2
 kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme '__aurorae__svg__Koollook'
