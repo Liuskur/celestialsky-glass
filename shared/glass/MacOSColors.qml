@@ -4,9 +4,9 @@ import org.kde.kirigami as Kirigami
 QtObject {
     id: macColors
 
-    // Two orthogonal axes:
-    //   styleMode:  0 = Glass (translucent shader),  1 = Solid (opaque fill)
-    //   appearance: 0 = Dark, 1 = Light, 2 = Follow system
+    // styleMode:
+    //   0 Glass, 1 Solid, 2 Clear (see-through, no frame),
+    //   3 Plasma, 4 Chameleon, 5 Inverse, 6 Koollook
     property int styleMode: 0
     property int appearance: 0
 
@@ -16,9 +16,22 @@ QtObject {
         var luminance = 0.299 * bg.r + 0.587 * bg.g + 0.114 * bg.b
         return luminance < 0.5
     }
-    readonly property bool isLight: !isGlass && (appearance === 1 || (useSystem && !systemIsDark))
+    readonly property real desktopLum: {
+        var bg = Kirigami.Theme.backgroundColor
+        return 0.299 * bg.r + 0.587 * bg.g + 0.114 * bg.b
+    }
+    readonly property bool desktopIsDark: desktopLum < 0.5
+
     readonly property bool isGlass: styleMode === 0
     readonly property bool isSolid: styleMode === 1
+    readonly property bool isClear: styleMode === 2
+    readonly property bool isPlasma: styleMode === 3
+    readonly property bool isChameleon: styleMode === 4
+    readonly property bool isInverse: styleMode === 5
+    readonly property bool isKoollook: styleMode === 6
+    readonly property bool usesBackdropShader: isGlass || isChameleon || isKoollook
+    readonly property bool showSpecular: isGlass || isChameleon
+    readonly property bool hideChrome: isClear
 
     readonly property color background: isLight ? "#f2f2f7" : "#1c1c1e"
     readonly property color surface:    isLight ? "#ffffff" : "#2c2c2e"
