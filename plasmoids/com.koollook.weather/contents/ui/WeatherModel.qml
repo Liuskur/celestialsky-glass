@@ -121,8 +121,8 @@ QtObject {
     function windArrow() {
         if (windDirText.length)
             return windDirText
-        var dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
-        return dirs[Math.round(windDir / 45) % 8]
+        var dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+        return dirs[Math.round(windDir / 22.5) % 16]
     }
 
     function _dayName(dt) {
