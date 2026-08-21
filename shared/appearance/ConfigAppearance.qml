@@ -54,14 +54,21 @@ Item {
     property var cfg_firstDayOfWeek
     property var cfg_firstDayOfWeekDefault
     property var cfg_showWeekNumbers
+    property var cfg_showWeekNumbersDefault
     property var cfg_deleteClipPhrase
     property var cfg_deleteClipPhraseDefault
-    property var cfg_enabledCalendarPlugins
-    property var cfg_enabledCalendarPluginsDefault
-    property var cfg_firstDayOfWeek
-    property var cfg_firstDayOfWeekDefault
-    property var cfg_showWeekNumbers
-    property var cfg_showWeekNumbersDefault
+    property var cfg_sendClipPhrase
+    property var cfg_sendClipPhraseDefault
+    property var cfg_commandsJson
+    property var cfg_commandsJsonDefault
+    property var cfg_sourceMode
+    property var cfg_sourceModeDefault
+    property var cfg_barCount
+    property var cfg_barCountDefault
+    property var cfg_sensitivity
+    property var cfg_sensitivityDefault
+    property var cfg_innerRadiusPct
+    property var cfg_innerRadiusPctDefault
 
     function _serialize() {
         return JSON.stringify({
