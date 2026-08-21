@@ -130,17 +130,17 @@ ensure_theme_tree() {
   THEME_TMP="$(mktemp -d)"
   tar -C "$THEME_TMP" -xf "$f"
 }
+
+cleanup() {
+  [[ -n "$THEME_TMP" && -d "$THEME_TMP" ]] && rm -rf "$THEME_TMP"
+}
+trap cleanup EXIT
+
 [[ "$WANT_PLANISPHERE" -eq 1 ]] && install_plasmoid planisphere
 [[ "$WANT_CALENDAR" -eq 1 ]] && install_plasmoid calendar
 [[ "$WANT_WEATHER" -eq 1 ]] && install_plasmoid weather
 [[ "$WANT_MUHURTA" -eq 1 ]] && install_plasmoid muhurta
 [[ "$WANT_HORA" -eq 1 ]] && install_plasmoid hora
-[[ "$WANT_STTCLIP" -eq 1 ]] && install_plasmoid sttclip
-[[ "$WANT_STTTRAY" -eq 1 ]] && install_plasmoid stt
-[[ "$WANT_WAVEBAR" -eq 1 ]] && install_plasmoid audioviz
-[[ "$WANT_PLANISPHERE" -eq 1 ]] && install_plasmoid planisphere
-[[ "$WANT_CALENDAR" -eq 1 ]] && install_plasmoid calendar
-[[ "$WANT_WEATHER" -eq 1 ]] && install_plasmoid weather
 [[ "$WANT_STTCLIP" -eq 1 ]] && install_plasmoid sttclip
 [[ "$WANT_STTTRAY" -eq 1 ]] && install_plasmoid stt
 [[ "$WANT_WAVEBAR" -eq 1 ]] && install_plasmoid audioviz
