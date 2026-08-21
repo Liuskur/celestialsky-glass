@@ -65,14 +65,15 @@ ColumnLayout {
 
     LocationSearch {
         visible: root.omMode
-        Layout.fillWidth: true
         locationName: root.locationName
         latitude: root.latitude
         longitude: root.longitude
-        onLocationNameChanged: if (!root.omMode) return; else root.locationName = locationName
-        onLatitudeChanged: if (root.omMode) root.latitude = latitude
-        onLongitudeChanged: if (root.omMode) { root.longitude = longitude; root.source = "openmeteo" }
-    }
+        onLocationNameChanged: root.locationName = locationName
+        onLatitudeChanged: root.latitude = latitude
+        onLongitudeChanged: {
+            root.longitude = longitude
+            root.source = "openmeteo"
+        }
 
     RowLayout {
         visible: !root.omMode
