@@ -23,7 +23,7 @@ Item {
         visible: !auroraeTheme.appMenuButtonPath
         Kirigami.Icon {
             anchors.fill: parent
-            source: decoration.client.icon
+            source: "application-menu"
         }
     }
 }
