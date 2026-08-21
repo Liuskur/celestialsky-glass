@@ -112,36 +112,83 @@ QtObject {
         conditionText = _condition(weatherCode)
         iconName = _icon(weatherCode, isNight)
         updatedAt = cur.time || ""
-
         var d = resp.daily || {}
         var times = d.time || []
+        var h = resp.hourly || {}
+        var ht = h.time || []
+        var byKey = ({})
+        for (var j = 0; j < ht.length; j++) {
+            var hd = new Date(ht[j])
+            var key = hd.getFullYear() + "-" + ("0" + (hd.getMonth() + 1)).slice(-2)
+                + "-" + ("0" + hd.getDate()).slice(-2) + "-" + hd.getHours()
+            byKey[key] = {
+                icon: _icon(h.weather_code[j], h.is_day[j] === 0),
+                temp: formatTemp(h.temperature_2m[j]),
+                at: hd
+            }
+        }
+
+        function slotsFor(ymd) {
+            var slots = []
+            for (var s = 0; s < root.slotHours.length; s++) {
+                var hour = root.slotHours[s]
+                var hit = byKey[ymd + "-" + hour]
+                slots.push({
+                    hour: hour,
+                    label: (hour < 10 ? "0" : "") + hour,
+                    icon: hit ? hit.icon : "weather-none-available",
+                    temp: hit ? hit.temp : "—"
+                })
+            }
+            return slots
+        }
+
         var days = []
-        for (var i = 0; i < times.length && i < 6; i++) {
+        for (var i = 0; i < times.length && i < 7; i++) {
             var dt = new Date(times[i] + "T12:00:00")
+            var ymd = times[i]
+            var noon = byKey[ymd + "-12"] || byKey[ymd + "-15"]
             days.push({
                 name: Qt.locale().dayName(dt.getDay(), Locale.ShortFormat),
-                icon: _icon(d.weather_code[i], false),
+                ymd: ymd,
+                icon: noon ? noon.icon : _icon(d.weather_code[i], false),
                 high: formatTemp(d.temperature_2m_max[i]),
-                low: formatTemp(d.temperature_2m_min[i])
+                low: formatTemp(d.temperature_2m_min[i]),
+                slots: slotsFor(ymd)
             })
         }
         daily = days
 
-        var h = resp.hourly || {}
-        var ht = h.time || []
         var hours = []
         var now = Date.now()
-        for (var j = 0; j < ht.length && hours.length < 12; j++) {
-            var hd = new Date(ht[j])
-            if (hd.getTime() + 3600000 < now)
+        for (var k = 0; k < root.slotHours.length; k++) {
+            var sh = root.slotHours[k]
+            var today = new Date()
+            var ymd0 = today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2)
+                + "-" + ("0" + today.getDate()).slice(-2)
+            var hit0 = byKey[ymd0 + "-" + sh]
+            if (!hit0)
+                continue
+            if (hit0.at.getTime() + 30 * 60 * 1000 < now)
                 continue
             hours.push({
-                label: Qt.formatTime(hd, "HH:mm"),
-                icon: _icon(h.weather_code[j], h.is_day[j] === 0),
-                temp: formatTemp(h.temperature_2m[j])
+                label: (sh < 10 ? "0" : "") + sh,
+                icon: hit0.icon,
+                temp: hit0.temp
             })
         }
+        if (hours.length < 4 && days.length > 1) {
+            var extra = days[1].slots
+            for (var e = 0; e < extra.length && hours.length < 6; e++) {
+                hours.push({
+                    label: extra[e].label,
+                    icon: extra[e].icon,
+                    temp: extra[e].temp
+                })
+            }
+        }
         hourly = hours
+        todaySlots = hours
         hasData = true
     }
 }
