@@ -100,7 +100,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 36
-        text: "Koollook"
+        text: "KoollooK"
         color: "#00d3b8"
         font.pixelSize: 18
         opacity: 0.7
