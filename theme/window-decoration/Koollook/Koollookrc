@@ -34,10 +34,10 @@ ButtonSpacing=1
 ButtonMarginTop=0
 ExplicitButtonSpacer=10
 
-PaddingTop=32
-PaddingBottom=76
-PaddingRight=47
-PaddingLeft=47
+PaddingTop=4
+PaddingBottom=6
+PaddingRight=4
+PaddingLeft=4
 TitleHeightMaximized=28
 TitleEdgeTopMaximized=0
 TitleEdgeBottomMaximized=0
