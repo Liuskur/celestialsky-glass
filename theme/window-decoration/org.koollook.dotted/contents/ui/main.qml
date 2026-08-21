@@ -52,7 +52,8 @@ Decoration {
         ButtonGroup {
             id: leftButtonGroup
             spacing: 1
-            explicitSpacer: 10
+            explicitSpacer: 0
+            height: root.barH
             buttons: options.titleButtonsLeft
             menuButton: menuComp
             appMenuButton: menuComp
@@ -65,7 +66,8 @@ Decoration {
             helpButton: minComp
             shadeButton: minComp
             anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
         }
 
         Text {
