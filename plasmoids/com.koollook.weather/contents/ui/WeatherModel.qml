@@ -211,9 +211,17 @@ QtObject {
                 return
             }
             try {
-                root._applyBbc(JSON.parse(xhr.responseText))
+                var txt = xhr.responseText
+                if (!txt || !txt.length) {
+                    if (!root.hasData) {
+                        root.loading = false
+                        root.error = i18n("Could not load forecast")
+                    }
+                    return
+                }
+                root._applyBbc(JSON.parse(txt))
             } catch (e) {
-                if (root.conditionText && root.conditionText.length) {
+                if (root.temperature) {
                     root.hasData = true
                     root.loading = false
                     root.error = ""
@@ -222,8 +230,6 @@ QtObject {
                     root.error = i18n("Could not read forecast")
                 }
             }
-        }
-        xhr.open("GET", "https://weather-broker-cdn.api.bbci.co.uk/en/forecast/aggregated/" + id)
         xhr.send()
     }
 
