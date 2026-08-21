@@ -1,0 +1,32 @@
+Window.SetBackgroundTopColor(0.07, 0.07, 0.10);
+Window.SetBackgroundBottomColor(0.07, 0.07, 0.10);
+
+logo.image = Image("griffin.png");
+fun Resize() {
+    logo.sprite.SetImage(logo.image.Scale(
+        Window.GetWidth() * 0.22,
+        Window.GetWidth() * 0.22));
+    logo.sprite.SetX(Window.GetWidth() / 2 - logo.sprite.GetWidth() / 2);
+    logo.sprite.SetY(Window.GetHeight() / 2 - logo.sprite.GetHeight() / 2 - 40);
+}
+logo.sprite = Sprite();
+Resize();
+Window.SetResizeFunction(Resize);
+
+progress = 0;
+bar = Sprite();
+fun DrawBar() {
+    w = Window.GetWidth() * 0.22 * progress;
+    if (w < 1) w = 1;
+    img = Image.Box(Math.Int(w), 4, 0.0, 0.83, 0.72);
+    bar.SetImage(img);
+    bar.SetX(Window.GetWidth() / 2 - (Window.GetWidth() * 0.22) / 2);
+    bar.SetY(Window.GetHeight() / 2 + logo.sprite.GetHeight() / 2);
+}
+DrawBar();
+
+fun progress_callback(p) {
+    progress = p;
+    DrawBar();
+}
+Plymouth.SetBootProgressFunction(progress_callback);
