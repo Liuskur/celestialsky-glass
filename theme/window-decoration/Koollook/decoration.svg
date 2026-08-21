@@ -69,6 +69,17 @@
   </sodipodi:namedview>
   <defs
      id="defs4">
+    <pattern
+       id="gripDots"
+       width="7"
+       height="7"
+       patternUnits="userSpaceOnUse">
+      <circle cx="3.85" cy="4.2" r="2.15" fill="#050506" opacity="0.62" />
+      <circle cx="3.35" cy="3.35" r="2.15" fill="#2f2c28" />
+      <ellipse cx="2.95" cy="2.85" rx="1.45" ry="1.25" fill="#4a453e" />
+      <ellipse cx="2.7" cy="2.55" rx="0.75" ry="0.55" fill="#7a7164" opacity="0.72" />
+      <circle cx="2.55" cy="2.4" r="0.32" fill="#c4b49a" opacity="0.42" />
+    </pattern>
     <linearGradient
        inkscape:collect="always"
        id="linearGradient1060">
