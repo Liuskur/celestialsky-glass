@@ -233,12 +233,12 @@ PlasmoidItem {
 
     fullRepresentation: Item {
         id: calRoot
-        Layout.preferredWidth: Kirigami.Units.gridUnit * 22
-        Layout.preferredHeight: Kirigami.Units.gridUnit * 26
+        Layout.preferredWidth: Kirigami.Units.gridUnit * 32
+        Layout.preferredHeight: Kirigami.Units.gridUnit * 18
         Layout.minimumWidth: Kirigami.Units.gridUnit * 14
-        Layout.minimumHeight: Kirigami.Units.gridUnit * 16
+        Layout.minimumHeight: Kirigami.Units.gridUnit * 14
         clip: true
-        readonly property bool isWide: width >= height * 1.35
+        readonly property bool showEvents: width >= Kirigami.Units.gridUnit * 24
 
         KoollookFrame { anchors.fill: parent }
 
@@ -249,36 +249,31 @@ PlasmoidItem {
                     : Math.min(28, (Plasmoid.configuration.cornerRadius || 48) * 0.18))
             spacing: Kirigami.Units.largeSpacing
 
-            ColumnLayout {
-                visible: calRoot.isWide
+            Item {
+                visible: calRoot.showEvents
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.preferredWidth: calRoot.width * 0.42
-                spacing: Kirigami.Units.smallSpacing
-
-                PlasmaComponents.Label {
-                    Layout.fillWidth: true
-                    text: i18n("Upcoming")
-                    color: colors.foreground
-                    font.weight: Font.DemiBold
-                    opacity: 0.7
-                }
+                Layout.preferredWidth: 1
+                Layout.minimumWidth: Kirigami.Units.gridUnit * 10
 
                 ListView {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    id: eventsList
+                    anchors.fill: parent
                     clip: true
                     spacing: 4
                     model: eventsModel
                     delegate: eventDelegate
+                    visible: eventsModel.count > 0
                 }
 
                 PlasmaComponents.Label {
-                    Layout.fillWidth: true
+                    anchors.centerIn: parent
                     visible: eventsModel.count === 0
                     text: i18n("No upcoming events")
                     color: colors.foreground
                     opacity: 0.4
+                    wrapMode: Text.WordWrap
+                    width: parent.width
                     horizontalAlignment: Text.AlignHCenter
                 }
             }
@@ -286,8 +281,8 @@ PlasmoidItem {
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                spacing: Kirigami.Units.smallSpacing
-                clip: true
+                Layout.preferredWidth: 1
+                spacing: 0
 
                 PlasmaCalendar.MonthView {
                     id: monthView
@@ -309,33 +304,9 @@ PlasmoidItem {
                         }
                     }
                 }
-
-                Kirigami.Separator {
-                    Layout.fillWidth: true
-                    opacity: 0.35
-                    visible: !calRoot.isWide
-                }
-
-                ListView {
-                    visible: !calRoot.isWide
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: Kirigami.Units.gridUnit * 7
-                    clip: true
-                    spacing: 4
-                    model: eventsModel
-                    delegate: eventDelegate
-                }
-
-                PlasmaComponents.Label {
-                    visible: !calRoot.isWide && eventsModel.count === 0
-                    Layout.fillWidth: true
-                    text: i18n("No upcoming events")
-                    color: colors.foreground
-                    opacity: 0.4
-                    horizontalAlignment: Text.AlignHCenter
-                }
             }
         }
+    }
     }
 
     Component {
