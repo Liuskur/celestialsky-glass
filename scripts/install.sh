@@ -44,4 +44,20 @@ if changed:
 PY
 
 echo "Koollook widgets, theme, and STT updated locally."
-echo "STT tray: com.koollook.stt (middle-click toggle). Restart plasmashell if the icon is missing."
+echo "STT tray: com.koollook.stt (middle-click toggle)."
+
+reload_plasmashell() {
+  local uid xrd
+  uid="$(id -u)"
+  xrd="${XDG_RUNTIME_DIR:-/run/user/$uid}"
+  export XDG_RUNTIME_DIR="$xrd"
+  export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=$xrd/bus}"
+  [[ -S "$xrd/wayland-0" ]] && export WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}"
+  export DISPLAY="${DISPLAY:-:0}"
+  echo "plasmashell --replace"
+  kquitapp6 plasmashell >/dev/null 2>&1 || true
+  sleep 0.4
+  nohup plasmashell --replace >/tmp/koollook-plasmashell-replace.log 2>&1 &
+  disown || true
+}
+reload_plasmashell
