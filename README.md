@@ -50,7 +50,7 @@ plasmoids/com.koollook.*/      widget-specific sources
 scripts/package.sh             builds all three
 ```
 
-## Theme (from RiderLook)
+## Theme
 
 ```bash
 ./theme/install.sh
