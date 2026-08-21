@@ -5,11 +5,11 @@ Plasma 6 look pieces.
 | Piece | Id | Source |
 |-------|-----|--------|
 | Color schemes | `Koollook` (dark), `KoollookAqua`, `KoollookEesti`, `KoollookLiwi` | Stone2 + aqua / Eesti / Liwi flags |
-| Icons | `Koollook` | Liwi-style griffin (teal `#00d3b8`); launcher is `start-here-kde` |
+| Icons | `Koollook` | Teal griffin; launcher is `start-here-kde` |
+| Wallpaper | `Koollook` | Same griffin, Koollook Dark |
+| KSplash / SDDM / Plymouth | griffin lock-in border | `theme/sddm`, `contents/splash`, `theme/plymouth` |
 | Aurorae decoration | `Koollook` | Willow Dark Alt Shader |
 | Aurorae decoration | `Koollook Dotted` | KDE 2 stippled title bar (separate option) |
-| KDE 2 C++ plugin | `org.koollook.kde2` | kdecoration2-kde2 → KDecoration3 (optional build) |
-| KWin effects | translucency, hide-cursor | RiderLook kwinrc |
 
 ```bash
 ./theme/install.sh
