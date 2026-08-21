@@ -58,10 +58,6 @@ QtObject {
             if (root.source.indexOf("bbcukmet|") === 0)
                 root._fetchBbc()
             else
-                root.loading = false
-        }
-    }
-
     function refresh() {
         loading = true
         error = ""
@@ -74,15 +70,18 @@ QtObject {
             loading = false
             return
         }
+        if (source.indexOf("bbcukmet|") === 0) {
+            _fetchBbc()
+            return
+        }
         try {
             engine.disconnectSource(source)
             engine.removeSource(source)
             engine.connectSource(source)
         } catch (e) {
         }
-        if (source.indexOf("bbcukmet|") === 0)
-            _fetchBbc()
         fallbackTimer.restart()
+    }
     }
 
     function formatTemp(celsius) {
