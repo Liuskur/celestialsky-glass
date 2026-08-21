@@ -40,15 +40,17 @@ kpackagetool6 -t Plasma/Applet -i dist/com.koollook.weather-2.0.0.plasmoid
 
 Then: Desktop → Add Widgets → search “Koollook”.
 
-## Layout
-
 ```
 theme/                         Koollook colors, Aurorae, look-and-feel, KWin
 accessibility/koollook-stt/    local English dictation (whisper.cpp)
 shared/glass/                  org.koollook.glass
 shared/location/               org.koollook.location
 shared/appearance/             ConfigAppearance.qml
+shared/timekeeping/            sunrise, muhurta, hora (JS + TimeBoard)
+web/muhurta/  web/hora/        standalone Koollook SPAs (open index.html)
 plasmoids/com.koollook.*/      widget-specific sources
+scripts/package.sh             builds all three
+```
 scripts/package.sh             builds all three
 ```
 
