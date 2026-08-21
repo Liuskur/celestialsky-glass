@@ -86,6 +86,7 @@ PlasmoidItem {
                             monthView.daysModel.setPluginsManager(eventPlugins)
                     }
                 }
+            }
 
             Kirigami.Separator {
                 Layout.fillWidth: true
