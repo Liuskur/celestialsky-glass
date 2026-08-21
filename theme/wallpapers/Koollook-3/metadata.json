@@ -1,0 +1,11 @@
+{
+    "KPackageStructure": "Plasma/Wallpaper",
+    "KPlugin": {
+        "Authors": [{"Name": "Koollook", "Email": ""}],
+        "Id": "Koollook-3",
+        "License": "MIT",
+        "Name": "Koollook 3",
+        "Description": "Koollook wallpaper 3",
+        "Version": "1.0.0"
+    }
+}
