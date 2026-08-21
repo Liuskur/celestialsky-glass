@@ -26,19 +26,19 @@ Plasma 6 widgets, theme, and local accessibility STT. Former Celestial Sky (Glas
 Writes `dist/`:
 
 - KDE Store: `com.koollook.*.plasmoid`
-- Theme pack: `koollook-theme-2.3.0.tar.zst`
-- Widgets pack: `koollook-widgets-2.3.0.tar.zst`
-- Accessibility pack: `koollook-accessibility-2.3.0.tar.zst`
-- Full: `koollook-2.3.0.tar.zst`
+- Theme pack: `koollook-theme-0.7.0.tar.zst`
+- Widgets pack: `koollook-widgets-0.7.0.tar.zst`
+- Accessibility pack: `koollook-accessibility-0.7.0.tar.zst`
+- Full: `koollook-0.7.0.tar.zst`
 
 ```bash
 ./scripts/install.sh
 # or:
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.planisphere-2.0.0.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.calendar-2.0.0.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.weather-2.0.0.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.muhurta-1.0.0.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.hora-1.0.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.planisphere-0.7.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.calendar-0.7.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.weather-0.7.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.muhurta-0.7.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.hora-0.7.0.plasmoid
 ```
 
 Then: Desktop → Add Widgets → search “Koollook”. Standalone sites: open `web/muhurta/index.html` or `web/hora/index.html`.
