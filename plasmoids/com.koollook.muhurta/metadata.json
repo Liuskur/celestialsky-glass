@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Tamás Máté",
+        "Email": "royalpython132@gmail.com"
+      },
+      {
+        "Name": "Koollook",
+        "Email": ""
+      }
+    ],
+    "Category": "Date and Time",
+    "Description": "Vedic day of 30 named muhūrtas from local sunrise to the next sunrise, in a liquid-glass frame.",
+    "Icon": "chronometer",
+    "Id": "com.koollook.muhurta",
+    "License": "MIT",
+    "Name": "Koollook Muhurta",
+    "Version": "1.0.0",
+    "Website": "https://github.com/Liuskur/celestialsky-glass"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0"
+}
