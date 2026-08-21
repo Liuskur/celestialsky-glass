@@ -51,10 +51,10 @@ for key, spec in wanted.items():
     if spec["name"] in existing_names:
         continue
     data[str(uuid.uuid4())] = spec
-enc = json.dumps(data, separators=(",", ":")).replace('"', '\\"')
-new = re.sub(r'(?m)^commands=.*$', 'commands="' + enc + '"', text, count=1)
+enc = json.dumps(data, separators=(",", ":"))
+kenc = enc.replace("\\", "\\\\").replace('"', '\\"')
+new = re.sub(r'(?m)^commands=.*$', 'commands="' + kenc + '"', text, count=1)
 cfg_path.write_text(new)
-print(f"kdeconnect runcommand updated: {cfg_path}")
 PY
 }
 
