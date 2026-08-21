@@ -32,8 +32,7 @@ Writes `dist/`:
 ```bash
 ./scripts/install.sh
 # or:
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.celestialsky-1.4.0.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.celestialsky-1.4.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.planisphere-2.0.0.plasmoid
 kpackagetool6 -t Plasma/Applet -i dist/com.koollook.calendar-2.0.0.plasmoid
 kpackagetool6 -t Plasma/Applet -i dist/com.koollook.weather-2.0.0.plasmoid
 
