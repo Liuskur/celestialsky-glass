@@ -186,7 +186,10 @@ function muhurtaSchedule(lat, lon, now) {
             start: start, end: end, label: fmtHM(start) + "–" + fmtHM(end), daypart: "night"
         })
     }
-    return { kind: "muhurta", window: w, periods: periods, current: currentPeriod(periods, now) }
+    return {
+        kind: "muhurta", window: w, periods: periods, current: currentPeriod(periods, now),
+        sunriseLabel: fmtHM(w.sunrise), sunsetLabel: fmtHM(w.sunset)
+    }
 }
 
 var CHALDEAN = ["saturn", "jupiter", "mars", "sun", "venus", "mercury", "moon"]
