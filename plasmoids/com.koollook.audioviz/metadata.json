@@ -1,0 +1,18 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      { "Name": "Tamás Máté", "Email": "royalpython132@gmail.com" },
+      { "Name": "Koollook", "Email": "" }
+    ],
+    "Category": "Multimedia",
+    "Description": "Circular wavebar for Plasma 6. Visualize microphone or speaker output.",
+    "Icon": "audio-input-microphone",
+    "Id": "com.koollook.audioviz",
+    "License": "MIT",
+    "Name": "Koollook Wavebar",
+    "Version": "1.0.0",
+    "Website": "https://github.com/Liuskur/celestialsky-glass"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0"
+}
