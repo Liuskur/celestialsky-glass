@@ -54,7 +54,7 @@ Then: Desktop → Add Widgets → search “Koollook”. Standalone sites: open 
 ## Layout
 
 ```
-theme/                         Koollook colors, Aurorae, look-and-feel, KWin
+theme/                         KoollooK colors, title bar, look-and-feel, KWin
 accessibility/koollook-stt/    local English dictation (whisper.cpp)
 shared/glass/                  org.koollook.glass
 shared/location/               org.koollook.location
