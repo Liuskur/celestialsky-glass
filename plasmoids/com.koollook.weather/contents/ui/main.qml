@@ -134,6 +134,49 @@ PlasmoidItem {
                         font.pointSize: Kirigami.Theme.smallFont.pointSize
                     }
                 }
+
+                ColumnLayout {
+                    visible: wx.hasData
+                    spacing: 0
+                    Layout.alignment: Qt.AlignVCenter
+                    PlasmaComponents.Label {
+                        text: i18n("Humidity %1%", Math.round(wx.humidity))
+                        color: colors.foreground
+                        opacity: 0.8
+                        font.pointSize: Kirigami.Theme.smallFont.pointSize
+                    }
+                    PlasmaComponents.Label {
+                        text: i18n("%1 hPa", Math.round(wx.pressure))
+                        color: colors.foreground
+                        opacity: 0.8
+                        font.pointSize: Kirigami.Theme.smallFont.pointSize
+                    }
+                }
+
+                Item {
+                    visible: wx.hasData
+                    Layout.alignment: Qt.AlignTop | Qt.AlignRight
+                    implicitWidth: Math.max(windArrow.implicitWidth, windSpeedLabel.implicitWidth, Kirigami.Units.iconSizes.medium)
+                    implicitHeight: windArrow.implicitHeight + windSpeedLabel.implicitHeight
+
+                    KSvg.SvgItem {
+                        id: windArrow
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        implicitWidth: Kirigami.Units.iconSizes.medium
+                        implicitHeight: Kirigami.Units.iconSizes.medium
+                        imagePath: "weather/wind-arrows"
+                        elementId: wx.windArrow()
+                        visible: wx.windArrow().length > 0
+                    }
+                    PlasmaComponents.Label {
+                        id: windSpeedLabel
+                        anchors.top: windArrow.bottom
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        color: colors.foreground
+                        font.pointSize: Kirigami.Theme.smallFont.pointSize
+                        text: wx.windSpeed < 0.5 ? i18nc("Wind condition", "Calm") : (Math.round(wx.windSpeed) + " m/s")
+                    }
+                }
             }
 
             PlasmaComponents.Label {
@@ -142,32 +185,6 @@ PlasmoidItem {
                 text: wx.error
                 wrapMode: Text.Wrap
                 color: colors.foreground
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                visible: wx.hasData
-                spacing: Kirigami.Units.largeSpacing
-
-                PlasmaComponents.Label {
-                    text: i18n("Wind %1 %2 m/s", wx.windArrow(), Math.round(wx.windSpeed))
-                    color: colors.foreground
-                    opacity: 0.8
-                    font.pointSize: Kirigami.Theme.smallFont.pointSize
-                }
-                PlasmaComponents.Label {
-                    text: i18n("Humidity %1%", Math.round(wx.humidity))
-                    color: colors.foreground
-                    opacity: 0.8
-                    font.pointSize: Kirigami.Theme.smallFont.pointSize
-                }
-                PlasmaComponents.Label {
-                    text: i18n("%1 hPa", Math.round(wx.pressure))
-                    color: colors.foreground
-                    opacity: 0.8
-                    font.pointSize: Kirigami.Theme.smallFont.pointSize
-                    Layout.fillWidth: true
-                }
             }
 
 
