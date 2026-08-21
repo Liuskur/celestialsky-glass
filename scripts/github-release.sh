@@ -20,14 +20,11 @@ args=(
 )
 [[ -n "${GITHUB_TARGET:-}" ]] && args+=(--target "$GITHUB_TARGET")
 
+shopt -s nullglob
 files=(
-  "$DIST/koollook-${VER}.tar.zst"
-  "$DIST/koollook-theme-${VER}.tar.zst"
-  "$DIST/koollook-widgets-${VER}.tar.zst"
-  "$DIST/koollook-accessibility-${VER}.tar.zst"
   "$DIST/SHA256SUMS"
 )
-shopt -s nullglob
+files+=("$DIST"/koollook-*.tar.zst)
 files+=("$DIST"/com.koollook.*.plasmoid)
 
 echo "gh release create ${args[*]}"
