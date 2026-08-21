@@ -31,11 +31,10 @@ QtObject {
     readonly property var slotHours: [6, 9, 12, 15, 18, 21]
 
     property int _reqId: 0
-
     property var engine: Plasma5Support.DataSource {
         engine: "weather"
         interval: 30 * 60 * 1000
-        connectedSources: root.source && root.source.length ? [root.source] : []
+        connectedSources: root._isOm() || !root.source.length ? [] : [root.source]
         onNewData: function (sourceName, data) {
             if (sourceName !== root.source)
                 return
@@ -43,13 +42,22 @@ QtObject {
         }
     }
 
+    function _isOm() {
+        return !source.length || source === "openmeteo" || source.indexOf("openmeteo|") === 0
+    }
+
     function refresh() {
-        if (!source || !source.length) {
-            error = i18n("Pick a weather station")
-            return
-        }
         loading = true
         error = ""
+        if (_isOm()) {
+            _fetchOpenMeteo()
+            return
+        }
+        if (!source.length) {
+            error = i18n("Pick a weather station")
+            loading = false
+            return
+        }
         engine.disconnectSource(source)
         engine.removeSource(source)
         engine.connectSource(source)
@@ -62,11 +70,14 @@ QtObject {
         interval: 4000
         repeat: false
         onTriggered: {
-            if (!root.hasData && root.source.indexOf("bbcukmet|") === 0)
+            if (root.hasData)
+                return
+            if (root.source.indexOf("bbcukmet|") === 0)
                 root._fetchBbc()
-            else if (!root.hasData)
+            else
                 root.loading = false
         }
+    }
     }
 
     function formatTemp(celsius) {
