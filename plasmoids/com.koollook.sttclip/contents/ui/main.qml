@@ -69,10 +69,10 @@ PlasmoidItem {
         onTriggered: root.reloadClip()
     }
 
-    Connections {
-        target: Plasmoid.configuration
-        function onDeleteClipPhraseChanged() { root.syncPhrases() }
-        function onSendClipPhraseChanged() { root.syncPhrases() }
+    function shellQuote(t) {
+        return "'" + String(t).replace(/'/g, "'\\''") + "'"
+    }
+
     Connections {
         target: Plasmoid.configuration
         function onCommandsJsonChanged() { root.syncCommands() }
@@ -82,6 +82,10 @@ PlasmoidItem {
         syncCommands()
         reloadClip()
     }
+
+    compactRepresentation: MouseArea {
+        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+        Layout.minimumHeight: Kirigami.Units.iconSizes.small
         onClicked: root.expanded = !root.expanded
         RowLayout {
             anchors.fill: parent
