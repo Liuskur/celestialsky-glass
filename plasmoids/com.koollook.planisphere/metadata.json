@@ -4,7 +4,7 @@
         "Description": "Local planisphere: the sky hemisphere visible at your location. Rise/set arcs, time cards, \u00b172 h scrubber. Plasma 6.",
         "Icon": "weather-clear-night",
         "Id": "com.koollook.planisphere",
-        "Version": "0.7.1",
+        "Version": "0.7.2",
         "Website": "https://github.com/Liuskur/celestialsky-glass",
         "Authors": [
             {
