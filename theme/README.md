@@ -4,7 +4,8 @@ Plasma 6 look pieces.
 
 | Piece | Id | Source |
 |-------|-----|--------|
-| Color scheme | `Koollook` | Stone2 |
+| Color schemes | `Koollook` (dark), `KoollookAqua`, `KoollookEesti`, `KoollookLivonia` | Stone2 + aqua / Eesti / Livonian flags |
+| Icons | `Koollook` | Livonian-style griffin; launcher is `start-here-kde` |
 | Aurorae decoration | `Koollook` | Willow Dark Alt Shader |
 | KDE 2 decoration | `org.koollook.kde2` | kdecoration2-kde2 → KDecoration3 |
 | Global theme | `org.koollook.desktop` | RiderLook |
@@ -14,6 +15,8 @@ Plasma 6 look pieces.
 ./theme/install.sh
 ```
 
-Widget styles (Glass / Clear / Plasma / Chameleon / Inverse / Koollook) are in `shared/glass/KoollookFrame.qml` — one change applies to every plasmoid.
+Schemes: **Koollook Dark**, **Koollook Aqua** (light), **Koollook Eesti** (blue/black/white), **Koollook Livonia** (green/white/blue). Apply in System Settings → Colors.
 
-KDE 2 C++ decoration needs cmake + KF6 + KDecoration3 (`cmake` on PATH). Aurorae `Koollook` always installs.
+Icons: regular griffin on gules, white glyph, charcoal glyph, ColorScheme symbolic. Application launcher uses the regular griffin (`start-here-kde`).
+
+Widget styles (Glass / Clear / Plasma / Chameleon / Inverse / Koollook) are in `shared/glass/KoollookFrame.qml`.
