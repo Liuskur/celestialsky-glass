@@ -305,6 +305,13 @@
          style="opacity:0.8;fill:#191919;fill-opacity:1;stroke:none;stroke-width:3.33334;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="m 165,650.36218 h 25 v 25 h -25 z"
          sodipodi:nodetypes="ccccc" />
+      <rect
+         fill="url(#gripDots)"
+         x="165"
+         y="650.36218"
+         width="25"
+         height="25"
+         id="gripDotsCorner" />
       <path
          id="path1952-1"
          style="opacity:0.003;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:3.33334;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
