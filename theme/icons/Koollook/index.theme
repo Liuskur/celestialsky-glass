@@ -1,6 +1,6 @@
 [Icon Theme]
 Name=Koollook
-Comment=Livonian griffin brand icons for Koollook
+Comment=Liwi griffin brand icons for Koollook
 Inherits=breeze,hicolor
 Directories=apps/16,apps/22,apps/24,apps/32,apps/48,apps/64,apps/128,apps/256,apps/scalable,places/16,places/22,places/24,places/32,places/48,places/64,places/128,places/256,places/scalable
 FollowsColorScheme=true
