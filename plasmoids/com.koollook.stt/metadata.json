@@ -1,0 +1,22 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Koollook",
+                "Email": ""
+            }
+        ],
+        "Category": "Accessibility",
+        "Description": "System tray for local Koollook STT: start/stop listening, send or delete clip.",
+        "Icon": "audio-input-microphone",
+        "Id": "com.koollook.stt",
+        "License": "MIT",
+        "Name": "Koollook STT",
+        "Version": "1.0.0",
+        "Website": "https://github.com/Liuskur/celestialsky-glass"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-NotificationArea": "true",
+    "X-Plasma-NotificationAreaCategory": "SystemServices"
+}
