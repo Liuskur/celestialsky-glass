@@ -8,7 +8,7 @@
 - [ ] Drop secrets and machine paths: no `/opt/Grok`, no `/home/rider`, no ResoNider absolute paths in shipped scripts (use env vars only).
 - [ ] `.gitignore`: `/dist/`, decoration `build/`, vendored `contents/ui/org/`, `error.txt`, screenshots of the local desktop.
 - [ ] Do not commit `.git` inside third-party tarballs (kdecoration2-kde2).
-- [ ] LICENSE: widgets MIT; Aurorae Koollook (Willow) GPL-3.0 — keep that split visible on the repo front page.
+- [ ] LICENSE: widgets MIT; KoollooK title-bar SVGs (Willow) GPL-3.0 — keep that split visible on the repo front page.
 - [ ] Add screenshots (launcher griffin, Dotted vs Koollook title bars, four color schemes, STT tray) — no personal files on the desktop.
 - [ ] CI: `scripts/package.sh` on Plasma 6; optional compile of `org.koollook.kde2` if ECM is present.
 - [ ] Tag `v2.6.0` after the rename; attach `koollook-2.6.0.tar.zst`.
