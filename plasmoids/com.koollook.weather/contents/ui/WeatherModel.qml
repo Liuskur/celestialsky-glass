@@ -32,9 +32,8 @@ QtObject {
     property int _reqId: 0
 
     function _isOm() {
-        return !source.length || source === "openmeteo" || source.indexOf("openmeteo|") === 0
+        return source === "openmeteo" || source.indexOf("openmeteo|") === 0
     }
-
     property var engine: Plasma5Support.DataSource {
         engine: "weather"
         interval: 30 * 60 * 1000
