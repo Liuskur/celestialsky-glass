@@ -235,29 +235,30 @@ PlasmoidItem {
         id: calRoot
         Layout.preferredWidth: Kirigami.Units.gridUnit * 32
         Layout.preferredHeight: Kirigami.Units.gridUnit * 18
-        Layout.minimumWidth: Kirigami.Units.gridUnit * 14
-        Layout.minimumHeight: Kirigami.Units.gridUnit * 14
+        Layout.minimumWidth: Kirigami.Units.gridUnit * 12
+        Layout.minimumHeight: Kirigami.Units.gridUnit * 12
         clip: true
-        readonly property bool showEvents: width >= Kirigami.Units.gridUnit * 24
+        readonly property real innerPad: Math.max(Kirigami.Units.largeSpacing,
+            Plasmoid.configuration.hideFrame ? Kirigami.Units.smallSpacing
+                : Math.min(28, (Plasmoid.configuration.cornerRadius || 48) * 0.18))
+        readonly property bool showEvents: width >= Kirigami.Units.gridUnit * 16
 
         KoollookFrame { anchors.fill: parent }
 
-        RowLayout {
+        Item {
+            id: body
             anchors.fill: parent
-            anchors.margins: Math.max(Kirigami.Units.largeSpacing,
-                Plasmoid.configuration.hideFrame ? Kirigami.Units.smallSpacing
-                    : Math.min(28, (Plasmoid.configuration.cornerRadius || 48) * 0.18))
-            spacing: Kirigami.Units.largeSpacing
+            anchors.margins: calRoot.innerPad
 
             Item {
+                id: eventsPane
                 visible: calRoot.showEvents
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.preferredWidth: 1
-                Layout.minimumWidth: Kirigami.Units.gridUnit * 10
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: calRoot.showEvents ? Math.floor(parent.width / 2) - Kirigami.Units.smallSpacing : 0
 
                 ListView {
-                    id: eventsList
                     anchors.fill: parent
                     clip: true
                     spacing: 4
@@ -269,25 +270,26 @@ PlasmoidItem {
                 PlasmaComponents.Label {
                     anchors.centerIn: parent
                     visible: eventsModel.count === 0
+                    width: parent.width - 8
+                    wrapMode: Text.WordWrap
+                    horizontalAlignment: Text.AlignHCenter
                     text: i18n("No upcoming events")
                     color: colors.foreground
                     opacity: 0.4
-                    wrapMode: Text.WordWrap
-                    width: parent.width
-                    horizontalAlignment: Text.AlignHCenter
                 }
             }
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.preferredWidth: 1
-                spacing: 0
+            Item {
+                id: monthPane
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                anchors.left: calRoot.showEvents ? eventsPane.right : parent.left
+                anchors.leftMargin: calRoot.showEvents ? Kirigami.Units.smallSpacing * 2 : 0
 
                 PlasmaCalendar.MonthView {
                     id: monthView
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    anchors.fill: parent
                     today: root.today
                     showWeekNumbers: Plasmoid.configuration.showWeekNumbers
                     firstDayOfWeek: Plasmoid.configuration.firstDayOfWeek
