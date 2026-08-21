@@ -22,12 +22,9 @@ PlasmoidItem {
 
     WeatherModel {
         id: wx
-        source: {
-            var s = Plasmoid.configuration.source || ""
-            if (!s.length || s === "bbcukmet|weather|Tallinn, Estonia|588409")
-                return "openmeteo"
-            return s
-        }
+        source: Plasmoid.configuration.source && Plasmoid.configuration.source.length
+            ? Plasmoid.configuration.source
+            : "bbcukmet|weather|Tallinn, Estonia, EE|588409"
         latitude: Plasmoid.configuration.latitude
         longitude: Plasmoid.configuration.longitude
         temperatureUnit: Plasmoid.configuration.temperatureUnit
