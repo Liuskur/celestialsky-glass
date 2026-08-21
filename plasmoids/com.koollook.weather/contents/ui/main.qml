@@ -169,21 +169,6 @@ PlasmoidItem {
                 }
             }
 
-            RowLayout {
-                Layout.fillWidth: true
-                visible: wx.hourly.length > 0
-                Repeater {
-                    model: ["06", "09", "12", "15", "18", "21"]
-                    PlasmaComponents.Label {
-                        Layout.fillWidth: true
-                        horizontalAlignment: Text.AlignHCenter
-                        text: modelData
-                        font.pointSize: Kirigami.Theme.smallFont.pointSize
-                        color: colors.foreground
-                        opacity: 0.45
-                    }
-                }
-            }
 
             ListView {
                 id: hourlyView
