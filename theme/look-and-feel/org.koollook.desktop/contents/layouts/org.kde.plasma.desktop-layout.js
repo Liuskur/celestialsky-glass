@@ -45,8 +45,8 @@ var layout = {
                     "geometry.width": 0,
                     "geometry.x": 0,
                     "geometry.y": 0,
-                    "plugin": "com.koollook.celestialsky",
-                    "title": "Koollook Celestial Sky"
+                    "plugin": "com.koollook.planisphere",
+                    "title": "Koollook Planisphere"
                 }
             ],
             "config": {
