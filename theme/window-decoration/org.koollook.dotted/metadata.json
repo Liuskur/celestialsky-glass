@@ -6,5 +6,6 @@
         "Id": "org.koollook.dotted",
         "License": "MIT",
         "Name": "Koollook Dotted"
-    }
+    },
+    "X-KWin-Config-TranslationDomain": "aurorae"
 }
