@@ -63,20 +63,21 @@ echo "wrote $DIST/koollook-accessibility-${SUITE_VER}.tar.zst"
 
 cp -a "$ROOT/README.md" "$DIST/README.md"
 cp -a "$ROOT/LICENSE" "$DIST/LICENSE"
+cp -a "$ROOT/TESTERS.md" "$DIST/TESTERS.md"
 cp -a "$ROOT/scripts/install-release.sh" "$DIST/install.sh"
 chmod 755 "$DIST/install.sh"
 
 (
   cd "$DIST"
   sha256sum -- com.koollook*.plasmoid koollook-theme-*.tar.zst koollook-widgets-*.tar.zst \
-    koollook-accessibility-*.tar.zst README.md LICENSE install.sh > SHA256SUMS
+    koollook-accessibility-*.tar.zst README.md LICENSE TESTERS.md install.sh > SHA256SUMS
 )
 
 STAGE="$(mktemp -d)"
 mkdir -p "$STAGE/koollook-${SUITE_VER}"
 cp -a "$DIST"/com.koollook*.plasmoid "$DIST"/koollook-theme-*.tar.zst \
   "$DIST"/koollook-widgets-*.tar.zst "$DIST"/koollook-accessibility-*.tar.zst \
-  "$DIST/README.md" "$DIST/LICENSE" "$DIST/install.sh" "$DIST/SHA256SUMS" \
+  "$DIST/README.md" "$DIST/LICENSE" "$DIST/TESTERS.md" "$DIST/install.sh" "$DIST/SHA256SUMS" \
   "$STAGE/koollook-${SUITE_VER}/"
 ARCHIVE="$DIST/koollook-${SUITE_VER}.tar.zst"
 rm -f "$ARCHIVE"
