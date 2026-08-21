@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Tamás Máté",
+        "Email": "royalpython132@gmail.com"
+      },
+      {
+        "Name": "Koollook",
+        "Email": ""
+      }
+    ],
+    "Category": "Date and Time",
+    "Description": "Planetary hours (hora): 12 day and 12 night from local sunrise, Chaldean order, in a liquid-glass frame.",
+    "Icon": "clock",
+    "Id": "com.koollook.hora",
+    "License": "MIT",
+    "Name": "Koollook Hora",
+    "Version": "1.0.0",
+    "Website": "https://github.com/Liuskur/celestialsky-glass"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0"
+}
