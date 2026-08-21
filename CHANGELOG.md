@@ -1,11 +1,13 @@
 # Changelog — Koollook Widgets
 
+## 2.3.0
+
+- Shared `KoollookFrame`: Glass, Solid, Clear (see-through), Plasma, Chameleon, Inverse, Koollook
+- Invisible frame option; Inverse uses opposite of desktop background for text/icons
+- KDE 2 window decoration ported to Plasma 6 KDecoration3
+- Packs: `koollook-theme`, `koollook-widgets`, `koollook-accessibility`
+
 ## 2.2.0
-
-- STT Clip config: hard command phrases + custom spoken match → command (KDE Connect Run Command style)
-- Wavebar widget `com.koollook.audioviz`: circular bars, mic or speaker monitor (Plasma 6 / PipeWire)
-
-## 2.1.0
 
 - STT clip widget `com.koollook.sttclip`: live local transcription buffer
 - Spoken **delete clip** clears the buffer; **send clip** types/copies it
