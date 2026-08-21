@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Tamás Máté",
+        "Email": "royalpython132@gmail.com"
+      },
+      {
+        "Name": "Koollook",
+        "Email": ""
+      }
+    ],
+    "Category": "Utilities",
+    "Description": "Live local STT clip: everything you dictate, until you say send clip or delete clip.",
+    "Icon": "audio-input-microphone",
+    "Id": "com.koollook.sttclip",
+    "License": "MIT",
+    "Name": "Koollook STT Clip",
+    "Version": "1.0.0",
+    "Website": "https://github.com/Liuskur/celestialsky-glass"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0"
+}
