@@ -69,6 +69,8 @@ Item {
     property var cfg_sensitivityDefault
     property var cfg_innerRadiusPct
     property var cfg_innerRadiusPctDefault
+    property var cfg_source
+    property var cfg_sourceDefault
 
     function _serialize() {
         return JSON.stringify({
