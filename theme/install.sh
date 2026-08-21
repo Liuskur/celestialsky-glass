@@ -72,4 +72,4 @@ command -v kbuildsycoca6 >/dev/null && kbuildsycoca6 >/dev/null 2>&1 || true
 
 echo "Koollook theme installed (4 color schemes, griffin icons, Aurorae, KWin)."
 echo "Global theme: org.koollook.desktop  (APPLY_LAYOUT=1 to also load layout)"
-echo "Colors: Koollook Dark (default), Koollook Aqua, Koollook Eesti, Koollook Livonia"
+echo "Colors: Koollook Dark (default), Koollook Aqua, Koollook Eesti, Koollook Liwi"
