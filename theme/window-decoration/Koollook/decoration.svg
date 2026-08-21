@@ -69,17 +69,6 @@
   </sodipodi:namedview>
   <defs
      id="defs4">
-    <pattern
-       id="gripDots"
-       width="7"
-       height="7"
-       patternUnits="userSpaceOnUse">
-      <circle cx="3.85" cy="4.2" r="2.15" fill="#050506" opacity="0.62" />
-      <circle cx="3.35" cy="3.35" r="2.15" fill="#2f2c28" />
-      <ellipse cx="2.95" cy="2.85" rx="1.45" ry="1.25" fill="#4a453e" />
-      <ellipse cx="2.7" cy="2.55" rx="0.75" ry="0.55" fill="#7a7164" opacity="0.72" />
-      <circle cx="2.55" cy="2.4" r="0.32" fill="#c4b49a" opacity="0.42" />
-    </pattern>
     <linearGradient
        inkscape:collect="always"
        id="linearGradient1060">
@@ -305,13 +294,6 @@
          style="opacity:0.8;fill:#191919;fill-opacity:1;stroke:none;stroke-width:3.33334;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="m 165,650.36218 h 25 v 25 h -25 z"
          sodipodi:nodetypes="ccccc" />
-      <rect
-         fill="url(#gripDots)"
-         x="165"
-         y="650.36218"
-         width="25"
-         height="25"
-         id="gripDotsCorner" />
       <path
          id="path1952-1"
          style="opacity:0.003;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:3.33334;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -327,13 +309,6 @@
          height="25"
          x="205"
          y="650.36218" />
-      <rect
-         fill="url(#gripDots)"
-         x="205"
-         y="650.36218"
-         width="25"
-         height="25"
-         id="gripDotsFill" />
       <rect
          y="-650.36218"
          x="205"
