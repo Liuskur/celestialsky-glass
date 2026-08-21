@@ -250,8 +250,8 @@ PlasmoidItem {
                             model: modelData.slots
                             WeatherIcon {
                                 iconName: modelData.icon
-                                Layout.preferredWidth: Kirigami.Units.iconSizes.medium * 1.5
-                                Layout.preferredHeight: Kirigami.Units.iconSizes.medium * 1.5
+                                Layout.preferredWidth: Kirigami.Units.iconSizes.medium
+                                Layout.preferredHeight: Kirigami.Units.iconSizes.medium
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
                             }
