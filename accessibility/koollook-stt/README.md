@@ -1,8 +1,10 @@
 # Koollook STT (accessibility)
 
-Local **English** speech-to-text that types into the focused field. No cloud.
+Local **English** speech-to-text into a **clip buffer** (`~/.local/state/koollook/clip.txt`).
+The **Koollook STT Clip** desktop widget shows that buffer.
 
-Uses ResoNider’s **whisper.cpp** (`tiny.en`) and the same English model as `config.en-async.json`.
+- Say **delete clip** — empty the buffer.
+- Say **send clip** — actualize: copy + type the buffer into the focused field, then clear.
 
 ```bash
 ./accessibility/koollook-stt/install.sh
@@ -10,25 +12,15 @@ koollook-stt --toggle     # Meta+Alt+V
 koollook-stt --list-sources
 ```
 
-Needs `wtype` (preferred), or `ydotool` / `xdotool`, to inject keys. Without those it copies to the clipboard.
+Phrases are configurable (`~/.config/koollook/stt.conf` or the widget Clip page).
 
-## Audio sources (KDE Connect phone mic)
+Uses ResoNider **whisper.cpp** (`tiny.en`). Needs `wtype` (or ydotool/xdotool) to type on send.
 
-Capture is **PipeWire/Pulse**, not a hardcoded ALSA device.
+## KDE Connect / phone mic
 
 | `KOOLLOOK_STT_SOURCE` | Behaviour |
 |------------------------|-----------|
-| `auto` (default) | If a source name contains `kdeconnect`, use it; else the default input |
-| a Pulse source name | That source only |
+| `auto` (default) | Source name containing `kdeconnect`, else default input |
+| Pulse source name | That source |
 
-When KDE Connect (or a later audio plugin) exposes the phone as a Pulse/PipeWire source, dictation uses the phone microphone with no code change.
-
-Until that source exists: use the computer mic, and start/stop listening from the phone via **KDE Connect → Run Command**:
-
-- Koollook STT toggle
-- Koollook STT start
-- Koollook STT stop
-
-`install.sh` adds those commands to each paired device.
-
-English only for now (`-l en`, `ggml-tiny.en-q5_1.bin`).
+`install.sh` adds Run Command: STT toggle / start / stop.
