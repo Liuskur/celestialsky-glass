@@ -86,13 +86,15 @@ Decoration {
             id: grip
             clip: true
             visible: width > 6
-            height: parent.height
+            height: root.dottedH
+            anchors.verticalCenter: parent.verticalCenter
             x: caption.x + caption.width + root.gap
             width: Math.max(0, rightButtonGroup.x - root.gap - x)
             Image {
-                width: Math.max(parent.width, 7)
-                height: Math.max(parent.height, 7)
+                anchors.fill: parent
                 fillMode: Image.Tile
+                sourceSize.width: root.dottedCell
+                sourceSize.height: root.dottedCell
                 source: Qt.resolvedUrl("dots.svg")
                 horizontalAlignment: Image.AlignLeft
                 verticalAlignment: Image.AlignTop
