@@ -65,6 +65,7 @@ ColumnLayout {
 
     LocationSearch {
         visible: root.omMode
+        Layout.fillWidth: true
         locationName: root.locationName
         latitude: root.latitude
         longitude: root.longitude
@@ -74,7 +75,9 @@ ColumnLayout {
             root.longitude = longitude
             root.source = "openmeteo"
         }
+    }
 
+    RowLayout {
     RowLayout {
         visible: !root.omMode
         Layout.fillWidth: true
