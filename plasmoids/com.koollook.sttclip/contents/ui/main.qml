@@ -152,11 +152,13 @@ PlasmoidItem {
                 Layout.fillWidth: true
                 PlasmaComponents.Button {
                     text: i18n("Delete clip")
+                    focusPolicy: Qt.NoFocus
                     onClicked: runner.exec(root.sttBin + " --clear-clip")
                 }
                 Item { Layout.fillWidth: true }
                 PlasmaComponents.Button {
                     text: i18n("Send clip")
+                    focusPolicy: Qt.NoFocus
                     onClicked: runner.exec(root.sttBin + " --send-clip")
                 }
             }
