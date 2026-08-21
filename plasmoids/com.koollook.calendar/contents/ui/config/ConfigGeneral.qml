@@ -27,11 +27,26 @@ Kirigami.FormLayout {
             i18n("Saturday")
         ]
     }
-
     CheckBox {
         id: weekNumbers
         Kirigami.FormData.label: i18n("Week numbers:")
         text: i18n("Show")
+    }
+
+    ComboBox {
+        id: lookaheadCombo
+        Kirigami.FormData.label: i18n("Upcoming events:")
+        model: [i18n("Next 7 days"), i18n("Next 14 days"), i18n("Next 30 days"), i18n("Next 60 days")]
+        property var days: [7, 14, 30, 60]
+        Component.onCompleted: {
+            var i
+            currentIndex = 1
+            for (i = 0; i < days.length; i++) {
+                if (days[i] === root.cfg_eventLookaheadDays)
+                    currentIndex = i
+            }
+        }
+        onActivated: function (idx) { root.cfg_eventLookaheadDays = days[idx] }
     }
 
     CheckBox {
