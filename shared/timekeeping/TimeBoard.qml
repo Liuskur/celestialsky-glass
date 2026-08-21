@@ -25,6 +25,8 @@ Item {
     property string currentName: "…"
     property int periodCount: 0
 
+    implicitWidth: compact ? Math.max(Kirigami.Units.gridUnit * 4, nameLab.implicitWidth) : Kirigami.Units.gridUnit * 16
+    implicitHeight: compact ? nameLab.implicitHeight : Kirigami.Units.gridUnit * 20
     function periodAt(i) {
         if (!day || !day.periods)
             return null
