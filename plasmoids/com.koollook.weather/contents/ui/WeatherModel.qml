@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Default: Open-Meteo (former macOS weather widget). Optional: Plasma ions (BBC, NOAA, DWD, wetter.com, EnvCan).
+// Default: Open-Meteo (former macOS weather widget). Optional Plasma ions: BBC, NOAA, DWD, wetter.com, EnvCan.
 import QtQuick
 import org.kde.plasma.plasma5support as Plasma5Support
 
@@ -29,12 +29,16 @@ QtObject {
     property var hourly: []
     property var todaySlots: []
     readonly property var slotHours: [6, 9, 12, 15, 18, 21]
-
     property int _reqId: 0
+
+    function _isOm() {
+        return !source.length || source === "openmeteo" || source.indexOf("openmeteo|") === 0
+    }
+
     property var engine: Plasma5Support.DataSource {
         engine: "weather"
         interval: 30 * 60 * 1000
-        connectedSources: root._isOm() || !root.source.length ? [] : [root.source]
+        connectedSources: root._isOm() ? [] : (root.source.length ? [root.source] : [])
         onNewData: function (sourceName, data) {
             if (sourceName !== root.source)
                 return
@@ -42,8 +46,17 @@ QtObject {
         }
     }
 
-    function _isOm() {
-        return !source.length || source === "openmeteo" || source.indexOf("openmeteo|") === 0
+    property var fallbackTimer: Timer {
+        interval: 4000
+        repeat: false
+        onTriggered: {
+            if (root.hasData)
+                return
+            if (root.source.indexOf("bbcukmet|") === 0)
+                root._fetchBbc()
+            else
+                root.loading = false
+        }
     }
 
     function refresh() {
@@ -64,20 +77,6 @@ QtObject {
         if (source.indexOf("bbcukmet|") === 0)
             _fetchBbc()
         fallbackTimer.restart()
-    }
-
-    property var fallbackTimer: Timer {
-        interval: 4000
-        repeat: false
-        onTriggered: {
-            if (root.hasData)
-                return
-            if (root.source.indexOf("bbcukmet|") === 0)
-                root._fetchBbc()
-            else
-                root.loading = false
-        }
-    }
     }
 
     function formatTemp(celsius) {
@@ -103,6 +102,35 @@ QtObject {
         if (unit === 6000)
             return n - 273.15
         return n
+    }
+
+    function _icon(code, night) {
+        if (code === 0) return night ? "weather-clear-night" : "weather-clear"
+        if (code === 1 || code === 2) return night ? "weather-few-clouds-night" : "weather-few-clouds"
+        if (code === 3) return "weather-clouds"
+        if (code === 45 || code === 48) return "weather-fog"
+        if (code >= 51 && code <= 57) return "weather-showers-scattered"
+        if (code >= 61 && code <= 67) return "weather-showers"
+        if (code >= 71 && code <= 77) return "weather-snow"
+        if (code >= 80 && code <= 82) return "weather-showers"
+        if (code >= 85 && code <= 86) return "weather-snow"
+        if (code >= 95) return "weather-storm"
+        return "weather-none-available"
+    }
+
+    function _condition(code) {
+        if (code === 0) return i18n("Clear")
+        if (code === 1) return i18n("Mainly clear")
+        if (code === 2) return i18n("Partly cloudy")
+        if (code === 3) return i18n("Overcast")
+        if (code === 45 || code === 48) return i18n("Fog")
+        if (code >= 51 && code <= 57) return i18n("Drizzle")
+        if (code >= 61 && code <= 67) return i18n("Rain")
+        if (code >= 71 && code <= 77) return i18n("Snow")
+        if (code >= 80 && code <= 82) return i18n("Showers")
+        if (code >= 85 && code <= 86) return i18n("Snow showers")
+        if (code >= 95) return i18n("Thunderstorm")
+        return i18n("Unknown")
     }
 
     function _applyEngine(d) {
@@ -166,7 +194,6 @@ QtObject {
             return
         var reqId = ++_reqId
         var xhr = new XMLHttpRequest()
-        var url = "https://weather-broker-cdn.api.bbci.co.uk/en/forecast/aggregated/" + id
         xhr.onreadystatechange = function () {
             if (xhr.readyState !== XMLHttpRequest.DONE)
                 return
@@ -188,7 +215,7 @@ QtObject {
                 }
             }
         }
-        xhr.open("GET", url)
+        xhr.open("GET", "https://weather-broker-cdn.api.bbci.co.uk/en/forecast/aggregated/" + id)
         xhr.send()
     }
 
@@ -211,7 +238,7 @@ QtObject {
         iconName = _bbcIcon(nowR.weatherType !== undefined ? nowR.weatherType : sum.weatherType)
         credit = "BBC Weather"
         var hours = []
-        var r, ts, hh, hnum
+        var r, ts, hh
         for (r = 0; r < reports.length; r++) {
             ts = reports[r].timeslot || ""
             hh = parseInt(ts.split(":")[0], 10)
@@ -226,7 +253,7 @@ QtObject {
         hourly = hours
         todaySlots = hours
         var days = []
-        var d, rep, srep, dt, ymd, slots, s, hour, hit
+        var d, rep, srep, dt, ymd, slots, s, hour, hit, hnum
         for (d = 0; d < forecasts.length && days.length < 7; d++) {
             srep = (forecasts[d].summary && forecasts[d].summary.report) ? forecasts[d].summary.report : {}
             ymd = srep.localDate || ""
@@ -251,39 +278,23 @@ QtObject {
                 })
             }
             days.push({
-    }
-
-    function _icon(code, night) {
-        if (code === 0) return night ? "weather-clear-night" : "weather-clear"
-        if (code === 1 || code === 2) return night ? "weather-few-clouds-night" : "weather-few-clouds"
-        if (code === 3) return "weather-clouds"
-        if (code === 45 || code === 48) return "weather-fog"
-        if (code >= 51 && code <= 57) return "weather-showers-scattered"
-        if (code >= 61 && code <= 67) return "weather-showers"
-        if (code >= 71 && code <= 77) return "weather-snow"
-        if (code >= 80 && code <= 82) return "weather-showers"
-        if (code >= 85 && code <= 86) return "weather-snow"
-        if (code >= 95) return "weather-storm"
-        return "weather-none-available"
-    }
-
-    function _condition(code) {
-        if (code === 0) return i18n("Clear")
-        if (code === 1) return i18n("Mainly clear")
-        if (code === 2) return i18n("Partly cloudy")
-        if (code === 3) return i18n("Overcast")
-        if (code === 45 || code === 48) return i18n("Fog")
-        if (code >= 51 && code <= 57) return i18n("Drizzle")
-        if (code >= 61 && code <= 67) return i18n("Rain")
-        if (code >= 71 && code <= 77) return i18n("Snow")
-        if (code >= 80 && code <= 82) return i18n("Showers")
-        if (code >= 85 && code <= 86) return i18n("Snow showers")
-        if (code >= 95) return i18n("Thunderstorm")
-        return i18n("Unknown")
+                name: Qt.locale().dayName(dt.getDay(), Locale.ShortFormat),
+                ymd: ymd,
+                icon: _bbcIcon(srep.weatherType),
+                high: formatTemp(srep.maxTempC),
+                low: formatTemp(srep.minTempC),
+                slots: slots
+            })
+        }
+        daily = days
+        hasData = true
+        loading = false
+        error = ""
     }
 
     function _fetchOpenMeteo() {
         var reqId = ++_reqId
+        var xhr = new XMLHttpRequest()
         var url = "https://api.open-meteo.com/v1/forecast"
             + "?latitude=" + latitude
             + "&longitude=" + longitude
@@ -291,7 +302,6 @@ QtObject {
             + "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum"
             + "&hourly=temperature_2m,weather_code,is_day"
             + "&forecast_days=7&timezone=auto"
-        var xhr = new XMLHttpRequest()
         xhr.onreadystatechange = function () {
             if (xhr.readyState !== XMLHttpRequest.DONE)
                 return
@@ -331,9 +341,10 @@ QtObject {
         var h = resp.hourly || {}
         var ht = h.time || []
         var byKey = ({})
-        for (var j = 0; j < ht.length; j++) {
-            var hd = new Date(ht[j])
-            var key = hd.getFullYear() + "-" + ("0" + (hd.getMonth() + 1)).slice(-2)
+        var j, hd, key
+        for (j = 0; j < ht.length; j++) {
+            hd = new Date(ht[j])
+            key = hd.getFullYear() + "-" + ("0" + (hd.getMonth() + 1)).slice(-2)
                 + "-" + ("0" + hd.getDate()).slice(-2) + "-" + hd.getHours()
             byKey[key] = {
                 icon: _icon(h.weather_code[j], h.is_day[j] === 0),
@@ -343,9 +354,10 @@ QtObject {
         }
         function slotsFor(ymd) {
             var slots = []
-            for (var s = 0; s < root.slotHours.length; s++) {
-                var hour = root.slotHours[s]
-                var hit = byKey[ymd + "-" + hour]
+            var s, hour, hit
+            for (s = 0; s < root.slotHours.length; s++) {
+                hour = root.slotHours[s]
+                hit = byKey[ymd + "-" + hour]
                 slots.push({
                     hour: hour,
                     label: (hour < 10 ? "0" : "") + hour,
@@ -356,10 +368,11 @@ QtObject {
             return slots
         }
         var days = []
-        for (var i = 0; i < times.length && i < 7; i++) {
-            var dt = new Date(times[i] + "T12:00:00")
-            var ymd = times[i]
-            var noon = byKey[ymd + "-12"] || byKey[ymd + "-15"]
+        var i, dt, ymd, noon
+        for (i = 0; i < times.length && i < 7; i++) {
+            dt = new Date(times[i] + "T12:00:00")
+            ymd = times[i]
+            noon = byKey[ymd + "-12"] || byKey[ymd + "-15"]
             days.push({
                 name: Qt.locale().dayName(dt.getDay(), Locale.ShortFormat),
                 ymd: ymd,
@@ -372,12 +385,13 @@ QtObject {
         daily = days
         var hours = []
         var now = Date.now()
-        for (var k = 0; k < root.slotHours.length; k++) {
-            var sh = root.slotHours[k]
-            var today = new Date()
-            var ymd0 = today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2)
+        var k, sh, today, ymd0, hit0
+        for (k = 0; k < root.slotHours.length; k++) {
+            sh = root.slotHours[k]
+            today = new Date()
+            ymd0 = today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2)
                 + "-" + ("0" + today.getDate()).slice(-2)
-            var hit0 = byKey[ymd0 + "-" + sh]
+            hit0 = byKey[ymd0 + "-" + sh]
             if (!hit0)
                 continue
             if (hit0.at.getTime() + 30 * 60 * 1000 < now)
@@ -390,7 +404,8 @@ QtObject {
         }
         if (hours.length < 4 && days.length > 1) {
             var extra = days[1].slots
-            for (var e = 0; e < extra.length && hours.length < 6; e++) {
+            var e
+            for (e = 0; e < extra.length && hours.length < 6; e++) {
                 hours.push({
                     label: extra[e].label,
                     icon: extra[e].icon,
@@ -409,17 +424,5 @@ QtObject {
     onSourceChanged: refresh()
     onLatitudeChanged: if (_isOm()) refresh()
     onLongitudeChanged: if (_isOm()) refresh()
-    onTemperatureUnitChanged: refresh()
-}
-            })
-        }
-        daily = days
-        hasData = true
-        loading = false
-        error = ""
-    }
-
-    Component.onCompleted: refresh()
-    onSourceChanged: refresh()
     onTemperatureUnitChanged: refresh()
 }
