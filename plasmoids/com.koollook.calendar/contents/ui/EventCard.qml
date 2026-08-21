@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 import QtQuick
-import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 
 Item {
@@ -10,13 +10,8 @@ Item {
     property color pillColor: "#4B9EFF"
     property color textColor: "#ffffff"
 
-    implicitHeight: KirigamiUnits.row
+    implicitHeight: Kirigami.Units.gridUnit * 1.45
     height: implicitHeight
-
-    QtObject {
-        id: KirigamiUnits
-        readonly property int row: 22
-    }
 
     Rectangle {
         anchors.fill: parent
@@ -57,11 +52,6 @@ Item {
         text: card.timeLabel
         color: card.textColor
         opacity: 0.55
-        font.pointSize: KirigamiTheme.small
-    }
-
-    QtObject {
-        id: KirigamiTheme
-        readonly property int small: 9
+        font.pointSize: Kirigami.Theme.smallFont.pointSize
     }
 }
