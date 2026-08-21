@@ -574,7 +574,7 @@ QtObject {
             })
         }
         daily = days
-        hourly = _omSlots(ymd0, byKey)
+        hourly = _omHourlyNext(byKey)
         todaySlots = hourly
         hasData = true
         loading = false
