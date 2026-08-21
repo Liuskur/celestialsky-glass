@@ -57,7 +57,7 @@ scripts/package.sh             builds all three
 ./theme/install.sh
 ```
 
-Color schemes: **Koollook Dark**, **Aqua**, **Eesti**, **Livonia**. Griffin icon theme (launcher). Window decoration **Koollook**. See `theme/README.md`.
+Color schemes: **Koollook Dark**, **Aqua**, **Eesti**, **Liwi**. Griffin icon theme (launcher, teal). Window decoration **Koollook**. See `theme/README.md`.
 ## Accessibility STT
 
 Local English speech-to-text into a clip buffer. Tray applet **Koollook STT** start/stop; clip widget shows the buffer.
