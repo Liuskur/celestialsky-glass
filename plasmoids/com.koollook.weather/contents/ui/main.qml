@@ -34,11 +34,13 @@ PlasmoidItem {
         interval: 15 * 60 * 1000
         running: true
         repeat: true
-        onTriggered: wx.refresh()
-    }
     Connections {
         target: Plasmoid.configuration
         function onSourceChanged() { wx.refresh() }
+        function onLatitudeChanged() { wx.refresh() }
+        function onLongitudeChanged() { wx.refresh() }
+        function onTemperatureUnitChanged() { wx.refresh() }
+    }
         function onTemperatureUnitChanged() { wx.refresh() }
     }
 
