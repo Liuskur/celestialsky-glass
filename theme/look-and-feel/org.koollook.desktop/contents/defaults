@@ -19,7 +19,7 @@ name=lavender-round
 
 [ksplashrc][KSplash]
 Engine=KSplashQML
-Theme=None
+Theme=org.koollook.desktop
 
 [kwinrc][org.kde.kdecoration2]
 BorderSizeAuto=false
