@@ -68,23 +68,8 @@ PlasmoidItem {
         Layout.minimumWidth: Kirigami.Units.gridUnit * 6
         Layout.minimumHeight: Kirigami.Units.gridUnit * 6
 
-        LiquidGlass {
+        KoollookFrame {
             anchors.fill: parent
-            radius: Plasmoid.configuration.cornerRadius
-            roundness: Plasmoid.configuration.roundnessX10 / 10
-            refractThickness: Plasmoid.configuration.refractThickness
-            refractIOR: Plasmoid.configuration.refractIORx100 / 100
-            refractScale: Plasmoid.configuration.refractScale
-            tint: colors.glassTint
-            tintAlpha: Plasmoid.configuration.tintAlphaPct / 100
-            chromaStrength: Plasmoid.configuration.chromaStrengthPct / 100
-            specStrength: Plasmoid.configuration.specStrengthPct / 100
-            blurRadius: Plasmoid.configuration.blurRadiusPx
-            realtimeRefraction: Plasmoid.configuration.realtimeRefraction
-            fallbackOpacity: colors.glassFallbackOpacity
-            solidMode: colors.isSolid
-            solidColor: colors.solidBackground
-            solidColorBottom: "transparent"
         }
 
         Canvas {
