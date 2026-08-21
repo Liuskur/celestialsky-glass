@@ -190,15 +190,17 @@ PlasmoidItem {
 
             ListView {
                 id: hourlyView
+            ListView {
+                id: hourlyView
                 visible: wx.hourly.length > 0
                 Layout.fillWidth: true
-                Layout.preferredHeight: Kirigami.Units.gridUnit * 3.6
+                Layout.preferredHeight: Kirigami.Units.gridUnit * 5.2
                 orientation: ListView.Horizontal
                 clip: true
                 spacing: 0
                 model: wx.hourly
                 delegate: Item {
-                    width: Math.max(Kirigami.Units.gridUnit * 2.2, hourlyView.width / Math.max(1, hourlyView.count))
+                    width: Math.max(Kirigami.Units.gridUnit * 2.4, hourlyView.width / Math.max(1, hourlyView.count))
                     height: hourlyView.height
                     Column {
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -210,13 +212,11 @@ PlasmoidItem {
                             color: colors.foreground
                             opacity: 0.7
                         }
-                        Kirigami.Icon {
+                        WeatherIcon {
                             anchors.horizontalCenter: parent.horizontalCenter
-                            source: modelData.icon
-                            width: Kirigami.Units.iconSizes.smallMedium
+                            iconName: modelData.icon
+                            width: Kirigami.Units.iconSizes.smallMedium * 1.5
                             height: width
-                            isMask: colors.useLightGlyphs
-                            color: colors.foreground
                         }
                         PlasmaComponents.Label {
                             anchors.horizontalCenter: parent.horizontalCenter
@@ -226,7 +226,6 @@ PlasmoidItem {
                     }
                 }
             }
-
             Kirigami.Separator {
                 Layout.fillWidth: true
                 visible: wx.daily.length > 0
