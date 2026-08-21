@@ -150,18 +150,24 @@ QtObject {
 
     function _bbcDay(forecasts, ymd) {
         var out = { sum: ({}), reports: [] }
-        var d, srep, rep, r
+        var d, srep, rep, r, hh, dest
         for (d = 0; d < forecasts.length; d++) {
             srep = (forecasts[d].summary && forecasts[d].summary.report) ? forecasts[d].summary.report : {}
-            if (srep.localDate !== ymd)
-                continue
-            if (srep.maxTempC !== null && srep.maxTempC !== undefined)
-                out.sum = srep
-            else if (!out.sum.localDate)
-                out.sum = srep
+            if (srep.localDate === ymd) {
+                if (srep.maxTempC !== null && srep.maxTempC !== undefined)
+                    out.sum = srep
+                else if (!out.sum.localDate)
+                    out.sum = srep
+            }
             rep = (forecasts[d].detailed && forecasts[d].detailed.reports) ? forecasts[d].detailed.reports : []
-            for (r = 0; r < rep.length; r++)
-                out.reports.push(rep[r])
+            for (r = 0; r < rep.length; r++) {
+                hh = parseInt((rep[r].timeslot || "99").split(":")[0], 10)
+                dest = srep.localDate || ""
+                if (hh < 6)
+                    dest = _shiftYmd(dest, 1)
+                if (dest === ymd)
+                    out.reports.push(rep[r])
+            }
         }
         return out
     }
