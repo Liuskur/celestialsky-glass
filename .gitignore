@@ -8,3 +8,4 @@
 plasmoids/*/contents/ui/org/
 plasmoids/*/contents/ui/config/ConfigAppearance.qml
 **/icons-flat-backup/
+theme/window-decoration/kdecoration-kde2/build/
