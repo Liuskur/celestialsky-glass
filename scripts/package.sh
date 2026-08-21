@@ -43,14 +43,22 @@ package_one com.koollook.calendar
 package_one com.koollook.weather
 package_one com.koollook.sttclip
 package_one com.koollook.audioviz
-
-# Theme (KDE store / local share)
-tar -C "$ROOT" -c theme | zstd -19 -o "$DIST/koollook-theme-${SUITE_VER}.tar.zst"
+# --- three product packs ---
+tar -C "$ROOT" --exclude 'theme/window-decoration/kdecoration-kde2/build' -c theme \
+  | zstd -19 -o "$DIST/koollook-theme-${SUITE_VER}.tar.zst"
 echo "wrote $DIST/koollook-theme-${SUITE_VER}.tar.zst"
 
-# STT helper
-tar -C "$ROOT" -c accessibility | zstd -19 -o "$DIST/koollook-stt-${SUITE_VER}.tar.zst"
-echo "wrote $DIST/koollook-stt-${SUITE_VER}.tar.zst"
+WID="$DIST/stage-widgets"
+mkdir -p "$WID"
+cp -a "$DIST"/com.koollook.*.plasmoid "$WID"/
+cp -a "$ROOT/LICENSE" "$ROOT/README.md" "$WID"/
+tar -C "$WID" -c . | zstd -19 -o "$DIST/koollook-widgets-${SUITE_VER}.tar.zst"
+rm -rf "$WID"
+echo "wrote $DIST/koollook-widgets-${SUITE_VER}.tar.zst"
+
+tar -C "$ROOT" -c accessibility \
+  | zstd -19 -o "$DIST/koollook-accessibility-${SUITE_VER}.tar.zst"
+echo "wrote $DIST/koollook-accessibility-${SUITE_VER}.tar.zst"
 
 cp -a "$ROOT/README.md" "$DIST/README.md"
 cp -a "$ROOT/LICENSE" "$DIST/LICENSE"
@@ -59,12 +67,14 @@ chmod 755 "$DIST/install.sh"
 
 (
   cd "$DIST"
-  sha256sum -- com.koollook*.plasmoid koollook-theme-*.tar.zst koollook-stt-*.tar.zst README.md LICENSE install.sh > SHA256SUMS
+  sha256sum -- com.koollook*.plasmoid koollook-theme-*.tar.zst koollook-widgets-*.tar.zst \
+    koollook-accessibility-*.tar.zst README.md LICENSE install.sh > SHA256SUMS
 )
 
 STAGE="$(mktemp -d)"
 mkdir -p "$STAGE/koollook-${SUITE_VER}"
-cp -a "$DIST"/*.plasmoid "$DIST"/koollook-theme-*.tar.zst "$DIST"/koollook-stt-*.tar.zst \
+cp -a "$DIST"/com.koollook*.plasmoid "$DIST"/koollook-theme-*.tar.zst \
+  "$DIST"/koollook-widgets-*.tar.zst "$DIST"/koollook-accessibility-*.tar.zst \
   "$DIST/README.md" "$DIST/LICENSE" "$DIST/install.sh" "$DIST/SHA256SUMS" \
   "$STAGE/koollook-${SUITE_VER}/"
 ARCHIVE="$DIST/koollook-${SUITE_VER}.tar.zst"
@@ -72,4 +82,5 @@ rm -f "$ARCHIVE"
 tar -C "$STAGE" -c "koollook-${SUITE_VER}" | zstd -19 -o "$ARCHIVE"
 rm -rf "$STAGE"
 echo "wrote $ARCHIVE"
+ls -1 "$DIST"
 ls -1 "$DIST"
