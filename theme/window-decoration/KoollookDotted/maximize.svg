@@ -8,7 +8,7 @@
       .ColorScheme-NegativeText { color:#ff3b30; }
     </style>
     <g id="xicon">
-      <path fill="currentColor" d="M6.2,6.2 7.6,4.8 11,8.2 14.4,4.8 15.8,6.2 12.4,9.6 15.8,13 14.4,14.4 11,11 7.6,14.4 6.2,13 9.6,9.6 z"/>
+      <path fill="currentColor" fill-rule="evenodd" d="M6,6 h10 v10 h-10 z M7.6,7.6 v6.8 h6.8 v-6.8 z"/>
     </g>
   </defs>
   <g id="active-center">
