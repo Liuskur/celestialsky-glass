@@ -19,10 +19,10 @@
         <entry name="blurRadiusPx" type="Int"><default>2</default></entry>
         <entry name="realtimeRefraction" type="Bool"><default>false</default></entry>
         <entry name="firstDayOfWeek" type="Int"><default>1</default></entry>
-        <entry name="showWeekNumbers" type="Bool"><default>false</default></entry>
+        <entry name="showWeekNumbers" type="Bool"><default>true</default></entry>
         <entry name="eventLookaheadDays" type="Int"><default>14</default></entry>
         <entry name="enabledCalendarPlugins" type="StringList">
-            <default>holidaysevents,astronomicalevents</default>
+            <default>astronomicalevents,holidaysevents</default>
         </entry>
     </group>
 </kcfg>
