@@ -3,7 +3,7 @@
         "Authors": [{"Name": "Koollook", "Email": ""}],
         "Description": "KDE 2-style dotted title bar (separate from Koollook Aurorae).",
         "EnabledByDefault": false,
-        "Id": "org.koollook.dotted",
+        "Id": "org.koollook.dotted.aurorae",
         "License": "MIT",
         "Name": "Koollook Dotted",
         "Version": "1.0.0"
