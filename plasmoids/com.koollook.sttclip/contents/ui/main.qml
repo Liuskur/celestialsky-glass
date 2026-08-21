@@ -34,14 +34,10 @@ PlasmoidItem {
     property string listenStatus: "stopped"
     property string lastAction: ""
 
-    function syncPhrases() {
-        var d = Plasmoid.configuration.deleteClipPhrase || "delete clip"
-        var s = Plasmoid.configuration.sendClipPhrase || "send clip"
-        runner.exec(sttBin + " --set-phrases " + shellQuote(d) + " " + shellQuote(s))
-    }
-
-    function shellQuote(t) {
-        return "'" + String(t).replace(/'/g, "'\\''") + "'"
+    function syncCommands() {
+        var js = Plasmoid.configuration.commandsJson || ""
+        if (js.length)
+            runner.exec(sttBin + " --write-commands-json " + shellQuote(js))
     }
 
     function reloadClip() {
