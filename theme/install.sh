@@ -51,5 +51,16 @@ if [[ "$APPLY_LAYOUT" == 1 ]] && command -v lookandfeeltool >/dev/null; then
   lookandfeeltool -a org.koollook.desktop
 fi
 
-echo "Koollook theme installed (colors, Koollook decoration, KWin effects)."
+DECO="$ROOT/theme/window-decoration/kdecoration-kde2"
+if command -v cmake >/dev/null && [[ -f "$DECO/CMakeLists.txt" ]]; then
+  cmake -B "$DECO/build" -S "$DECO" \
+    -DCMAKE_INSTALL_PREFIX="${HOME}/.local" \
+    -DCMAKE_BUILD_TYPE=Release >/tmp/koollook-kde2-cmake.log 2>&1 \
+    && cmake --build "$DECO/build" -j"$(nproc)" >/tmp/koollook-kde2-build.log 2>&1 \
+    && cmake --install "$DECO/build" >/tmp/koollook-kde2-install.log 2>&1 \
+    && echo "Koollook KDE 2 decoration installed to ~/.local" \
+    || echo "KDE 2 decoration build skipped (see /tmp/koollook-kde2-*.log)"
+fi
+
+echo "Koollook theme installed (colors, Koollook Aurorae, KWin effects)."
 echo "Global theme: org.koollook.desktop  (APPLY_LAYOUT=1 to also load layout)"
