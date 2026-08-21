@@ -1,15 +1,16 @@
 # Koollook STT (accessibility)
 
-Local **English** speech-to-text into a **clip buffer** (`~/.local/state/koollook/clip.txt`).
-The **Koollook STT Clip** desktop widget shows that buffer.
+The **Koollook STT** system tray applet starts/stops listening. The **Koollook STT Clip** desktop widget shows the buffer.
 
+- Tray: left-click popup, middle-click toggle, right-click Start/Stop/Send/Delete
 - Say **delete clip** — empty the buffer.
-- Say **send clip** — type the buffer into the currently focused field (`wtype`), then clear the widget. If the compositor rejects virtual-keyboard, AT-SPI insert is used; clipboard is always filled as backup.
+- Say **send clip** — type the buffer into the focused field, then clear.
 
 ```bash
 ./accessibility/koollook-stt/install.sh
 koollook-stt --toggle     # Meta+Alt+V
 koollook-stt --list-sources
+```
 ```
 
 Phrases are configurable (`~/.config/koollook/stt.conf` or the widget Clip page).
