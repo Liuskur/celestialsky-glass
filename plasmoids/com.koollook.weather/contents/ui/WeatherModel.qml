@@ -254,11 +254,23 @@ QtObject {
         hourly = hours
         todaySlots = hours
         var days = []
-        var d, rep, srep, dt, ymd, slots, s, hour, hit, hnum
+        var d, rep, srep, dt, ymd, slots, s, hour, hit, hnum, hi, lo, seen
+        seen = ({})
         for (d = 0; d < forecasts.length && days.length < 7; d++) {
             srep = (forecasts[d].summary && forecasts[d].summary.report) ? forecasts[d].summary.report : {}
             ymd = srep.localDate || ""
-            dt = ymd ? new Date(ymd + "T12:00:00") : new Date()
+            if (!ymd || seen[ymd])
+                continue
+            hi = srep.maxTempC
+            if (hi === null || hi === undefined)
+                hi = srep.mostLikelyHighTemperatureC
+            lo = srep.minTempC
+            if (lo === null || lo === undefined)
+                lo = srep.mostLikelyLowTemperatureC
+            if (hi === null || hi === undefined)
+                continue
+            seen[ymd] = true
+            dt = new Date(ymd + "T12:00:00")
             rep = (forecasts[d].detailed && forecasts[d].detailed.reports) ? forecasts[d].detailed.reports : []
             slots = []
             for (s = 0; s < slotHours.length; s++) {
@@ -282,8 +294,8 @@ QtObject {
                 name: Qt.locale().dayName(dt.getDay(), Locale.ShortFormat),
                 ymd: ymd,
                 icon: _bbcIcon(srep.weatherType),
-                high: formatTemp(srep.maxTempC),
-                low: formatTemp(srep.minTempC),
+                high: formatTemp(hi),
+                low: (lo === null || lo === undefined) ? "—" : formatTemp(lo),
                 slots: slots
             })
         }
