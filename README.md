@@ -1,8 +1,6 @@
-# Koollook Widgets
+# Koollook
 
-Plasma 6 desktop widgets with a shared liquid-glass QML module.
-
-This is the former Celestial Sky (Glass) repository, now the Koollook widget suite.
+Plasma 6 widgets, theme, and local accessibility STT. Former Celestial Sky (Glass) repository.
 
 ## Widgets
 
