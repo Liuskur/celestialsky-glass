@@ -128,6 +128,68 @@ QtObject {
         return false
     }
 
+    function _pad2(n) {
+        return (n < 10 ? "0" : "") + n
+    }
+
+    function _ymdFromDate(dt) {
+        return dt.getFullYear() + "-" + _pad2(dt.getMonth() + 1) + "-" + _pad2(dt.getDate())
+    }
+
+    function _todayYmd() {
+        return _ymdFromDate(new Date())
+    }
+
+    function _shiftYmd(ymd, days) {
+        var p = (ymd || "").split("-")
+        if (p.length < 3)
+            return ymd
+        var dt = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10) + days)
+        return _ymdFromDate(dt)
+    }
+
+    function _bbcDay(forecasts, ymd) {
+        var out = { sum: ({}), reports: [] }
+        var d, srep, rep, r
+        for (d = 0; d < forecasts.length; d++) {
+            srep = (forecasts[d].summary && forecasts[d].summary.report) ? forecasts[d].summary.report : {}
+            if (srep.localDate !== ymd)
+                continue
+            if (srep.maxTempC !== null && srep.maxTempC !== undefined)
+                out.sum = srep
+            else if (!out.sum.localDate)
+                out.sum = srep
+            rep = (forecasts[d].detailed && forecasts[d].detailed.reports) ? forecasts[d].detailed.reports : []
+            for (r = 0; r < rep.length; r++)
+                out.reports.push(rep[r])
+        }
+        return out
+    }
+
+    function _bbcSlotsFromReports(reports, fallbackType) {
+        var byHour = ({})
+        var r, ts, hh
+        for (r = 0; r < reports.length; r++) {
+            ts = reports[r].timeslot || ""
+            hh = parseInt(ts.split(":")[0], 10)
+            if (hh >= 6 && hh <= 21)
+                byHour[hh] = reports[r]
+        }
+        var slots = []
+        var s, hour, hit
+        for (s = 0; s < slotHours.length; s++) {
+            hour = slotHours[s]
+            hit = byHour[hour]
+            slots.push({
+                hour: hour,
+                label: (hour < 10 ? "0" : "") + hour,
+                icon: hit ? _bbcIcon(hit.weatherType, _hourIsNight(hour)) : "weather-none-available",
+                temp: hit ? formatTemp(hit.temperatureC) : "—"
+            })
+        }
+        return slots
+    }
+
     function _toC(value, unit) {
         if (value === undefined || value === null || value === "")
             return 0
