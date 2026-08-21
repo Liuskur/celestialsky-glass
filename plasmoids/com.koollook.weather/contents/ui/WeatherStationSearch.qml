@@ -10,11 +10,11 @@ ColumnLayout {
     id: root
     spacing: Kirigami.Units.smallSpacing
 
-    property string source: "openmeteo"
-    property string locationName: ""
+    property string source: "bbcukmet|weather|Tallinn, Estonia, EE|588409"
+    property string locationName: "Tallinn, Estonia, EE"
     property real latitude: 0
     property real longitude: 0
-    property string provider: "openmeteo"
+    property string provider: "bbcukmet"
     property bool omMode: provider === "openmeteo"
 
     Plasma5Support.DataSource {
