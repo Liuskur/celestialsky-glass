@@ -37,8 +37,13 @@ Writes `dist/`:
 kpackagetool6 -t Plasma/Applet -i dist/com.koollook.planisphere-2.0.0.plasmoid
 kpackagetool6 -t Plasma/Applet -i dist/com.koollook.calendar-2.0.0.plasmoid
 kpackagetool6 -t Plasma/Applet -i dist/com.koollook.weather-2.0.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.muhurta-1.0.0.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.hora-1.0.0.plasmoid
+```
 
-Then: Desktop → Add Widgets → search “Koollook”.
+Then: Desktop → Add Widgets → search “Koollook”. Standalone sites: open `web/muhurta/index.html` or `web/hora/index.html`.
+
+## Layout
 
 ```
 theme/                         Koollook colors, Aurorae, look-and-feel, KWin
@@ -49,8 +54,6 @@ shared/appearance/             ConfigAppearance.qml
 shared/timekeeping/            sunrise, muhurta, hora (JS + TimeBoard)
 web/muhurta/  web/hora/        standalone Koollook SPAs (open index.html)
 plasmoids/com.koollook.*/      widget-specific sources
-scripts/package.sh             builds all three
-```
 scripts/package.sh             builds all three
 ```
 
