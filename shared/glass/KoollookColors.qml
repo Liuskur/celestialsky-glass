@@ -2,8 +2,7 @@ import QtQuick
 import org.kde.kirigami as Kirigami
 
 QtObject {
-    id: macColors
-
+    id: koollookColors
     // styleMode:
     //   0 Glass, 1 Solid, 2 Clear (see-through, no frame),
     //   3 Plasma, 4 Chameleon, 5 Inverse, 6 Koollook
