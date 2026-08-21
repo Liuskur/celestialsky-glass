@@ -12,4 +12,9 @@ ConfigModel {
         icon: "view-calendar"
         source: "config/ConfigGeneral.qml"
     }
+    ConfigCategory {
+        name: i18n("Holidays")
+        icon: "view-calendar-holiday"
+        source: "config/ConfigHolidays.qml"
+    }
 }
