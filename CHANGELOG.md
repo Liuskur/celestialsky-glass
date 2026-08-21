@@ -41,7 +41,7 @@
 - Weather is original MIT code, Weather Report layout, Open-Meteo
 - Removed GPL macOS-widget sources
 - Rebrand to Koollook; plugin IDs `com.koollook.*`
-- Theme: Koollook color scheme, Aurorae decoration, look-and-feel, KWin effects (from RiderLook)
+- Theme: Koollook color scheme, title bar, look-and-feel, KWin effects (from RiderLook)
 - Accessibility STT via ResoNider whisper.cpp; KDE Connect runcommand + Pulse source hook
 ## Celestial Sky 1.4.0
 
