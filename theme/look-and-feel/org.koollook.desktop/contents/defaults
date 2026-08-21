@@ -4,8 +4,7 @@ AccentColor=0,211,184
 LastUsedCustomAccentColor=0,211,184
 
 [kdeglobals][Icons]
-Theme=Tela
-
+Theme=Koollook
 [kdeglobals][KDE]
 widgetStyle=Breeze
 LookAndFeelPackage=org.koollook.desktop
