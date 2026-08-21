@@ -175,17 +175,17 @@ QtObject {
             loading = false
             error = ""
         }
-    }
-
     function _bbcIcon(type) {
         var n = parseInt(type, 10)
         if (n === 0 || n === 1) return isNight ? "weather-clear-night" : "weather-clear"
-        if (n >= 2 && n <= 4) return isNight ? "weather-few-clouds-night" : "weather-few-clouds"
-        if (n >= 5 && n <= 8) return "weather-clouds"
-        if (n === 9 || n === 10 || n === 11 || n === 12) return "weather-showers-scattered"
-        if (n >= 13 && n <= 18) return "weather-showers"
+        if (n === 2 || n === 3) return isNight ? "weather-few-clouds-night" : "weather-few-clouds"
+        if (n >= 4 && n <= 8) return isNight ? "weather-clouds-night" : "weather-clouds"
+        if (n === 9 || n === 10) return isNight ? "weather-showers-scattered-night" : "weather-showers-scattered"
+        if (n >= 11 && n <= 18) return isNight ? "weather-showers-night" : "weather-showers"
         if (n >= 19 && n <= 22) return "weather-snow"
-        if (n >= 23 && n <= 30) return "weather-storm"
+        if (n >= 23 && n <= 30) return isNight ? "weather-storm-night" : "weather-storm"
+        return "weather-none-available"
+    }
         return "weather-none-available"
     }
 
