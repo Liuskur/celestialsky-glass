@@ -3,16 +3,18 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
-import "../org/koollook/location"
+import ".."
 
 Item {
     id: root
     implicitWidth: Kirigami.Units.gridUnit * 28
-    implicitHeight: Kirigami.Units.gridUnit * 22
+    implicitHeight: Kirigami.Units.gridUnit * 28
 
     property string title
     property string cfg_location: ""
     property string cfg_locationDefault: ""
+    property string cfg_source: ""
+    property string cfg_sourceDefault: ""
     property double cfg_latitude: 0
     property double cfg_latitudeDefault: 0
     property double cfg_longitude: 0
@@ -52,15 +54,14 @@ Item {
         anchors.margins: Kirigami.Units.largeSpacing * 2
         spacing: Kirigami.Units.largeSpacing
 
-        LocationSearch {
+        WeatherStationSearch {
             id: loc
             Layout.fillWidth: true
+            Layout.fillHeight: true
+            source: root.cfg_source
             locationName: root.cfg_location
-            latitude: root.cfg_latitude
-            longitude: root.cfg_longitude
+            onSourceChanged: if (root._ready) root.cfg_source = source
             onLocationNameChanged: if (root._ready) root.cfg_location = locationName
-            onLatitudeChanged: if (root._ready) root.cfg_latitude = latitude
-            onLongitudeChanged: if (root._ready) root.cfg_longitude = longitude
         }
 
         Kirigami.FormLayout {
