@@ -234,11 +234,11 @@ function horaSchedule(lat, lon, now) {
         info = HORA_INFO[id]
         periods.push({
             index: 13 + i, planet: id, name: info.name, meaning: info.quality, quality: info.tone,
-            start: start, end: end, label: fmtHM(start) + "–" + fmtHM(end), daypart: "night"
-        })
-    }
     return {
         kind: "hora", window: w, periods: periods, current: currentPeriod(periods, now),
+        dayLord: HORA_INFO[lord].name,
+        sunriseLabel: fmtHM(w.sunrise), sunsetLabel: fmtHM(w.sunset)
+    }
         dayLord: HORA_INFO[lord].name
     }
 }
