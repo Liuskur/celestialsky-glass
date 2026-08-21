@@ -177,6 +177,42 @@ Decoration {
             rightMargin: decoration.client.maximized ? auroraeTheme.titleEdgeRightMaximized : (auroraeTheme.titleEdgeRight + root.padding.right)
         }
     }
+    Item {
+        id: dottedLeft
+        visible: root.dottedSpacer && width > 6
+        clip: true
+        z: 0
+        height: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
+        y: decoration.client.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
+        x: leftButtonGroup.x + leftButtonGroup.width + 6
+        width: Math.max(0, root.captionTextX - 6 - x)
+        Image {
+            width: Math.max(parent.width, 7)
+            height: Math.max(parent.height, 7)
+            fillMode: Image.Tile
+            source: root.dottedTile.length ? ("file://" + root.dottedTile) : ""
+            horizontalAlignment: Image.AlignLeft
+            verticalAlignment: Image.AlignTop
+        }
+    }
+    Item {
+        id: dottedRight
+        visible: root.dottedSpacer && width > 6
+        clip: true
+        z: 0
+        height: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
+        y: decoration.client.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
+        x: root.captionTextX + root.captionTextW + 6
+        width: Math.max(0, rightButtonGroup.x - 6 - x)
+        Image {
+            width: Math.max(parent.width, 7)
+            height: Math.max(parent.height, 7)
+            fillMode: Image.Tile
+            source: root.dottedTile.length ? ("file://" + root.dottedTile) : ""
+            horizontalAlignment: Image.AlignLeft
+            verticalAlignment: Image.AlignTop
+        }
+    }
     Text {
         id: caption
         text: decoration.client.caption
