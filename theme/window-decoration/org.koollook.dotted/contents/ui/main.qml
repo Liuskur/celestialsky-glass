@@ -106,7 +106,8 @@ Decoration {
         ButtonGroup {
             id: rightButtonGroup
             spacing: 1
-            explicitSpacer: 10
+            explicitSpacer: 0
+            height: root.barH
             buttons: options.titleButtonsRight
             menuButton: menuComp
             appMenuButton: menuComp
@@ -119,7 +120,9 @@ Decoration {
             helpButton: minComp
             shadeButton: minComp
             anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+        }
         }
 
         Component.onCompleted: decoration.installTitleItem(titleRow)
