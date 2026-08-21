@@ -81,7 +81,6 @@ cp -a "$DIST"/com.koollook*.plasmoid "$DIST"/koollook-theme-*.tar.zst \
   "$DIST/README.md" "$DIST/LICENSE" "$DIST/TESTERS.md" "$DIST/RELEASE-NOTES.md" \
   "$DIST/install.sh" "$DIST/SHA256SUMS" \
   "$STAGE/koollook-${SUITE_VER}/"
-  "$STAGE/koollook-${SUITE_VER}/"
 ARCHIVE="$DIST/koollook-${SUITE_VER}.tar.zst"
 rm -f "$ARCHIVE"
 tar -C "$STAGE" -c "koollook-${SUITE_VER}" | zstd -19 -o "$ARCHIVE"
