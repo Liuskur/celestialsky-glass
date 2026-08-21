@@ -152,28 +152,37 @@ do_clear_clip() {
   echo "clip cleared"
   notify-send -a Koollook "STT" "Clip deleted" 2>/dev/null || true
 }
-
-do_send_clip() {
-  local t
-  t="$(clip_read)"
-  t="${t%"${t##*[![:space:]]}"}"
-  if [[ -z "$t" ]]; then
-    echo "clip empty"
-    return 0
-  fi
-  printf '%s' "$t" >"$STATE/last-sent.txt"
-  if command -v wl-copy >/dev/null; then
-    printf '%s' "$t" | wl-copy || true
-  fi
-  type_text "$t" || true
-  clip_write ""
-  echo "sent" >"$STATUS_FILE"
-  echo "clip sent"
-  notify-send -a Koollook "STT" "Clip sent" 2>/dev/null || true
+handle_utterance() {
+  local out="$1"
+  ensure_commands_json
+  local kind payload rest=""
+  local result
+  result="$(match_command "$out" || true)"
+  kind="$(printf '%s\n' "$result" | awk 'NR==1{print $1}')"
+  payload="$(printf '%s\n' "$result" | awk 'NR==1{ $1=""; sub(/^ /,""); print }')"
+  rest="$(printf '%s\n' "$result" | awk 'NR==2 && $1=="REST"{ $1=""; sub(/^ /,""); print }')"
+  case "$kind" in
+    BUILTIN)
+      case "$payload" in
+        clear-clip) do_clear_clip ;;
+        send-clip)
+          [[ -n "$rest" ]] && clip_append "$rest"
+          do_send_clip
+          ;;
+        *) clip_append "$out" ;;
+      esac
+      ;;
+    RUN)
+      if [[ -n "$payload" ]]; then
+        bash -lc "$payload" >/dev/null 2>&1 &
+        notify-send -a Koollook "STT" "Ran command" 2>/dev/null || true
+      fi
+      ;;
+    *)
+      clip_append "$out"
+      ;;
+  esac
 }
-
-do_set_phrases() {
-  local d="${1:-delete clip}"
   local s="${2:-send clip}"
   mkdir -p "$(dirname "$CONF")"
   printf 'delete_clip=%q\nsend_clip=%q\n' "$d" "$s" >"$CONF"
