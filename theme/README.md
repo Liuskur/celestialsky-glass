@@ -1,19 +1,19 @@
-# Koollook theme (from RiderLook)
+# Koollook theme pack
 
-Plasma 6 look pieces, rebranded from the RiderLook stack.
+Plasma 6 look pieces.
 
 | Piece | Id | Source |
 |-------|-----|--------|
 | Color scheme | `Koollook` | Stone2 |
-| Window decoration | Aurorae `Koollook` | Willow Dark Alt Shader |
-| Global theme | `org.koollook.desktop` | RiderLook defaults |
-| KWin effects | translucency, hide-cursor, no slide, thumbnail switcher | RiderLook `kwinrc` |
+| Aurorae decoration | `Koollook` | Willow Dark Alt Shader |
+| KDE 2 decoration | `org.koollook.kde2` | kdecoration2-kde2 → KDecoration3 |
+| Global theme | `org.koollook.desktop` | RiderLook |
+| KWin effects | translucency, hide-cursor | RiderLook kwinrc |
 
 ```bash
-./theme/install.sh              # install + apply colors/decoration/effects
-APPLY_LAYOUT=1 ./theme/install.sh   # also apply desktop/panel layout
+./theme/install.sh
 ```
 
-Window decoration SVGs remain GPL-3.0 (Willow / doncsugar). Color scheme and look-and-feel defaults are MIT.
+Widget styles (Glass / Clear / Plasma / Chameleon / Inverse / Koollook) are in `shared/glass/KoollookFrame.qml` — one change applies to every plasmoid.
 
-Plasma style still expects **lavender-round** and **Tela** icons if those packages are present; otherwise Breeze is used.
+KDE 2 C++ decoration needs cmake + KF6 + KDecoration3 (`cmake` on PATH). Aurorae `Koollook` always installs.
