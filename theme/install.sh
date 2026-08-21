@@ -17,6 +17,17 @@ rm -rf "$HOME_SHARE/aurorae/themes/Koollook"
 cp -a "$ROOT/theme/window-decoration/Koollook" "$HOME_SHARE/aurorae/themes/Koollook"
 rm -rf "$HOME_SHARE/aurorae/themes/KoollookDotted"
 cp -a "$ROOT/theme/window-decoration/KoollookDotted" "$HOME_SHARE/aurorae/themes/KoollookDotted"
+mkdir -p "$HOME_SHARE/kwin/aurorae"
+cp -a "$ROOT/theme/kwin-aurorae/"*.qml "$HOME_SHARE/kwin/aurorae/"
+SYS_AURORAE="/usr/share/kwin/aurorae"
+if [[ -d "$SYS_AURORAE" ]]; then
+  for f in aurorae.qml AuroraeButtonGroup.qml AppMenuButton.qml; do
+    if [[ -f "$SYS_AURORAE/$f" && ! -f "$SYS_AURORAE/$f.bak-koollook" ]]; then
+      cp -a "$SYS_AURORAE/$f" "$SYS_AURORAE/$f.bak-koollook" 2>/dev/null || true
+    fi
+    cp -a "$ROOT/theme/kwin-aurorae/$f" "$SYS_AURORAE/$f" 2>/dev/null || true
+  done
+fi
 mkdir -p "$HOME_SHARE/kwin/decorations"
 rm -rf "$HOME_SHARE/kwin/decorations/org.koollook.dotted"
 cp -a "$ROOT/theme/window-decoration/org.koollook.dotted" "$HOME_SHARE/kwin/decorations/org.koollook.dotted"
