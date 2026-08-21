@@ -30,15 +30,14 @@
           + (day.dayLord ? " · Day lord " + day.dayLord : "")
         var tb = $("rows")
         tb.innerHTML = ""
-        for (var i = 0; i < day.periods.length; i++) {
-          var x = day.periods[i]
           var tr = document.createElement("tr")
-          if (cur && x.index === cur.index) tr.className = "current"
+          var cls = x.daypart || ""
+          if (cur && x.index === cur.index) cls += (cls ? " " : "") + "current"
+          tr.className = cls
           var qclass = (x.quality === "inauspicious" || x.quality === "fierce" || x.quality === "heavy") ? "bad" : "ok"
           tr.innerHTML = "<td>" + x.index + "</td><td>" + x.name + "</td><td class='" + qclass + "'>"
             + x.quality + "</td><td>" + x.label + "</td>"
           tb.appendChild(tr)
-        }
       }
       $("geo").onclick = function () {
         if (!navigator.geolocation) return
