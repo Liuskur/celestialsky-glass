@@ -22,14 +22,13 @@ Plasma 6 widgets, theme, and local accessibility STT. Former Celestial Sky (Glas
 
 Writes `dist/`:
 
-- `com.koollook.celestialsky-1.4.0.plasmoid`
+Writes `dist/`:
+
 - `com.koollook.celestialsky-1.4.0.plasmoid`
 - `com.koollook.calendar-2.0.0.plasmoid`
 - `com.koollook.weather-2.0.0.plasmoid`
 - `koollook-widgets-2.0.0.tar.zst`
 - `SHA256SUMS`
-GitHub Actions on `main` and `v*` tags produce the same artifacts.
-
 ## Install
 
 ```bash
