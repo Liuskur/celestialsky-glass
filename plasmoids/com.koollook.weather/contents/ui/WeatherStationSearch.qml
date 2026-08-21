@@ -53,9 +53,17 @@ ColumnLayout {
     ComboBox {
         id: providerBox
         Layout.fillWidth: true
-        model: [i18n("Open-Meteo (macOS weather)"), i18n("BBC Weather"), i18n("NOAA"), i18n("German Weather Service"), i18n("wetter.com"), i18n("Environment Canada")]
-        property var ids: ["openmeteo", "bbcukmet", "noaa", "dwd", "wettercom", "envcan"]
+        model: [i18n("BBC Weather"), i18n("NOAA"), i18n("German Weather Service"), i18n("wetter.com"), i18n("Environment Canada"), i18n("Open-Meteo")]
+        property var ids: ["bbcukmet", "noaa", "dwd", "wettercom", "envcan", "openmeteo"]
         currentIndex: 0
+        Component.onCompleted: {
+            var i
+            for (i = 0; i < ids.length; i++) {
+                if (root.source.indexOf(ids[i] + "|") === 0 || root.provider === ids[i] || (ids[i] === "openmeteo" && root.source === "openmeteo"))
+                    currentIndex = i
+            }
+            root.provider = ids[currentIndex]
+        }
         onActivated: function (idx) {
             root.provider = ids[idx]
             if (ids[idx] === "openmeteo")
