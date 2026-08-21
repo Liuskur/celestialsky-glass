@@ -1,5 +1,10 @@
 # Changelog — Koollook Widgets
 
+## 0.7.0
+
+- Unified version **0.7.0** across widgets, theme, decorations, wallpapers, look-and-feel, SDDM
+- First numbered Koollook suite release (replaces mixed 1.x / 2.x / 2.8.0 labels)
+
 ## 2.8.0
 
 - **Koollook Muhurta** (`com.koollook.muhurta`): Vedic 30 named muhūrtas from local sunrise
