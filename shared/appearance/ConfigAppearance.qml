@@ -3,31 +3,64 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 
-ColumnLayout {
+Item {
     id: root
-    spacing: Kirigami.Units.largeSpacing
+    implicitWidth: Kirigami.Units.gridUnit * 32
+    implicitHeight: Kirigami.Units.gridUnit * 42
 
-    property alias cfg_styleMode: styleCombo.currentIndex
-    property alias cfg_appearance: appearanceCombo.currentIndex
-    property alias cfg_cornerRadius: radiusSpin.value
-    property alias cfg_roundnessX10: roundnessSpin.value
-    property alias cfg_refractThickness: thicknessSpin.value
-    property alias cfg_refractIORx100: iorSpin.value
-    property alias cfg_refractScale: scaleSpin.value
-    property alias cfg_tintAlphaPct: tintSpin.value
-    property alias cfg_chromaStrengthPct: chromaSpin.value
-    property alias cfg_specStrengthPct: specStrengthSpin.value
-    property alias cfg_blurRadiusPx: blurRadiusSpin.value
-    property alias cfg_realtimeRefraction: realtimeCheck.checked
-    property alias cfg_hideFrame: hideFrameCheck.checked
+    property string title
 
-    function _serialize() {
-        return JSON.stringify({
-            s: styleCombo.currentIndex,
-            a: appearanceCombo.currentIndex,
-            cr: radiusSpin.value,
-            rn: roundnessSpin.value,
-            rt: thicknessSpin.value,
+    property int cfg_styleMode: 0
+    property int cfg_styleModeDefault: 0
+    property int cfg_appearance: 0
+    property int cfg_appearanceDefault: 0
+    property int cfg_cornerRadius: 64
+    property int cfg_cornerRadiusDefault: 64
+    property int cfg_roundnessX10: 75
+    property int cfg_roundnessX10Default: 75
+    property int cfg_refractThickness: 35
+    property int cfg_refractThicknessDefault: 35
+    property int cfg_refractIORx100: 170
+    property int cfg_refractIORx100Default: 170
+    property int cfg_refractScale: 65
+    property int cfg_refractScaleDefault: 65
+    property int cfg_tintAlphaPct: 22
+    property int cfg_tintAlphaPctDefault: 22
+    property int cfg_chromaStrengthPct: 28
+    property int cfg_chromaStrengthPctDefault: 28
+    property int cfg_specStrengthPct: 70
+    property int cfg_specStrengthPctDefault: 70
+    property int cfg_blurRadiusPx: 2
+    property int cfg_blurRadiusPxDefault: 2
+    property bool cfg_realtimeRefraction: false
+    property bool cfg_realtimeRefractionDefault: false
+    property bool cfg_hideFrame: false
+    property bool cfg_hideFrameDefault: false
+
+    property var cfg_location
+    property var cfg_locationDefault
+    property var cfg_latitude
+    property var cfg_latitudeDefault
+    property var cfg_longitude
+    property var cfg_longitudeDefault
+    property var cfg_planetScale
+    property var cfg_planetScaleDefault
+    property var cfg_bgOpacity
+    property var cfg_bgOpacityDefault
+    property var cfg_temperatureUnit
+    property var cfg_temperatureUnitDefault
+    property var cfg_enabledCalendarPlugins
+    property var cfg_enabledCalendarPluginsDefault
+    property var cfg_firstDayOfWeek
+    property var cfg_firstDayOfWeekDefault
+    property var cfg_showWeekNumbers
+    property var cfg_showWeekNumbersDefault
+    property var cfg_commandsJson
+    property var cfg_commandsJsonDefault
+    property var cfg_sendClipPhrase
+    property var cfg_sendClipPhraseDefault
+    property var cfg_deleteClipPhrase
+    property var cfg_deleteClipPhraseDefault
             ri: iorSpin.value,
             rs: scaleSpin.value,
             ta: tintSpin.value,
