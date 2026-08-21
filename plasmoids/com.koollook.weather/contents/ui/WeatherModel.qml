@@ -356,65 +356,30 @@ QtObject {
             || sum.enhancedWeatherDescription || sum.weatherTypeText || ""
         iconName = _bbcIcon(nowR.weatherType !== undefined ? nowR.weatherType : sum.weatherType, isNight)
         credit = "BBC Weather"
-        var hours = []
-        var r, ts, hh
-        for (r = 0; r < reports.length; r++) {
-            ts = reports[r].timeslot || ""
-            hh = parseInt(ts.split(":")[0], 10)
-            if (!_slotMatch(hh))
-                continue
-            hours.push({
-                label: (hh < 10 ? "0" : "") + hh,
-                icon: _bbcIcon(reports[r].weatherType, _hourIsNight(hh)),
-                temp: formatTemp(reports[r].temperatureC)
-            })
-        }
+        var todayYmd = _todayYmd()
+        var todayPack = _bbcDay(forecasts, todayYmd)
+        var hours = _bbcSlotsFromReports(todayPack.reports, todayPack.sum.weatherType)
         hourly = hours
         todaySlots = hours
         var days = []
-        var d, rep, srep, dt, ymd, slots, s, hour, hit, hnum, hi, lo
-        var seen = ({})
-        for (d = 0; d < forecasts.length && days.length < 7; d++) {
-            srep = (forecasts[d].summary && forecasts[d].summary.report) ? forecasts[d].summary.report : {}
-            ymd = srep.localDate || ""
-            if (!ymd || seen[ymd])
-                continue
-            hi = srep.maxTempC
-            if (hi === null || hi === undefined)
-                hi = srep.mostLikelyHighTemperatureC
-            lo = srep.minTempC
-            if (lo === null || lo === undefined)
-                lo = srep.mostLikelyLowTemperatureC
-            if (hi === null || hi === undefined)
-                continue
-            seen[ymd] = true
+        var k, ymd, pack, dt, hi, lo
+        for (k = 1; k <= 7; k++) {
+            ymd = _shiftYmd(todayYmd, k)
+            pack = _bbcDay(forecasts, ymd)
             dt = new Date(ymd + "T12:00:00")
-            rep = (forecasts[d].detailed && forecasts[d].detailed.reports) ? forecasts[d].detailed.reports : []
-            slots = []
-            for (s = 0; s < slotHours.length; s++) {
-                hour = slotHours[s]
-                hit = null
-                for (r = 0; r < rep.length; r++) {
-                    hnum = parseInt((rep[r].timeslot || "99").split(":")[0], 10)
-                    if (hnum === hour) {
-                        hit = rep[r]
-                        break
-                    }
-                }
-                slots.push({
-                    hour: hour,
-                    label: (hour < 10 ? "0" : "") + hour,
-                    icon: hit ? _bbcIcon(hit.weatherType, _hourIsNight(hour)) : _bbcIcon(srep.weatherType, false),
-                    temp: hit ? formatTemp(hit.temperatureC) : "—"
-                })
-            }
+            hi = pack.sum.maxTempC
+            if (hi === null || hi === undefined)
+                hi = pack.sum.mostLikelyHighTemperatureC
+            lo = pack.sum.minTempC
+            if (lo === null || lo === undefined)
+                lo = pack.sum.mostLikelyLowTemperatureC
             days.push({
                 name: _dayName(dt),
                 ymd: ymd,
-                icon: _bbcIcon(srep.weatherType, false),
-                high: formatTemp(Number(hi)),
-                low: (lo === null || lo === undefined) ? "—" : formatTemp(Number(lo)),
-                slots: slots
+                icon: _bbcIcon(pack.sum.weatherType, false),
+                high: formatTemp(hi),
+                low: formatTemp(lo),
+                slots: _bbcSlotsFromReports(pack.reports, pack.sum.weatherType)
             })
         }
         daily = days
