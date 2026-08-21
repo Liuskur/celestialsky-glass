@@ -38,7 +38,7 @@ package_one() {
   echo "wrote $out"
 }
 
-package_one com.koollook.celestialsky
+package_one com.koollook.planisphere
 package_one com.koollook.calendar
 package_one com.koollook.weather
 package_one com.koollook.sttclip
