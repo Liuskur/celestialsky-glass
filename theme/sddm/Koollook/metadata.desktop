@@ -1,0 +1,16 @@
+[SddmGreeterTheme]
+Name=Koollook
+Description=Koollook Dark teal griffin login
+Author=Koollook
+Copyright=Koollook
+License=MIT
+Type=sddm-theme
+Version=1.0.0
+Website=
+Screenshot=preview.png
+MainScript=Main.qml
+ConfigFile=theme.conf
+Email=
+Theme-Id=koollook
+Theme-API=2.0
+QtVersion=6
