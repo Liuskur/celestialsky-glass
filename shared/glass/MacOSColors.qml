@@ -33,36 +33,59 @@ QtObject {
     readonly property bool showSpecular: isGlass || isChameleon
     readonly property bool hideChrome: isClear
 
-    readonly property color background: isLight ? "#f2f2f7" : "#1c1c1e"
-    readonly property color surface:    isLight ? "#ffffff" : "#2c2c2e"
-    readonly property color surfaceAlt: isLight ? "#e5e5ea" : "#3a3a3c"
+    readonly property color glassTint: {
+        if (isKoollook) return "#00d3b8"
+        if (isChameleon) return Kirigami.Theme.highlightColor
+        if (isLight) return "#ffffff"
+        return "#000000"
+    }
+    readonly property real  glassTintAlpha: {
+        if (isClear) return 0
+        if (isKoollook) return 0.18
+        if (isChameleon) return 0.28
+        return isLight ? 0.60 : 0.32
+    }
+    readonly property real  glassFallbackOpacity: isClear ? 0 : (isLight ? 0.72 : 0.55)
 
-    readonly property color labelPrimary:    isLight ? "#000000" : "#ffffff"
-    readonly property color labelSecondary:  isLight ? "#3c3c43" : "#ebebf5"
-    readonly property color labelTertiary:   isLight ? "#3c3c4399" : "#ebebf599"
-    readonly property color labelQuaternary: isLight ? "#3c3c432e" : "#ebebf52e"
-
-    readonly property color accent: "#0a84ff"
-
-    readonly property color separator: isLight ? "#3c3c4336" : "#54545899"
-
-    // Glass mode tint — translucent overlay sampled by the shader.
-    readonly property color glassTint: isLight ? "#ffffff" : "#000000"
-    readonly property real  glassTintAlpha: isLight ? 0.60 : 0.32
-    readonly property real  glassFallbackOpacity: isLight ? 0.72 : 0.55
-
-    // Solid mode palette — opaque fill plus contrasting foreground.
     readonly property color solidBackground: isLight ? "#ffffff" : "#1A1B1E"
     readonly property color solidForeground: isLight ? "#1A1B1E" : "#ffffff"
 
-    // Tuned reds for the today badge in Solid mode (Glass keeps it white).
     readonly property color accentRed: isLight ? "#D70015" : "#FF3B30"
+    readonly property color koollookAccent: "#00d3b8"
+    readonly property color koollookGold: "#e7bf7e"
 
-    // Per-widget override: set to true/false to force foreground polarity
-    // independent of appearance. Null means use the normal isLight logic.
     property var foregroundDarkOverride: null
 
     readonly property bool effectiveLight: foregroundDarkOverride !== null
+        ? !foregroundDarkOverride
+        : isLight
+
+    readonly property bool useLightGlyphs: {
+        if (isInverse || isClear) return desktopIsDark
+        if (isPlasma) return systemIsDark
+        if (isKoollook || isGlass || isChameleon) return true
+        return !effectiveLight
+    }
+
+    readonly property color foreground: {
+        if (isInverse || isClear)
+            return desktopIsDark ? "#ffffff" : "#141414"
+        if (isPlasma)
+            return Kirigami.Theme.textColor
+        if (isKoollook)
+            return koollookGold
+        if (isGlass || isChameleon)
+            return "#ffffff"
+        return effectiveLight ? "#1A1B1E" : "#ffffff"
+    }
+
+    readonly property color todayAccent: {
+        if (isKoollook) return koollookAccent
+        if (isInverse || isClear) return foreground
+        return isGlass ? "#ffffff" : accentRed
+    }
+
+    readonly property bool punchOutText: isGlass && !isClear
         ? !foregroundDarkOverride
         : isLight
 
