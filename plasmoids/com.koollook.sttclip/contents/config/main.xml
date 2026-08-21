@@ -19,5 +19,6 @@
         <entry name="realtimeRefraction" type="Bool"><default>false</default></entry>
         <entry name="deleteClipPhrase" type="String"><default>delete clip</default></entry>
         <entry name="sendClipPhrase" type="String"><default>send clip</default></entry>
+        <entry name="commandsJson" type="String"><default>{"hard":[{"id":"clear-clip","name":"Delete clip","match":"delete clip","builtin":"clear-clip"},{"id":"send-clip","name":"Send clip","match":"send clip","builtin":"send-clip"}],"custom":[]}</default></entry>
     </group>
 </kcfg>
