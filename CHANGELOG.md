@@ -1,11 +1,10 @@
 # Changelog — Koollook Widgets
 
+## 2.7.0
+
+- Sky widget renamed **Koollook Planisphere** (`com.koollook.planisphere`)
+
 ## 2.6.0
-
-- Window decoration **Koollook Dotted**: KDE 2 stippled title bar (separate from Koollook)
-- Tester install pack with a single `install.sh`
-
-## 2.5.0
 
 - System tray applet `com.koollook.stt`: start/stop listening, send/delete clip, audio sources
 
