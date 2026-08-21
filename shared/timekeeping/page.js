@@ -49,9 +49,9 @@
       }
       latEl.onchange = lonEl.onchange = paint
       $("go").onclick = paint
+      $("go").onclick = paint
+      document.body.dataset.kind = opts.kind
       paint()
       setInterval(paint, 15000)
-      document.title = title
-    }
   }
 })()
