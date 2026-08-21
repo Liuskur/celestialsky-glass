@@ -216,7 +216,6 @@ Decoration {
     Text {
         id: caption
         z: 1
-        id: caption
         text: decoration.client.caption
         textFormat: Text.PlainText
         horizontalAlignment: auroraeTheme.horizontalAlignment
