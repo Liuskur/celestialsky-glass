@@ -8,8 +8,8 @@ Plasma 6 look pieces.
 | Icons | `Koollook` | Teal griffin; launcher is `start-here-kde` |
 | Wallpaper | `Koollook` | Same griffin, Koollook Dark |
 | KSplash / SDDM / Plymouth | griffin lock-in border; splash wordmark **KoollooK** | `theme/sddm`, `contents/splash`, `theme/plymouth` |
-| Aurorae decoration | `Koollook` | Willow Dark Alt Shader |
-| Aurorae decoration | `Koollook Dotted` | KDE 2 stippled title bar (separate option) |
+| Window decoration | `Koollook` | Willow Dark Alt Shader |
+| Window decoration | `Koollook Dotted` | KDE 2 stippled title bar (separate option) |
 
 ```bash
 ./theme/install.sh
