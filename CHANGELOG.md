@@ -1,5 +1,10 @@
 # Changelog — Koollook Widgets
 
+## 2.2.0
+
+- STT Clip config: hard command phrases + custom spoken match → command (KDE Connect Run Command style)
+- Wavebar widget `com.koollook.audioviz`: circular bars, mic or speaker monitor (Plasma 6 / PipeWire)
+
 ## 2.1.0
 
 - STT clip widget `com.koollook.sttclip`: live local transcription buffer
