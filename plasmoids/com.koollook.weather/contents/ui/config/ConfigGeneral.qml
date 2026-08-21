@@ -60,8 +60,12 @@ Item {
             Layout.fillHeight: true
             source: root.cfg_source
             locationName: root.cfg_location
+            latitude: root.cfg_latitude
+            longitude: root.cfg_longitude
             onSourceChanged: if (root._ready) root.cfg_source = source
             onLocationNameChanged: if (root._ready) root.cfg_location = locationName
+            onLatitudeChanged: if (root._ready) root.cfg_latitude = latitude
+            onLongitudeChanged: if (root._ready) root.cfg_longitude = longitude
         }
 
         Kirigami.FormLayout {
