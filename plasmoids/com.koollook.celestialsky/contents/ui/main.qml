@@ -112,25 +112,9 @@ PlasmoidItem {
             } catch (e) { return false }
         }
 
-        // ── Liquid-glass — same config wiring as calendar / weather ──
-        LiquidGlass {
+        KoollookFrame {
             id: glass
             anchors.fill: parent
-            radius: Plasmoid.configuration.cornerRadius
-            roundness: Plasmoid.configuration.roundnessX10 / 10
-            refractThickness: Plasmoid.configuration.refractThickness
-            refractIOR: Plasmoid.configuration.refractIORx100 / 100
-            refractScale: Plasmoid.configuration.refractScale
-            tint: colors.glassTint
-            tintAlpha: Plasmoid.configuration.tintAlphaPct / 100
-            chromaStrength: Plasmoid.configuration.chromaStrengthPct / 100
-            specStrength: Plasmoid.configuration.specStrengthPct / 100
-            blurRadius: Plasmoid.configuration.blurRadiusPx
-            realtimeRefraction: Plasmoid.configuration.realtimeRefraction
-            fallbackOpacity: colors.glassFallbackOpacity
-            solidMode: colors.isSolid
-            solidColor: colors.solidBackground
-            solidColorBottom: "transparent"
         }
 
         // Cancel parent applet edit/drag if containment opened handles after a hold.
