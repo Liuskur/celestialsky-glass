@@ -1,6 +1,6 @@
 # Shared Koollook components
 
-`glass/` is QML module `org.koollook.glass` (`LiquidGlass`, `MacOSColors`, shaders).
+`glass/` is QML module `org.koollook.glass` (`KoollookFrame`, `LiquidGlass`, `KoollookColors`, shaders).
 
 `location/` is QML module `org.koollook.location` (`LocationSearch` via Open-Meteo geocoding).
 
