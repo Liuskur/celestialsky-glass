@@ -17,7 +17,7 @@ PlasmoidItem {
     switchWidth: Kirigami.Units.gridUnit * 10
     switchHeight: Kirigami.Units.gridUnit * 8
 
-    MacOSColors {
+    KoollookColors {
         id: colors
         styleMode: Plasmoid.configuration.styleMode
         appearance: Plasmoid.configuration.appearance
