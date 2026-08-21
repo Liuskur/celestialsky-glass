@@ -23,7 +23,7 @@
 ## Product gaps before “world”
 
 - [ ] STT helper: document that typing is AT-SPI on KWin (not wtype). Optional ydotool.
-- [ ] C++ `org.koollook.kde2` needs cmake + extra-cmake-modules; testers use Aurorae **Koollook Dotted** until that builds everywhere.
+- [ ] C++ `org.koollook.kde2` needs cmake + extra-cmake-modules; testers use **KoollooK Dotted** until that builds everywhere.
 - [ ] `astronomy.js` QML used-before-declared warnings.
 - [ ] Tester pack: people run `./install.sh` then pick **Koollook Dotted** in Window Decorations.
 
