@@ -62,9 +62,9 @@ Decoration {
             return caption.x + (caption.width - captionTextW) / 2
         return caption.x
     }
-    readonly property int dottedCell: 7
+    readonly property int dottedCell: 4
     readonly property int dottedRows: 3
-    readonly property int dottedH: dottedCell * dottedRows
+    readonly property int dottedH: 10
     readonly property real barTop: decoration.client.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
     readonly property real barH: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
 
