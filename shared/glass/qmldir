@@ -1,5 +1,5 @@
 module org.koollook.glass
 # SPDX-License-Identifier: MIT
 LiquidGlass 1.0 LiquidGlass.qml
-MacOSColors 1.0 MacOSColors.qml
+KoollookColors 1.0 KoollookColors.qml
 KoollookFrame 1.0 KoollookFrame.qml
