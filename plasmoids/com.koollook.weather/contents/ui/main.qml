@@ -58,8 +58,8 @@ PlasmoidItem {
             id: compactRow
             anchors.fill: parent
             spacing: Kirigami.Units.smallSpacing
-            Kirigami.Icon {
-                source: wx.iconName
+            WeatherIcon {
+                iconName: wx.iconName
                 Layout.preferredWidth: Kirigami.Units.iconSizes.small
                 Layout.preferredHeight: Kirigami.Units.iconSizes.small
             }
