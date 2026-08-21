@@ -8,7 +8,7 @@ ConfigModel {
         source: "config/ConfigAppearance.qml"
     }
     ConfigCategory {
-        name: i18n("Sky")
+        name: i18n("Planisphere")
         icon: "weather-clear-night"
         source: "config/ConfigGeneral.qml"
     }
