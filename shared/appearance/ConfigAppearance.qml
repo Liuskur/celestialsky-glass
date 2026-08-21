@@ -55,6 +55,8 @@ Item {
     property var cfg_firstDayOfWeekDefault
     property var cfg_showWeekNumbers
     property var cfg_showWeekNumbersDefault
+    property var cfg_eventLookaheadDays
+    property var cfg_eventLookaheadDaysDefault
     property var cfg_deleteClipPhrase
     property var cfg_deleteClipPhraseDefault
     property var cfg_sendClipPhrase
