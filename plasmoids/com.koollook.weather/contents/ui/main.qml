@@ -268,10 +268,9 @@ PlasmoidItem {
                             model: modelData.slots
                             WeatherIcon {
                                 iconName: modelData.icon
-                                Layout.preferredWidth: Kirigami.Units.iconSizes.medium
-                                Layout.preferredHeight: Kirigami.Units.iconSizes.medium
+                                Layout.preferredWidth: Kirigami.Units.iconSizes.medium * 0.85
+                                Layout.preferredHeight: Kirigami.Units.iconSizes.medium * 0.85
                                 Layout.fillWidth: true
-                                Layout.fillHeight: true
                             }
                         }
                         PlasmaComponents.Label {
