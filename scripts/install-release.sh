@@ -13,10 +13,11 @@ Usage: ./install.sh [options]
   --all              widgets + theme + dotted + STT helper
   --planisphere      Koollook Planisphere
   --calendar         Koollook Calendar
-  --weather          Koollook Weather
   --sttclip          Koollook STT Clip
   --stt-tray         Koollook STT tray
   --wavebar          Koollook Wavebar
+  --muhurta          Koollook Muhurta
+  --hora             Koollook Hora
   --theme            colors, icons, Koollook title bar
   --dotted           Koollook Dotted title bar (KDE 2 stipple)
   --stt              STT helper (koollook-stt)
