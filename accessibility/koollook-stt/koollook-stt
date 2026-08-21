@@ -30,16 +30,56 @@ U
 }
 
 load_phrases() {
-  DELETE_CLIP="${KOOLLOOK_STT_DELETE_CLIP:-delete clip}"
-  SEND_CLIP="${KOOLLOOK_STT_SEND_CLIP:-send clip}"
-  if [[ -f "$CONF" ]]; then
-    # shellcheck disable=SC1090
-    source "$CONF" 2>/dev/null || true
-    [[ -n "${delete_clip:-}" ]] && DELETE_CLIP="$delete_clip"
-    [[ -n "${send_clip:-}" ]] && SEND_CLIP="$send_clip"
+ensure_commands_json() {
+  mkdir -p "$(dirname "$COMMANDS_JSON")"
+  if [[ ! -f "$COMMANDS_JSON" ]]; then
+    local def
+    def="$(cd "$(dirname "$0")" && pwd)/commands.default.json"
+    if [[ -f "$def" ]]; then
+      cp -a "$def" "$COMMANDS_JSON"
+    else
+      printf '%s\n' '{"hard":[{"id":"clear-clip","name":"Delete clip","match":"delete clip","builtin":"clear-clip"},{"id":"send-clip","name":"Send clip","match":"send clip","builtin":"send-clip"}],"custom":[]}' >"$COMMANDS_JSON"
+    fi
   fi
 }
 
+do_write_commands_json() {
+  mkdir -p "$(dirname "$COMMANDS_JSON")"
+  printf '%s\n' "$1" >"$COMMANDS_JSON"
+  echo "commands written $COMMANDS_JSON"
+}
+
+match_command() {
+  local uttered="$1"
+  python3 - "$COMMANDS_JSON" "$uttered" <<'PY'
+import json, re, sys
+from pathlib import Path
+path, uttered = sys.argv[1], sys.argv[2]
+def norm(s):
+    s = s.lower()
+    s = re.sub(r'[^a-z0-9 ]+', ' ', s)
+    return re.sub(r' +', ' ', s).strip()
+n = norm(uttered)
+try:
+    data = json.loads(Path(path).read_text())
+except Exception:
+    print("NONE")
+    raise SystemExit(0)
+for item in data.get("hard") or []:
+    m = norm(item.get("match") or "")
+    if m and m in n:
+        print("BUILTIN", item.get("builtin") or "")
+        rest = n.replace(m, " ", 1)
+        print("REST", rest.strip())
+        raise SystemExit(0)
+for item in data.get("custom") or []:
+    m = norm(item.get("match") or "")
+    if m and m in n:
+        print("RUN", item.get("command") or "")
+        raise SystemExit(0)
+print("NONE")
+PY
+}
 norm() {
   printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9 ]/ /g;s/  */ /g;s/^ //;s/ $//'
 }
