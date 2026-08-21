@@ -6,6 +6,7 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import "org/koollook/glass"
+import org.kde.ksvg as KSvg
 
 PlasmoidItem {
     id: root
