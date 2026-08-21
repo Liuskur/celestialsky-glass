@@ -5,8 +5,29 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile name=""/>
   <group name="">
-    <entry name="titleAlignLeft" type="Bool">
-      <default>true</default>
+    <entry name="marginLeftPct" type="Double">
+      <label>Left margin of the title bar, as percent of window width.</label>
+      <default>0</default>
+      <min>0</min>
+      <max>40</max>
+    </entry>
+    <entry name="marginRightPct" type="Double">
+      <label>Right margin of the title bar, as percent of window width.</label>
+      <default>0</default>
+      <min>0</min>
+      <max>40</max>
+    </entry>
+    <entry name="marginTopPct" type="Double">
+      <label>Top margin of the title bar, as percent of title-bar height.</label>
+      <default>0</default>
+      <min>0</min>
+      <max>40</max>
+    </entry>
+    <entry name="marginBottomPct" type="Double">
+      <label>Bottom margin of the dotted grip, as percent of title-bar height.</label>
+      <default>0</default>
+      <min>0</min>
+      <max>40</max>
     </entry>
   </group>
 </kcfg>
