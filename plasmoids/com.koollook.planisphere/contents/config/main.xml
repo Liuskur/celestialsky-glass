@@ -39,7 +39,7 @@
             <default>false</default>
         </entry>
 
-        <!-- Sky / location — Weather-style location + astronomy -->
+        <!-- Planisphere location — Weather-style search + astronomy -->
         <entry name="location" type="String">
             <default>Tallinn</default>
         </entry>
