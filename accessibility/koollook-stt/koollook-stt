@@ -14,6 +14,7 @@ STATE="${XDG_STATE_HOME:-$HOME/.local/state}/koollook"
 CLIP="$STATE/clip.txt"
 STATUS_FILE="$STATE/status"
 CONF="${XDG_CONFIG_HOME:-$HOME/.config}/koollook/stt.conf"
+COMMANDS_JSON="${XDG_CONFIG_HOME:-$HOME/.config}/koollook/stt-commands.json"
 
 mkdir -p "$STATE" "$(dirname "$CONF")"
 [[ -f "$CLIP" ]] || : >"$CLIP"
