@@ -6,7 +6,9 @@
 - Invisible frame option; Inverse uses opposite of desktop background for text/icons
 - KDE 2 window decoration ported to Plasma 6 KDecoration3
 - Packs: `koollook-theme`, `koollook-widgets`, `koollook-accessibility`
+- Renamed `MacOSColors` → `KoollookColors`
 
+## 2.2.0
 ## 2.2.0
 
 - STT clip widget `com.koollook.sttclip`: live local transcription buffer
