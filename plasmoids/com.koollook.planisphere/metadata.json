@@ -1,10 +1,10 @@
 {
     "KPlugin": {
-        "Name": "Koollook Celestial Sky",
-        "Description": "Planetary sky widget with liquid-glass frame for Plasma 6. Rise/set arcs, always-on time cards (day/night order), \u00b172 h scrubber, bodies hide at night.",
+        "Name": "Koollook Planisphere",
+        "Description": "Local planisphere: the sky hemisphere visible at your location. Rise/set arcs, time cards, \u00b172 h scrubber. Plasma 6.",
         "Icon": "weather-clear-night",
-        "Id": "com.koollook.celestialsky",
-        "Version": "1.4.0",
+        "Id": "com.koollook.planisphere",
+        "Version": "2.0.0",
         "Website": "https://github.com/Liuskur/celestialsky-glass",
         "Authors": [
             {
