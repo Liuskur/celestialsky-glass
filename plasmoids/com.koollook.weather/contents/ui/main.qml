@@ -217,7 +217,7 @@ PlasmoidItem {
                         source: modelData.icon
                         Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
                         Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
-                        isMask: colors.isGlass
+                        isMask: colors.useLightGlyphs
                         color: colors.foreground
                     }
                     Item { Layout.fillWidth: true }
