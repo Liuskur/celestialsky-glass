@@ -172,20 +172,22 @@ QtObject {
         return out
     }
 
-    function _bbcSlotsFromReports(reports, fallbackType) {
+    function _bbcSlotsFromReports(reports, fallbackType, onlyPresent) {
         var byHour = ({})
         var r, ts, hh
         for (r = 0; r < reports.length; r++) {
             ts = reports[r].timeslot || ""
             hh = parseInt(ts.split(":")[0], 10)
-            if (hh >= 6 && hh <= 23)
+            if (hh >= 0 && hh <= 23)
                 byHour[hh] = reports[r]
         }
         var slots = []
         var s, hour, hit
         for (s = 0; s < slotHours.length; s++) {
             hour = slotHours[s]
-            hit = byHour[hour] || byHour[hour + 1] || byHour[hour + 2]
+            hit = byHour[hour] || byHour[hour + 1] || byHour[hour - 1]
+            if (onlyPresent && !hit)
+                continue
             slots.push({
                 hour: hour,
                 label: (hour < 10 ? "0" : "") + hour,
