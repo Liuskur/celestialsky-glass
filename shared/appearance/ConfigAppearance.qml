@@ -113,13 +113,18 @@ ColumnLayout {
         }
 
         Kirigami.Separator {
-            Kirigami.FormData.isSection: true
-        }
-
         ComboBox {
             id: styleCombo
             Kirigami.FormData.label: i18n("Style:")
-            model: [i18n("Glass"), i18n("Solid")]
+            model: [
+                i18n("Glass"),
+                i18n("Solid"),
+                i18n("Clear (see-through)"),
+                i18n("Plasma"),
+                i18n("Chameleon"),
+                i18n("Inverse"),
+                i18n("Koollook")
+            ]
         }
 
         ComboBox {
@@ -128,24 +133,36 @@ ColumnLayout {
             model: [i18n("Dark"), i18n("Light"), i18n("Follow system")]
         }
 
+        CheckBox {
+            id: hideFrameCheck
+            Kirigami.FormData.label: i18n("Frame:")
+            text: i18n("No borders / invisible frame")
+        }
+
         SpinBox {
             id: radiusSpin
             Kirigami.FormData.label: i18n("Corner radius (px):")
             from: 0; to: 200; stepSize: 1
+            visible: !hideFrameCheck.checked && styleCombo.currentIndex !== 2
         }
 
         SpinBox {
             id: roundnessSpin
             Kirigami.FormData.label: i18n("Roundness (×10, 2.0..10.0):")
             from: 20; to: 100; stepSize: 1
+            visible: !hideFrameCheck.checked && styleCombo.currentIndex !== 2
         }
     }
 
     Kirigami.FormLayout {
         id: glassSection
         Layout.fillWidth: true
-        visible: styleCombo.currentIndex === 0
+        visible: styleCombo.currentIndex === 0 || styleCombo.currentIndex === 4 || styleCombo.currentIndex === 6
 
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: i18n("Glass effect")
+        }
         Kirigami.Separator {
             Kirigami.FormData.isSection: true
             Kirigami.FormData.label: i18n("Glass effect")
