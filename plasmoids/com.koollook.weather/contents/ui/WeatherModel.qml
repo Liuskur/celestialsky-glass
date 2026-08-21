@@ -238,13 +238,18 @@ QtObject {
         pressure = nowR.pressure || 0
         windSpeed = nowR.windSpeedKph || sum.windSpeedKph || 0
         windDirText = nowR.windDirectionAbbreviation || sum.windDirectionAbbreviation || ""
-        conditionText = nowR.enhancedWeatherDescription || nowR.weatherTypeText || sum.weatherTypeText || sum.enhancedWeatherDescription || ""
-        iconName = _bbcIcon(nowR.weatherType !== undefined ? nowR.weatherType : sum.weatherType)
-        credit = "BBC Weather"
         var hours = []
-        var r, ts, hh
+        var r, ts, hh, si, isSlot
         for (r = 0; r < reports.length; r++) {
             ts = reports[r].timeslot || ""
+            hh = parseInt(ts.split(":")[0], 10)
+            isSlot = false
+            for (si = 0; si < slotHours.length; si++) {
+                if (slotHours[si] === hh)
+                    isSlot = true
+            }
+            if (!isSlot)
+                continue
             hh = parseInt(ts.split(":")[0], 10)
             if (slotHours.indexOf(hh) < 0)
                 continue
