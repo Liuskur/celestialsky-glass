@@ -445,10 +445,8 @@ QtObject {
         iconName = _bbcIcon(nowR.weatherType !== undefined ? nowR.weatherType : sum.weatherType, isNight)
         credit = "BBC Weather"
         var todayYmd = _todayYmd()
-        var todayPack = _bbcDay(forecasts, todayYmd)
-        var hours = _bbcSlotsFromReports(todayPack.reports, todayPack.sum.weatherType, true)
-        hourly = hours
-        todaySlots = hours
+        hourly = _bbcHourlyNext(forecasts)
+        todaySlots = hourly
         var days = []
         var k, ymd, pack, dt, hi, lo
         for (k = 1; k <= 7; k++) {
