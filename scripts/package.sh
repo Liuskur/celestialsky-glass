@@ -44,6 +44,8 @@ package_one com.koollook.weather
 package_one com.koollook.sttclip
 package_one com.koollook.stt
 package_one com.koollook.audioviz
+package_one com.koollook.muhurta
+package_one com.koollook.hora
 # --- three product packs ---
 tar -C "$ROOT" --exclude 'theme/window-decoration/kdecoration-kde2/build' -c theme \
   | zstd -19 -o "$DIST/koollook-theme-${SUITE_VER}.tar.zst"
