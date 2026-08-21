@@ -40,8 +40,8 @@
 #include <QtWidgets/qdrawutil.h>
 #include <QBitmap>
 
-K_PLUGIN_FACTORY_WITH_JSON(SkeletonDecorationFactory,
-    "skeleton.json",
+K_PLUGIN_FACTORY_WITH_JSON(KoollookKde2DecorationFactory,
+    "koollook_kde2.json",
     registerPlugin<Skeleton::Decoration>();
     registerPlugin<Skeleton::ThemeLister>(QStringLiteral("themes"));
 )
