@@ -10,7 +10,8 @@ Kirigami.FormLayout {
     property alias cfg_firstDayOfWeek: firstDayCombo.currentIndex
     property alias cfg_showWeekNumbers: weekNumbers.checked
     property var cfg_enabledCalendarPlugins
-
+    property int cfg_eventLookaheadDays: 14
+    property int cfg_eventLookaheadDaysDefault: 14
     property bool _ready: false
 
     ComboBox {
