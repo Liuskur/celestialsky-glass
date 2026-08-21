@@ -260,17 +260,20 @@ function progress(period, now) {
     var p = (t - a) / (b - a)
     if (p < 0) return 0
     if (p > 1) return 1
-    return p
+var KoollookTime = {
+    sunTimes: sunTimes,
+    solarWindow: solarWindow,
+    muhurtaSchedule: muhurtaSchedule,
+    horaSchedule: horaSchedule,
+    currentPeriod: currentPeriod,
+    progress: progress,
+    fmtHM: fmtHM
 }
 
-if (typeof window !== "undefined") {
-    window.KoollookTime = {
-        sunTimes: sunTimes,
-        solarWindow: solarWindow,
-        muhurtaSchedule: muhurtaSchedule,
-        horaSchedule: horaSchedule,
-        currentPeriod: currentPeriod,
-        progress: progress,
+if (typeof window !== "undefined")
+    window.KoollookTime = KoollookTime
+if (typeof module !== "undefined" && module.exports)
+    module.exports = KoollookTime
         fmtHM: fmtHM
     }
 }
