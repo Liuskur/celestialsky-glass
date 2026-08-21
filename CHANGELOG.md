@@ -6,6 +6,7 @@
 - First numbered Koollook suite release (replaces mixed 1.x / 2.x / 2.8.0 labels)
 - Release assets: one tarball per piece, plus suite bundle `koollook-0.7.0.tar.zst`
 - Plasma splash wordmark: **KoollooK**
+- User-facing “Aurorae” renamed to KoollooK / title bar; KWin Aurorae engine paths and IDs unchanged
 ## 2.8.0
 
 - **Koollook Muhurta** (`com.koollook.muhurta`): Vedic 30 named muhūrtas from local sunrise
