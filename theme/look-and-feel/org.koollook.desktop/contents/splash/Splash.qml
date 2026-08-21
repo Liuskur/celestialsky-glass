@@ -49,20 +49,6 @@ Rectangle {
             opacity: 0
         }
 
-        Repeater {
-            id: corners
-            model: 4
-            Rectangle {
-                required property int index
-                width: 18
-                height: 2
-                color: "#00d3b8"
-                opacity: 0
-                x: index % 2 === 0 ? lockFrame.x - 1 : lockFrame.x + lockFrame.width - width + 1
-                y: index < 2 ? lockFrame.y - 1 : lockFrame.y + lockFrame.height - height + 1
-            }
-        }
-
         Rectangle {
             id: hiLite
             anchors.fill: lockFrame
