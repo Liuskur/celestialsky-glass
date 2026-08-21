@@ -75,12 +75,6 @@ Rectangle {
             NumberAnimation { target: hiLite; property: "opacity"; from: 0.55; to: 0; duration: 380 }
             NumberAnimation { target: hiLite; property: "scale"; from: 1; to: 1.12; duration: 380 }
         }
-        ScriptAction {
-            script: {
-                for (var i = 0; i < corners.count; i++)
-                    corners.itemAt(i).opacity = 1
-            }
-        }
     }
 
     Rectangle {
