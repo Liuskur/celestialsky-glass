@@ -63,13 +63,14 @@ Item {
 
     PlasmaComponents.Label {
         visible: root.compact
+    PlasmaComponents.Label {
+        id: nameLab
+        visible: root.compact
         anchors.centerIn: parent
         text: root.currentName
         font.weight: Font.DemiBold
         color: root.foreground
     }
-
-    ColumnLayout {
         visible: !root.compact
         anchors.fill: parent
         spacing: Kirigami.Units.smallSpacing
