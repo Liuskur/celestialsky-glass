@@ -2,18 +2,15 @@
     "KPlugin": {
         "Authors": [
             {
-                "Email": "",
-                "Name": "doncsugar"
+                "Name": "Koollook",
+                "Email": ""
             }
         ],
-        "Category": "",
-        "Dependencies": [
-        ],
-        "Description": "",
+        "Description": "Koollook window decoration (Aurorae), from RiderLook / Willow Dark Alt Shader.",
         "EnabledByDefault": true,
-        "Id": "willow-dark-alt-aurorae",
-        "License": "GPLv3",
-        "Name": "Willow Dark Alt",
-        "Version": "0.1"
+        "Id": "org.koollook.aurorae",
+        "License": "GPL-3.0-only",
+        "Name": "Koollook",
+        "Version": "1.0.0"
     }
 }
