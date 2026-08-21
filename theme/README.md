@@ -7,8 +7,8 @@ Plasma 6 look pieces.
 | Color schemes | `Koollook` (dark), `KoollookAqua`, `KoollookEesti`, `KoollookLiwi` | Stone2 + aqua / Eesti / Liwi flags |
 | Icons | `Koollook` | Liwi-style griffin (teal `#00d3b8`); launcher is `start-here-kde` |
 | Aurorae decoration | `Koollook` | Willow Dark Alt Shader |
-| KDE 2 decoration | `org.koollook.kde2` | kdecoration2-kde2 → KDecoration3 |
-| Global theme | `org.koollook.desktop` | RiderLook |
+| Aurorae decoration | `Koollook Dotted` | KDE 2 stippled title bar (separate option) |
+| KDE 2 C++ plugin | `org.koollook.kde2` | kdecoration2-kde2 → KDecoration3 (optional build) |
 | KWin effects | translucency, hide-cursor | RiderLook kwinrc |
 
 ```bash
