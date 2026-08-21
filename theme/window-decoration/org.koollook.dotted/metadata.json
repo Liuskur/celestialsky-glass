@@ -1,0 +1,10 @@
+{
+    "KPackageStructure": "KWin/Decoration",
+    "KPlugin": {
+        "Authors": [ { "Name": "Koollook" } ],
+        "Description": "Dotted title bar with Koollook buttons; grip stops before title and buttons.",
+        "Id": "org.koollook.dotted",
+        "License": "MIT",
+        "Name": "Koollook Dotted"
+    }
+}
