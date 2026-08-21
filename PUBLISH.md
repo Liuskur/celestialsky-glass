@@ -1,8 +1,8 @@
 # TODO: publish Koollook and clean GitHub
 
-## GitHub (repo still `Liuskur/celestialsky-glass`)
+## GitHub (`Liuskur/KoollooK`)
 
-- [ ] Rename repository to `koollook` (or `koollook-plasma`). Update clone URLs, website fields in every `metadata.json`.
+- [x] Repository renamed to `KoollooK`. Clone URL: `https://github.com/Liuskur/KoollooK`. Website fields in `metadata.json` updated.
 - [ ] Set description, topics: `kde`, `plasma-6`, `plasmoid`, `aurorae` (KWin engine topic, not product name).
 - [ ] Replace leftover RiderLook / MacOS wording in READMEs and plugin Website URLs. Sky widget is **Koollook Planisphere**.
 - [ ] Drop secrets and machine paths: no `/opt/Grok`, no `/home/rider`, no ResoNider absolute paths in shipped scripts (use env vars only).
