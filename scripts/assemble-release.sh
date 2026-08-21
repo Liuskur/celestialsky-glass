@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build every Koollook release artifact and copy it into ./release
-# (plasmoids, theme/widgets/accessibility tarballs, install.sh, checksums, suite archive).
+# (per-piece tarballs, plasmoids, install.sh, checksums, suite bundle).
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 VER="$(tr -d '[:space:]' < "$ROOT/VERSION")"
@@ -15,5 +15,5 @@ cp -a "$ROOT/dist"/. "$OUT/"
 echo "assembled $OUT  (suite $VER)"
 ls -lh "$OUT"
 echo
-echo "ship:  $OUT/koollook-${VER}.tar.zst"
-echo "or:    $OUT/install.sh  plus the tarballs next to it"
+echo "ship bundle:  $OUT/koollook-${VER}.tar.zst"
+echo "or download only the piece tarballs / .plasmoid files next to install.sh"
