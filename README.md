@@ -20,19 +20,13 @@ Plasma 6 widgets, theme, and local accessibility STT. Former Celestial Sky (Glas
 ```bash
 ./scripts/package.sh
 ```
-Writes `dist/` for KDE Store (`.plasmoid`) and distro (`koollook-2.2.0.tar.zst`):
+Writes `dist/`:
 
-- `com.koollook.celestialsky-1.4.0.plasmoid`
-- `com.koollook.calendar-2.0.0.plasmoid`
-- `com.koollook.weather-2.0.0.plasmoid`
-- `com.koollook.sttclip-1.0.0.plasmoid`
-- `com.koollook.audioviz-1.0.0.plasmoid`
-- `koollook-theme-2.2.0.tar.zst`
-- `koollook-stt-2.2.0.tar.zst`
-- `koollook-2.2.0.tar.zst`
-- `SHA256SUMS`
-- `SHA256SUMS`
-## Install
+- KDE Store: `com.koollook.*.plasmoid`
+- Theme pack: `koollook-theme-2.3.0.tar.zst`
+- Widgets pack: `koollook-widgets-2.3.0.tar.zst`
+- Accessibility pack: `koollook-accessibility-2.3.0.tar.zst`
+- Full: `koollook-2.3.0.tar.zst`
 
 ```bash
 ./scripts/install.sh
