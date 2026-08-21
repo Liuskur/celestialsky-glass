@@ -42,6 +42,7 @@ package_one com.koollook.celestialsky
 package_one com.koollook.calendar
 package_one com.koollook.weather
 package_one com.koollook.sttclip
+package_one com.koollook.stt
 package_one com.koollook.audioviz
 # --- three product packs ---
 tar -C "$ROOT" --exclude 'theme/window-decoration/kdecoration-kde2/build' -c theme \
