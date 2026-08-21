@@ -1,0 +1,3 @@
+module org.koollook.glass
+LiquidGlass 1.0 LiquidGlass.qml
+MacOSColors 1.0 MacOSColors.qml

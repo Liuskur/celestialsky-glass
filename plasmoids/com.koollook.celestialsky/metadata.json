@@ -1,0 +1,24 @@
+{
+    "KPlugin": {
+        "Name": "Koollook Celestial Sky",
+        "Description": "Planetary sky widget with liquid-glass frame for Plasma 6. Rise/set arcs, always-on time cards (day/night order), \u00b172 h scrubber, bodies hide at night.",
+        "Icon": "weather-clear-night",
+        "Id": "com.koollook.celestialsky",
+        "Version": "1.4.0",
+        "Website": "https://github.com/Liuskur/celestialsky-glass",
+        "Authors": [
+            {
+                "Name": "Tamás Máté",
+                "Email": "royalpython132@gmail.com"
+            },
+            {
+                "Name": "Koollook",
+                "Email": ""
+            }
+        ],
+        "Category": "Astronomy",
+        "License": "GPL-3.0-only"
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

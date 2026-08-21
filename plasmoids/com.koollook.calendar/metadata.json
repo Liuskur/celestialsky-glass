@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "zinczorphin@email.com",
+        "Name": "Jack Faith"
+      },
+      {
+        "Name": "Koollook",
+        "Email": ""
+      }
+    ],
+    "Category": "Date and Time",
+    "Description": "Month calendar with a frosted-glass backdrop. Stretch it wide for a side panel of upcoming events.",
+    "Icon": "/icon.png",
+    "Id": "com.koollook.calendar",
+    "License": "GPL-3.0-only",
+    "Name": "Koollook Calendar",
+    "Version": "1.1.0",
+    "Website": "https://github.com/Liuskur/celestialsky-glass"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0"
+}

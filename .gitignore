@@ -4,4 +4,7 @@
 *~
 *.bak
 .DS_Store
-contents/ui/icons-flat-backup/
+/dist/
+plasmoids/*/contents/ui/org/
+plasmoids/*/contents/ui/config/ConfigAppearance.qml
+**/icons-flat-backup/

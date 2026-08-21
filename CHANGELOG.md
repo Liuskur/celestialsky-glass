@@ -1,4 +1,17 @@
-# Changelog — Celestial Sky (Glass)
+# Changelog — Koollook Widgets
+
+## 2.0.0
+
+- Monorepo: Celestial Sky, Calendar, and Weather in one repo
+- Shared QML module `org.koollook.glass` plus common Appearance config
+- Rebrand to Koollook; plugin IDs `com.koollook.celestialsky`, `com.koollook.calendar`, `com.koollook.weather`
+- `scripts/package.sh` and GitHub Actions build all three widgets at once
+
+## Celestial Sky 1.4.0
+
+- Appearance settings match Calendar/Weather (Copy/Paste style, glass/solid, tint %, blur, refraction…)
+- Sky tab: Weather-style location search + lat/lon; planet size
+- LiquidGlass wired to the same configuration keys as the other widgets
 
 ## 1.3.9
 - Time scrubber: hover + wheel/touchpad scroll only (no drag)
