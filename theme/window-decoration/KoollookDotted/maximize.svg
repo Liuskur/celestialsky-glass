@@ -27,7 +27,7 @@
     <rect class="ColorScheme-Background" fill="currentColor" x="0" y="0" width="22" height="22"/>
     <rect fill="#000000" opacity="0.35" x="0" y="0" width="22" height="1"/>
     <rect fill="#ffffff" opacity="0.12" x="0" y="21" width="22" height="1"/>
-    <use class="ColorScheme-NegativeText" fill="currentColor" xlink:href="#xicon" transform="translate(0,1)"/>
+    <use class="ColorScheme-Highlight" fill="currentColor" xlink:href="#xicon" transform="translate(0,1)"/>
   </g>
   <g id="inactive-center" transform="translate(66,0)">
     <rect class="ColorScheme-Background" fill="currentColor" x="0" y="0" width="22" height="22"/>
