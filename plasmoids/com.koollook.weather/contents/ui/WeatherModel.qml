@@ -213,9 +213,13 @@ QtObject {
             try {
                 root._applyBbc(JSON.parse(xhr.responseText))
             } catch (e) {
-                if (!root.hasData) {
-                    loading = false
-                    error = i18n("Could not read forecast")
+                if (root.conditionText && root.conditionText.length) {
+                    root.hasData = true
+                    root.loading = false
+                    root.error = ""
+                } else if (!root.hasData) {
+                    root.loading = false
+                    root.error = i18n("Could not read forecast")
                 }
             }
         }
