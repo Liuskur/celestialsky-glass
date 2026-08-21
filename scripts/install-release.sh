@@ -13,6 +13,7 @@ Usage: ./install.sh [options]
   --all              widgets + theme + dotted + STT helper
   --planisphere      Koollook Planisphere
   --calendar         Koollook Calendar
+  --weather          Koollook Weather
   --sttclip          Koollook STT Clip
   --stt-tray         Koollook STT tray
   --wavebar          Koollook Wavebar
@@ -32,13 +33,13 @@ WANT_PLANISPHERE=0
 WANT_CALENDAR=0
 WANT_WEATHER=0
 WANT_STTCLIP=0
+WANT_STTTRAY=0
 WANT_WAVEBAR=0
 WANT_MUHURTA=0
 WANT_HORA=0
 WANT_THEME=0
 WANT_DOTTED=0
 WANT_STT=0
-WANT_APPLY=0
 WANT_APPLY=0
 ANY_FLAG=0
 
@@ -48,6 +49,7 @@ while [[ $# -gt 0 ]]; do
     --all)
       WANT_PLANISPHERE=1 WANT_CALENDAR=1 WANT_WEATHER=1
       WANT_STTCLIP=1 WANT_STTTRAY=1 WANT_WAVEBAR=1
+      WANT_MUHURTA=1 WANT_HORA=1
       WANT_THEME=1 WANT_DOTTED=1 WANT_STT=1
       ANY_FLAG=1
       ;;
@@ -57,6 +59,8 @@ while [[ $# -gt 0 ]]; do
     --sttclip) WANT_STTCLIP=1; ANY_FLAG=1 ;;
     --stt-tray) WANT_STTTRAY=1; ANY_FLAG=1 ;;
     --wavebar) WANT_WAVEBAR=1; ANY_FLAG=1 ;;
+    --muhurta) WANT_MUHURTA=1; ANY_FLAG=1 ;;
+    --hora) WANT_HORA=1; ANY_FLAG=1 ;;
     --theme) WANT_THEME=1; ANY_FLAG=1 ;;
     --dotted) WANT_DOTTED=1; ANY_FLAG=1 ;;
     --stt) WANT_STT=1; ANY_FLAG=1 ;;
@@ -84,6 +88,8 @@ if [[ "$ANY_FLAG" -eq 0 ]]; then
     ask_yn "Planisphere (local sky)?" n && WANT_PLANISPHERE=1
     ask_yn "Calendar?" n && WANT_CALENDAR=1
     ask_yn "Weather?" n && WANT_WEATHER=1
+    ask_yn "Muhurta?" n && WANT_MUHURTA=1
+    ask_yn "Hora?" n && WANT_HORA=1
     ask_yn "STT Clip widget?" n && WANT_STTCLIP=1
     ask_yn "STT tray applet?" n && WANT_STTTRAY=1
     ask_yn "Wavebar?" n && WANT_WAVEBAR=1
@@ -92,7 +98,7 @@ if [[ "$ANY_FLAG" -eq 0 ]]; then
     ask_yn "STT helper (koollook-stt)?" n && WANT_STT=1
     ask_yn "Apply Koollook colors/icons/Koollook bar to this session now?" n && WANT_APPLY=1
     echo
-    if [[ "$WANT_PLANISPHERE$WANT_CALENDAR$WANT_WEATHER$WANT_STTCLIP$WANT_STTTRAY$WANT_WAVEBAR$WANT_THEME$WANT_DOTTED$WANT_STT" == *1* ]]; then
+    if [[ "$WANT_PLANISPHERE$WANT_CALENDAR$WANT_WEATHER$WANT_MUHURTA$WANT_HORA$WANT_STTCLIP$WANT_STTTRAY$WANT_WAVEBAR$WANT_THEME$WANT_DOTTED$WANT_STT" == *1* ]]; then
       true
     else
       echo "Nothing selected. Use --all or pick at least one piece. Try --help."
