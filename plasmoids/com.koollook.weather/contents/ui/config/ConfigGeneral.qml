@@ -15,10 +15,11 @@ Item {
     property string cfg_locationDefault: ""
     property string cfg_source: ""
     property string cfg_sourceDefault: ""
+    property string cfg_provider: "bbcukmet"
+    property string cfg_providerDefault: "bbcukmet"
+    property string cfg_placeInfo: ""
+    property string cfg_placeInfoDefault: ""
     property double cfg_latitude: 0
-    property double cfg_latitudeDefault: 0
-    property double cfg_longitude: 0
-    property double cfg_longitudeDefault: 0
     property int cfg_temperatureUnit: 0
     property int cfg_temperatureUnitDefault: 0
     property var cfg_styleMode
