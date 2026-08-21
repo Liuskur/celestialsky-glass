@@ -60,6 +60,10 @@ import "../org/koollook/location"
 
         PlasmaComponentsPlaceholder {}
     }
-
-    Component.onCompleted: _ready = true
+        Label {
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            opacity: 0.7
+            text: i18n("Periods start at local sunrise. Glass settings are on the Appearance tab.")
+        }
 }
