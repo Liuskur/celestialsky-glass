@@ -11,6 +11,9 @@ Item {
         var component = Qt.createComponent("AuroraeButton.qml");
         for (var i=0; i<buttons.length; i++) {
             if (buttons[i] == DecorationOptions.DecorationButtonExplicitSpacer) {
+                var decoPath = String(auroraeTheme.decorationPath || "")
+                if (decoPath.indexOf("Koollook") >= 0)
+                    continue
                 Qt.createQmlObject("import QtQuick 2.0; Item { width: auroraeTheme.explicitButtonSpacer * auroraeTheme.buttonSizeFactor; height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor }",
                     groupRow, "explicitSpacer" + buttons + i);
             } else if (buttons[i] == DecorationOptions.DecorationButtonMenu) {
