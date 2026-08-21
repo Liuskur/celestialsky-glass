@@ -4,8 +4,8 @@ Plasma 6 look pieces.
 
 | Piece | Id | Source |
 |-------|-----|--------|
-| Color schemes | `Koollook` (dark), `KoollookAqua`, `KoollookEesti`, `KoollookLivonia` | Stone2 + aqua / Eesti / Livonian flags |
-| Icons | `Koollook` | Livonian-style griffin; launcher is `start-here-kde` |
+| Color schemes | `Koollook` (dark), `KoollookAqua`, `KoollookEesti`, `KoollookLiwi` | Stone2 + aqua / Eesti / Liwi flags |
+| Icons | `Koollook` | Liwi-style griffin (teal `#00d3b8`); launcher is `start-here-kde` |
 | Aurorae decoration | `Koollook` | Willow Dark Alt Shader |
 | KDE 2 decoration | `org.koollook.kde2` | kdecoration2-kde2 → KDecoration3 |
 | Global theme | `org.koollook.desktop` | RiderLook |
@@ -15,7 +15,7 @@ Plasma 6 look pieces.
 ./theme/install.sh
 ```
 
-Schemes: **Koollook Dark**, **Koollook Aqua** (light), **Koollook Eesti** (blue/black/white), **Koollook Livonia** (green/white/blue). Apply in System Settings → Colors.
+Schemes: **Koollook Dark**, **Koollook Aqua** (light), **Koollook Eesti** (blue/black/white), **Koollook Liwi** (green/white/blue). Apply in System Settings → Colors.
 
 Icons: regular griffin on gules, white glyph, charcoal glyph, ColorScheme symbolic. Application launcher uses the regular griffin (`start-here-kde`).
 
