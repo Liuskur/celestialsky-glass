@@ -73,6 +73,10 @@ Item {
     property var cfg_innerRadiusPctDefault
     property var cfg_source
     property var cfg_sourceDefault
+    property var cfg_provider
+    property var cfg_providerDefault
+    property var cfg_placeInfo
+    property var cfg_placeInfoDefault
 
     function _serialize() {
         return JSON.stringify({
