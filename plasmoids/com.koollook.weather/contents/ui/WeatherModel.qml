@@ -37,7 +37,11 @@ QtObject {
     property var engine: Plasma5Support.DataSource {
         engine: "weather"
         interval: 30 * 60 * 1000
-        connectedSources: root._isOm() ? [] : (root.source.length ? [root.source] : [])
+        connectedSources: {
+            if (root._isOm() || root.source.indexOf("bbcukmet|") === 0)
+                return []
+            return root.source.length ? [root.source] : []
+        }
         onNewData: function (sourceName, data) {
             if (sourceName !== root.source)
                 return
