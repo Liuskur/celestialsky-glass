@@ -20,8 +20,6 @@ ColumnLayout {
     property alias cfg_blurRadiusPx: blurRadiusSpin.value
     property alias cfg_realtimeRefraction: realtimeCheck.checked
     property alias cfg_hideFrame: hideFrameCheck.checked
-
-    function _serialize() {
         return JSON.stringify({
             s: styleCombo.currentIndex,
             a: appearanceCombo.currentIndex,
@@ -34,7 +32,9 @@ ColumnLayout {
             ca: chromaSpin.value,
             ss: specStrengthSpin.value,
             br: blurRadiusSpin.value,
-            rr: realtimeCheck.checked
+            rr: realtimeCheck.checked,
+            hf: hideFrameCheck.checked
+        })
         })
     }
 
