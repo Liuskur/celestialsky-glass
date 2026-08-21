@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Authors": [{"Name": "Koollook", "Email": ""}],
-        "Description": "KDE 2-style dotted title bar (separate from Koollook Aurorae).",
+        "Description": "KDE 2-style dotted title bar (separate from the KoollooK title bar).",
         "EnabledByDefault": false,
         "Id": "org.koollook.dotted.aurorae",
         "License": "MIT",
