@@ -131,8 +131,8 @@ ForegroundPositive=113,247,159
 ForegroundVisited=179,13,191
 
 [General]
-ColorScheme=Stone
-Name=Stone2
+ColorScheme=Koollook
+Name=Koollook
 TitlebarIsAccentColored=false
 shadeSortColumn=true
 
