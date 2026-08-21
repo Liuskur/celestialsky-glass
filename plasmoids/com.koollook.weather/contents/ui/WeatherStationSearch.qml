@@ -78,7 +78,6 @@ ColumnLayout {
     }
 
     RowLayout {
-    RowLayout {
         visible: !root.omMode
         Layout.fillWidth: true
         TextField {
