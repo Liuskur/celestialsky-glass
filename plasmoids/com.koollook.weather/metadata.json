@@ -11,7 +11,7 @@
         "Email": ""
       }
     ],
-    "Category": "Environment",
+    "Category": "Environment and Weather",
     "Description": "Current conditions and forecast in a liquid-glass frame, laid out like Plasma Weather Report.",
     "Icon": "weather-clouds",
     "Id": "com.koollook.weather",
