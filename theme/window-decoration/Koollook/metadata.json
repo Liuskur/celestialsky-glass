@@ -6,7 +6,7 @@
                 "Email": ""
             }
         ],
-        "Description": "Koollook window decoration (Aurorae), from RiderLook / Willow Dark Alt Shader.",
+        "Description": "Koollook Aurorae window decoration for Plasma 6.",
         "EnabledByDefault": true,
         "Id": "org.koollook.aurorae",
         "License": "GPL-3.0-only",
