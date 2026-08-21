@@ -29,4 +29,4 @@
 
 ## What testers should already have
 
-`scripts/package.sh` writes `dist/koollook-<ver>.tar.zst`. Extract and `./install.sh` (see `TESTERS.md`).
+`scripts/package.sh` writes per-piece `dist/koollook-*-<ver>.tar.zst` plus suite `dist/koollook-<ver>.tar.zst`. Extract the bundle and `./install.sh` (see `TESTERS.md`).
