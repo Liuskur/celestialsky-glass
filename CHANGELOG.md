@@ -2,8 +2,8 @@
 
 ## 2.5.0
 
-- Livonian-style griffin icon theme (`Koollook`): regular launcher, white, charcoal, symbolic
-- Color schemes: Koollook Dark, Aqua (light), Eesti, Livonia
+- Liwi-style griffin icon theme (`Koollook`): teal `#00d3b8` launcher, white, charcoal, symbolic
+- Color schemes: Koollook Dark, Aqua (light), Eesti, Liwi
 
 ## 2.4.0
 
