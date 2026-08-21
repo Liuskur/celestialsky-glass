@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Forecast via Plasma weather DataEngine (BBC, NOAA, DWD, wetter.com, EnvCan)
-// plus BBC HTTP when the engine has no payload (same backend as KDE bbcukmet).
+// Default: Open-Meteo (former macOS weather widget). Optional: Plasma ions (BBC, NOAA, DWD, wetter.com, EnvCan).
 import QtQuick
 import org.kde.plasma.plasma5support as Plasma5Support
 
 QtObject {
     id: root
 
-    property string source: "bbcukmet|weather|Tallinn, Estonia|588409"
+    property string source: "openmeteo"
+    property real latitude: 59.43696
+    property real longitude: 24.75353
     property int temperatureUnit: 0
     property bool loading: false
     property string error: ""
