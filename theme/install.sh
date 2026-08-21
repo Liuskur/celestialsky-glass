@@ -68,6 +68,8 @@ if command -v cmake >/dev/null && [[ -f "$DECO/CMakeLists.txt" ]]; then
     && echo "Koollook KDE 2 decoration installed to ~/.local" \
     || echo "KDE 2 decoration build skipped (see /tmp/koollook-kde2-*.log)"
 fi
+command -v kbuildsycoca6 >/dev/null && kbuildsycoca6 >/dev/null 2>&1 || true
 
-echo "Koollook theme installed (colors, Koollook Aurorae, KWin effects)."
+echo "Koollook theme installed (4 color schemes, griffin icons, Aurorae, KWin)."
 echo "Global theme: org.koollook.desktop  (APPLY_LAYOUT=1 to also load layout)"
+echo "Colors: Koollook Dark (default), Koollook Aqua, Koollook Eesti, Koollook Livonia"
