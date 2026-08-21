@@ -188,17 +188,19 @@ Decoration {
         visible: root.dottedSpacer && width > 6
         clip: true
         z: 0
-        height: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
-        y: decoration.client.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
+        height: root.dottedH
+        y: leftButtonGroup.y + Math.max(0, (leftButtonGroup.height - root.dottedH) / 2)
         x: leftButtonGroup.x + leftButtonGroup.width + 6
         width: Math.max(0, root.captionTextX - 6 - x)
         Image {
-            width: Math.max(parent.width, 7)
-            height: Math.max(parent.height, 7)
+            anchors.fill: parent
             fillMode: Image.Tile
+            sourceSize.width: root.dottedCell
+            sourceSize.height: root.dottedCell
             source: root.dottedTile.length ? ("file://" + root.dottedTile) : ""
             horizontalAlignment: Image.AlignLeft
             verticalAlignment: Image.AlignTop
+            asynchronous: false
         }
     }
     Item {
@@ -206,17 +208,19 @@ Decoration {
         visible: root.dottedSpacer && width > 6
         clip: true
         z: 0
-        height: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
-        y: decoration.client.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
+        height: root.dottedH
+        y: rightButtonGroup.y + Math.max(0, (rightButtonGroup.height - root.dottedH) / 2)
         x: root.captionTextX + root.captionTextW + 6
         width: Math.max(0, rightButtonGroup.x - 6 - x)
         Image {
-            width: Math.max(parent.width, 7)
-            height: Math.max(parent.height, 7)
+            anchors.fill: parent
             fillMode: Image.Tile
+            sourceSize.width: root.dottedCell
+            sourceSize.height: root.dottedCell
             source: root.dottedTile.length ? ("file://" + root.dottedTile) : ""
             horizontalAlignment: Image.AlignLeft
             verticalAlignment: Image.AlignTop
+            asynchronous: false
         }
     }
     Text {
