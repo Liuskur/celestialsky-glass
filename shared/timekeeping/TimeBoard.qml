@@ -27,6 +27,7 @@ Item {
 
     implicitWidth: compact ? Math.max(Kirigami.Units.gridUnit * 4, nameLab.implicitWidth) : Kirigami.Units.gridUnit * 16
     implicitHeight: compact ? nameLab.implicitHeight : Kirigami.Units.gridUnit * 20
+
     function periodAt(i) {
         if (!day || !day.periods)
             return null
@@ -62,8 +63,6 @@ Item {
     onLongitudeChanged: refresh()
 
     PlasmaComponents.Label {
-        visible: root.compact
-    PlasmaComponents.Label {
         id: nameLab
         visible: root.compact
         anchors.centerIn: parent
@@ -71,6 +70,8 @@ Item {
         font.weight: Font.DemiBold
         color: root.foreground
     }
+
+    ColumnLayout {
         visible: !root.compact
         anchors.fill: parent
         spacing: Kirigami.Units.smallSpacing
