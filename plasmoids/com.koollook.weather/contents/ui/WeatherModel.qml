@@ -432,7 +432,7 @@ QtObject {
             slots.push({
                 hour: hour,
                 label: (hour < 10 ? "0" : "") + hour,
-                icon: hit ? hit.icon : "weather-none-available",
+            + "&forecast_days=8&timezone=auto"
                 temp: hit ? hit.temp : "—"
             })
         }
