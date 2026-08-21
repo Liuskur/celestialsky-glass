@@ -29,7 +29,7 @@ Item {
         refractIOR: Plasmoid.configuration.refractIORx100 / 100
         refractScale: (pal.isClear || frame.hideFrame) ? 0 : Plasmoid.configuration.refractScale
         tint: pal.glassTint
-        tintAlpha: pal.isClear ? 0 : pal.glassTintAlpha
+        tintAlpha: pal.isClear ? 0 : (pal.isGlass ? Plasmoid.configuration.tintAlphaPct / 100 : pal.glassTintAlpha)
         chromaStrength: pal.isClear || frame.hideFrame ? 0 : Plasmoid.configuration.chromaStrengthPct / 100
         specStrength: (pal.showSpecular && !frame.hideFrame) ? Plasmoid.configuration.specStrengthPct / 100 : 0
         specEnabled: pal.showSpecular && !frame.hideFrame
