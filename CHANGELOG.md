@@ -1,11 +1,11 @@
 # Changelog — Koollook Widgets
 
+## 2.5.0
+
+- Livonian-style griffin icon theme (`Koollook`): regular launcher, white, charcoal, symbolic
+- Color schemes: Koollook Dark, Aqua (light), Eesti, Livonia
+
 ## 2.4.0
-
-- System tray applet `com.koollook.stt`: start/stop listening, send/delete clip, audio sources
-- Middle-click tray icon toggles listening
-
-## 2.3.0
 
 - Shared `KoollookFrame`: Glass, Solid, Clear (see-through), Plasma, Chameleon, Inverse, Koollook
 - Invisible frame option; Inverse uses opposite of desktop background for text/icons
