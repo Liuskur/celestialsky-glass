@@ -24,7 +24,7 @@ Splash wordmark: **KoollooK**.
 | `com.koollook.*.plasmoid` | Single widgets (Store-style) |
 | `koollook-colors-0.7.0.tar.zst` | Color schemes |
 | `koollook-icons-0.7.0.tar.zst` | Griffin icons |
-| `koollook-aurorae-0.7.0.tar.zst` | Koollook title bar |
+| `koollook-titlebar-0.7.0.tar.zst` | KoollooK title bar |
 | `koollook-dotted-0.7.0.tar.zst` | Koollook Dotted title bar |
 | `koollook-splash-0.7.0.tar.zst` | Plasma splash (KoollooK) |
 | `koollook-sddm-0.7.0.tar.zst` | Login theme |
