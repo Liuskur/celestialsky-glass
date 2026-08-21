@@ -206,7 +206,7 @@ QtObject {
                 continue
             slots.push({
                 hour: hour,
-                label: (hour < 10 ? "0" : "") + hour,
+                label: formatHour(hour),
                 icon: hit ? _bbcIcon(hit.weatherType, _hourIsNight(hour)) : "weather-none-available",
                 temp: hit ? formatTemp(hit.temperatureC) : "—"
             })
