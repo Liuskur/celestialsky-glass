@@ -227,7 +227,7 @@ function horaSchedule(lat, lon, now) {
             start: start, end: end, label: fmtHM(start) + "–" + fmtHM(end), daypart: "day"
         })
     }
-    for (i = 0; i < 15; i++) {
+    for (i = 0; i < 12; i++) {
         start = new Date(w.sunset.getTime() + i * nightSlot)
         end = new Date(w.sunset.getTime() + (i + 1) * nightSlot)
         id = CHALDEAN[(idx + 12 + i) % 7]
