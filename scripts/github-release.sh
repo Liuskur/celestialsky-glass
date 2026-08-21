@@ -6,7 +6,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DIST="$ROOT/dist"
 VER="$(tr -d '[:space:]' < "$ROOT/VERSION")"
 TAG="v${VER}"
-REPO="${GITHUB_REPO:-Liuskur/celestialsky-glass}"
+REPO="${GITHUB_REPO:-Liuskur/KoollooK}"
 NOTES="$DIST/RELEASE-NOTES.md"
 [[ -f "$NOTES" ]] || NOTES="$ROOT/RELEASE-NOTES.md"
 [[ -f "$DIST/koollook-${VER}.tar.zst" ]] || { echo "run scripts/package.sh first" >&2; exit 1; }
