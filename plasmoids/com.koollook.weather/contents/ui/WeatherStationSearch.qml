@@ -4,21 +4,18 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasma5support as Plasma5Support
+import "org/koollook/location"
 
 ColumnLayout {
     id: root
     spacing: Kirigami.Units.smallSpacing
 
-    property string source: ""
+    property string source: "openmeteo"
     property string locationName: ""
-    property string provider: "bbcukmet"
-    property bool _ready: false
-
-    Plasma5Support.DataSource {
-        id: ionsSrc
-        engine: "weather"
-        connectedSources: ["ions"]
-    }
+    property real latitude: 0
+    property real longitude: 0
+    property string provider: "openmeteo"
+    property bool omMode: provider === "openmeteo"
 
     Plasma5Support.DataSource {
         id: valSrc
@@ -40,8 +37,6 @@ ColumnLayout {
                     resultsModel.append({ display: label, src: key })
                 }
             }
-            if (resultsModel.count === 0 && data["place"])
-                resultsModel.append({ display: "" + data["place"], src: root.provider + "|weather|" + data["place"] })
         }
     }
 
@@ -49,21 +44,38 @@ ColumnLayout {
 
     function search() {
         var q = searchField.text.trim()
-        if (q.length < 2)
+        if (q.length < 2 || root.omMode)
             return
         resultsModel.clear()
         valSrc.connectedSources = [root.provider + "|validate|" + q]
     }
+
     ComboBox {
         id: providerBox
         Layout.fillWidth: true
-        model: [i18n("BBC Weather"), i18n("NOAA"), i18n("German Weather Service"), i18n("wetter.com"), i18n("Environment Canada")]
-        property var ids: ["bbcukmet", "noaa", "dwd", "wettercom", "envcan"]
+        model: [i18n("Open-Meteo (macOS weather)"), i18n("BBC Weather"), i18n("NOAA"), i18n("German Weather Service"), i18n("wetter.com"), i18n("Environment Canada")]
+        property var ids: ["openmeteo", "bbcukmet", "noaa", "dwd", "wettercom", "envcan"]
         currentIndex: 0
-        onActivated: function (idx) { root.provider = ids[idx] }
+        onActivated: function (idx) {
+            root.provider = ids[idx]
+            if (ids[idx] === "openmeteo")
+                root.source = "openmeteo"
+        }
+    }
+
+    LocationSearch {
+        visible: root.omMode
+        Layout.fillWidth: true
+        locationName: root.locationName
+        latitude: root.latitude
+        longitude: root.longitude
+        onLocationNameChanged: if (!root.omMode) return; else root.locationName = locationName
+        onLatitudeChanged: if (root.omMode) root.latitude = latitude
+        onLongitudeChanged: if (root.omMode) { root.longitude = longitude; root.source = "openmeteo" }
     }
 
     RowLayout {
+        visible: !root.omMode
         Layout.fillWidth: true
         TextField {
             id: searchField
@@ -79,6 +91,7 @@ ColumnLayout {
     }
 
     ListView {
+        visible: !root.omMode
         Layout.fillWidth: true
         Layout.preferredHeight: Kirigami.Units.gridUnit * 8
         clip: true
@@ -98,7 +111,9 @@ ColumnLayout {
         Layout.fillWidth: true
         wrapMode: Text.WordWrap
         opacity: 0.7
-        text: root.source.length ? root.source : i18n("Same providers as Plasma Weather Report.")
+        text: root.omMode
+            ? i18n("Open-Meteo — same service as the previous macOS weather widget. No API key.")
+            : (root.source.length ? root.source : i18n("Plasma Weather Report providers."))
         font.pointSize: Kirigami.Theme.smallFont.pointSize
     }
 }
