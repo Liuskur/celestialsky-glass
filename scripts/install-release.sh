@@ -223,6 +223,7 @@ if [[ "$WANT_ICONS" -eq 1 ]]; then
   cp -a "$STAGING/theme/icons/Koollook" "$SHARE/icons/Koollook"
   echo "theme: icons"
 fi
+if [[ "$WANT_AURORAE" -eq 1 ]]; then
   extract_piece koollook-titlebar
   mkdir -p "$SHARE/aurorae/themes" "$SHARE/kwin/aurorae"
   rm -rf "$SHARE/aurorae/themes/Koollook"
@@ -231,7 +232,6 @@ fi
     cp -a "$STAGING/theme/kwin-aurorae/"*.qml "$SHARE/kwin/aurorae/" 2>/dev/null || true
   fi
   echo "theme: KoollooK title bar"
-fi
 fi
 if [[ "$WANT_DOTTED" -eq 1 ]]; then
   extract_piece koollook-dotted
