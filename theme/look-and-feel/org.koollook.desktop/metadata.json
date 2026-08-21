@@ -8,7 +8,7 @@
             }
         ],
         "Category": "Global Themes (Plasma 6)",
-        "Description": "Koollook desktop: Stone-derived colors, Koollook window decoration, Breeze apps. Migrated from RiderLook.",
+        "Description": "Koollook desktop: Koollook colors, Koollook window decoration, Breeze apps. Plasma 6.",
         "EnabledByDefault": true,
         "Id": "org.koollook.desktop",
         "License": "MIT",
