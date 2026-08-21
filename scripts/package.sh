@@ -27,18 +27,12 @@ package_one() {
   [[ -n "$ver" ]] || { echo "no Version in $dir/metadata.json" >&2; exit 1; }
   tmp="$(mktemp -d)"
   cp -a "$dir"/. "$tmp/"
-  cp -a "$ROOT/LICENSE.GPL-3.0" "$tmp/LICENSE"
-  if [[ "$id" == "com.koollook.celestialsky" ]]; then
-    cp -a "$ROOT/LICENSE.MIT" "$tmp/LICENSE.MIT"
-  fi
+  cp -a "$ROOT/LICENSE" "$tmp/LICENSE"
   out="$DIST/${id}-${ver}.plasmoid"
   rm -f "$out"
   (
     cd "$tmp"
     zip_add "$out" metadata.json contents LICENSE
-    if [[ -f LICENSE.MIT ]]; then
-      zip_add "$out" LICENSE.MIT
-    fi
   )
   rm -rf "$tmp"
   echo "wrote $out"
@@ -50,12 +44,10 @@ package_one com.koollook.weather
 
 cp -a "$ROOT/README.md" "$DIST/README.md"
 cp -a "$ROOT/LICENSE" "$DIST/LICENSE"
-cp -a "$ROOT/LICENSE.GPL-3.0" "$DIST/LICENSE.GPL-3.0"
-cp -a "$ROOT/LICENSE.MIT" "$DIST/LICENSE.MIT"
 
 (
   cd "$DIST"
-  sha256sum -- *.plasmoid README.md LICENSE LICENSE.GPL-3.0 LICENSE.MIT > SHA256SUMS
+  sha256sum -- *.plasmoid README.md LICENSE > SHA256SUMS
 )
 
 ARCHIVE="$DIST/koollook-widgets-${SUITE_VER}.tar.zst"
@@ -67,7 +59,7 @@ if command -v zstd >/dev/null 2>&1; then
       com.koollook.celestialsky-*.plasmoid \
       com.koollook.calendar-*.plasmoid \
       com.koollook.weather-*.plasmoid \
-      SHA256SUMS README.md LICENSE LICENSE.GPL-3.0 LICENSE.MIT
+      SHA256SUMS README.md LICENSE
   ) | zstd -19 -o "$ARCHIVE"
 else
   ARCHIVE="$DIST/koollook-widgets-${SUITE_VER}.tar.gz"
@@ -78,7 +70,7 @@ else
       com.koollook.celestialsky-*.plasmoid \
       com.koollook.calendar-*.plasmoid \
       com.koollook.weather-*.plasmoid \
-      SHA256SUMS README.md LICENSE LICENSE.GPL-3.0 LICENSE.MIT
+      SHA256SUMS README.md LICENSE
   )
 fi
 echo "wrote $ARCHIVE"

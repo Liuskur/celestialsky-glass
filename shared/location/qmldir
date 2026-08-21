@@ -1,0 +1,3 @@
+module org.koollook.location
+# SPDX-License-Identifier: MIT
+LocationSearch 1.0 LocationSearch.qml

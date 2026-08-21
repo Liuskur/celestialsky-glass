@@ -3,9 +3,13 @@
 ## 2.0.0
 
 - Monorepo: Celestial Sky, Calendar, and Weather in one repo
-- Shared QML module `org.koollook.glass` plus common Appearance config
-- Rebrand to Koollook; plugin IDs `com.koollook.celestialsky`, `com.koollook.calendar`, `com.koollook.weather`
+- Shared QML modules `org.koollook.glass` and `org.koollook.location`
+- Calendar is original MIT code using Plasma `MonthView` (Digital Clock popup)
+- Weather is original MIT code, Weather Report layout, Open-Meteo
+- Removed GPL macOS-widget sources
+- Rebrand to Koollook; plugin IDs `com.koollook.*`
 - `scripts/package.sh` and GitHub Actions build all three widgets at once
+- License: MIT for all widgets and QML
 
 ## Celestial Sky 1.4.0
 

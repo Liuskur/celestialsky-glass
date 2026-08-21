@@ -3,8 +3,8 @@
   "KPlugin": {
     "Authors": [
       {
-        "Email": "zinczorphin@email.com",
-        "Name": "Jack Faith"
+        "Name": "Tamás Máté",
+        "Email": "royalpython132@gmail.com"
       },
       {
         "Name": "Koollook",
@@ -12,12 +12,12 @@
       }
     ],
     "Category": "Date and Time",
-    "Description": "Month calendar with a frosted-glass backdrop. Stretch it wide for a side panel of upcoming events.",
-    "Icon": "/icon.png",
+    "Description": "Month calendar in a liquid-glass frame, using the same Plasma month view as the Digital Clock popup.",
+    "Icon": "office-calendar",
     "Id": "com.koollook.calendar",
-    "License": "GPL-3.0-only",
+    "License": "MIT",
     "Name": "Koollook Calendar",
-    "Version": "1.1.0",
+    "Version": "2.0.0",
     "Website": "https://github.com/Liuskur/celestialsky-glass"
   },
   "X-Plasma-API-Minimum-Version": "6.0"

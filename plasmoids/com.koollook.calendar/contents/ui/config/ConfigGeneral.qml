@@ -1,71 +1,60 @@
+// SPDX-License-Identifier: MIT
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 
 Kirigami.FormLayout {
+    id: root
+
     property alias cfg_firstDayOfWeek: firstDayCombo.currentIndex
-    property alias cfg_eventLookaheadDays: lookaheadCombo.currentIndex
+    property alias cfg_showWeekNumbers: weekNumbers.checked
+    property var cfg_enabledCalendarPlugins
 
-    // StringList — Plasma config passes this as a JS array.
-    property var cfg_enabledCalendarPlugins: []
-
-    function _applyPluginsToCheckboxes() {
-        var list = cfg_enabledCalendarPlugins;
-        // May arrive as an array or as a comma-joined string depending on KDE version.
-        if (typeof list === "string") list = list.split(",").map(function(s) { return s.trim(); });
-        pimCheck.checked          = list.indexOf("pimevents") !== -1;
-        holidaysCheck.checked     = list.indexOf("holidaysevents") !== -1;
-        astronomicalCheck.checked = list.indexOf("astronomicalevents") !== -1;
-    }
-
-    function _applyCheckboxesToPlugins() {
-        var parts = [];
-        if (pimCheck.checked)          parts.push("pimevents");
-        if (holidaysCheck.checked)     parts.push("holidaysevents");
-        if (astronomicalCheck.checked) parts.push("astronomicalevents");
-        cfg_enabledCalendarPlugins = parts;
-    }
-
-    // Populate checkboxes once config value is available.
-    onCfg_enabledCalendarPluginsChanged: _applyPluginsToCheckboxes()
+    property bool _ready: false
 
     ComboBox {
         id: firstDayCombo
         Kirigami.FormData.label: i18n("First day of week:")
-        model: [i18n("Sunday"), i18n("Monday")]
+        model: [
+            i18n("Sunday"),
+            i18n("Monday"),
+            i18n("Tuesday"),
+            i18n("Wednesday"),
+            i18n("Thursday"),
+            i18n("Friday"),
+            i18n("Saturday")
+        ]
     }
 
-    ComboBox {
-        id: lookaheadCombo
-        Kirigami.FormData.label: i18n("Show events for:")
-        model: [i18n("7 days"), i18n("14 days"), i18n("30 days"), i18n("60 days")]
+    CheckBox {
+        id: weekNumbers
+        Kirigami.FormData.label: i18n("Week numbers:")
+        text: i18n("Show")
     }
 
-    Item {
-        Kirigami.FormData.label: i18n("Calendar sources:")
-        implicitHeight: pluginsColumn.implicitHeight
-        implicitWidth: pluginsColumn.implicitWidth
+    CheckBox {
+        id: holidays
+        Kirigami.FormData.label: i18n("Holidays:")
+        text: i18n("Show regional holidays")
+        checked: cfg_enabledCalendarPlugins.indexOf("holidaysevents") !== -1
+        onToggled: root._syncPlugins()
+    }
 
-        ColumnLayout {
-            id: pluginsColumn
-            spacing: 4
+    CheckBox {
+        id: astronomical
+        Kirigami.FormData.label: i18n("Sky events:")
+        text: i18n("Show astronomical events")
+        checked: cfg_enabledCalendarPlugins.indexOf("astronomicalevents") !== -1
+        onToggled: root._syncPlugins()
+    }
 
-            CheckBox {
-                id: pimCheck
-                text: i18n("PIM Events (Akonadi)")
-                onCheckedChanged: _applyCheckboxesToPlugins()
-            }
-            CheckBox {
-                id: holidaysCheck
-                text: i18n("Holidays")
-                onCheckedChanged: _applyCheckboxesToPlugins()
-            }
-            CheckBox {
-                id: astronomicalCheck
-                text: i18n("Astronomical Events")
-                onCheckedChanged: _applyCheckboxesToPlugins()
-            }
-        }
+    function _syncPlugins() {
+        var list = []
+        if (holidays.checked)
+            list.push("holidaysevents")
+        if (astronomical.checked)
+            list.push("astronomicalevents")
+        cfg_enabledCalendarPlugins = list
     }
 }

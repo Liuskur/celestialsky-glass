@@ -3,8 +3,8 @@
   "KPlugin": {
     "Authors": [
       {
-        "Email": "zinczorphin@email.com",
-        "Name": "Jack Faith"
+        "Name": "Tamás Máté",
+        "Email": "royalpython132@gmail.com"
       },
       {
         "Name": "Koollook",
@@ -12,12 +12,12 @@
       }
     ],
     "Category": "Environment",
-    "Description": "Current conditions with hourly and daily forecasts on a frosted-glass card. Layout grows from a compact tile to a full panel as you resize it.",
-    "Icon": "/icon.png",
+    "Description": "Current conditions and forecast in a liquid-glass frame, laid out like Plasma Weather Report.",
+    "Icon": "weather-clouds",
     "Id": "com.koollook.weather",
-    "License": "GPL-3.0-only",
+    "License": "MIT",
     "Name": "Koollook Weather",
-    "Version": "1.1.0",
+    "Version": "2.0.0",
     "Website": "https://github.com/Liuskur/celestialsky-glass"
   },
   "X-Plasma-API-Minimum-Version": "6.0"

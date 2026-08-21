@@ -17,7 +17,7 @@
             }
         ],
         "Category": "Astronomy",
-        "License": "GPL-3.0-only"
+        "License": "MIT"
     },
     "KPackageStructure": "Plasma/Applet",
     "X-Plasma-API-Minimum-Version": "6.0"
