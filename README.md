@@ -44,11 +44,31 @@ Then: Desktop → Add Widgets → search “Koollook”.
 ## Layout
 
 ```
+theme/                         Koollook colors, Aurorae, look-and-feel, KWin
+accessibility/koollook-stt/    local English dictation (whisper.cpp)
 shared/glass/                  org.koollook.glass
 shared/location/               org.koollook.location
 shared/appearance/             ConfigAppearance.qml
 plasmoids/com.koollook.*/      widget-specific sources
 scripts/package.sh             builds all three
+```
+
+## Theme (from RiderLook)
+
+```bash
+./theme/install.sh
+```
+
+Color scheme **Koollook**, window decoration **Koollook**, KWin translucency + hide-cursor. See `theme/README.md`.
+
+## Accessibility STT
+
+Local English speech-to-text into the focused field. Reuses ResoNider whisper.cpp. Phone can start/stop via KDE Connect Run Command; audio source `auto` uses a `kdeconnect` Pulse source when present.
+
+```bash
+./accessibility/koollook-stt/install.sh
+koollook-stt --toggle
+```
 
 ## Migrating from older IDs
 
@@ -67,7 +87,7 @@ Remove the old applet, then add the Koollook one. Configuration is not migrated.
 
 ## License
 
-MIT — see `LICENSE`. All widgets and QML are MIT.
+MIT for widgets and QML. Aurorae decoration SVGs are GPL-3.0 (Willow). See `LICENSE` and `theme/README.md`.
 
 ## Changelog
 
