@@ -12,7 +12,7 @@ Item {
     readonly property bool hideFrame: Plasmoid.configuration.hideFrame === true
         || Plasmoid.configuration.hideFrame === 1
 
-    MacOSColors {
+    KoollookColors {
         id: pal
         styleMode: frame.styleMode
         appearance: Plasmoid.configuration.appearance
