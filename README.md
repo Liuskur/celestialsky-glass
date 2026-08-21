@@ -70,10 +70,9 @@ koollook-stt --toggle
 
 Phone: KDE Connect Run Command (toggle/start/stop). `KOOLLOOK_STT_SOURCE=auto` uses a `kdeconnect` Pulse source when the phone is a mic.
 
-```bash
-Phone: KDE Connect Run Command (toggle/start/stop). `KOOLLOOK_STT_SOURCE=auto` uses a `kdeconnect` Pulse source when the phone is a mic.
+Tray: after install, **Koollook STT** is in the system tray (Panel → System Tray Settings → Entries if hidden). Middle-click toggles listening.
+
 - KDE Plasma 6
-- Desktop containment (not panel)
 
 ## License
 
