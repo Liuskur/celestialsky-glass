@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Koollook
+Description=Koollook Dark teal griffin
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/koollook
+ScriptFile=/usr/share/plymouth/themes/koollook/koollook.script
