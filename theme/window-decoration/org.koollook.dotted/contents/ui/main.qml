@@ -12,6 +12,9 @@ Decoration {
 
     readonly property int barH: 28
     readonly property int gap: 10
+    readonly property int dottedCell: 7
+    readonly property int dottedRows: 3
+    readonly property int dottedH: dottedCell * dottedRows
     readonly property color barColor: "#1d1d27"
     readonly property color textColor: decoration.client.active ? "#e7bf7e" : "#666a73"
 
