@@ -455,7 +455,7 @@ QtObject {
             hit = byKey[ymd + "-" + hour]
             slots.push({
                 hour: hour,
-                label: (hour < 10 ? "0" : "") + hour,
+                label: formatHour(hour),
                 icon: hit ? hit.icon : "weather-none-available",
                 temp: hit ? hit.temp : "—"
             })
