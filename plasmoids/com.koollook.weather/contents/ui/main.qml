@@ -212,13 +212,34 @@ PlasmoidItem {
                 opacity: 0.3
             }
 
+            RowLayout {
+                Layout.fillWidth: true
+                visible: wx.daily.length > 0
+                Item { Layout.preferredWidth: Kirigami.Units.gridUnit * 2.6 }
+                Repeater {
+                    model: wx.slotHours
+                    PlasmaComponents.Label {
+                        Layout.fillWidth: true
+                        horizontalAlignment: Text.AlignHCenter
+                        text: wx.formatHour(modelData)
+                        font.pointSize: Kirigami.Theme.smallFont.pointSize
+                        color: colors.foreground
+                        opacity: 0.45
+                    }
+                }
+                PlasmaComponents.Label { text: "88°"; opacity: 0; font.weight: Font.DemiBold }
+                PlasmaComponents.Label { text: "88°"; opacity: 0 }
+            }
+
             Repeater {
                 model: wx.daily
                 delegate: ColumnLayout {
                     Layout.fillWidth: true
+                    Layout.fillHeight: true
                     spacing: 2
                     RowLayout {
                         Layout.fillWidth: true
+                        Layout.fillHeight: true
                         PlasmaComponents.Label {
                             text: modelData.name
                             Layout.preferredWidth: Kirigami.Units.gridUnit * 2.6
@@ -229,9 +250,10 @@ PlasmoidItem {
                             model: modelData.slots
                             WeatherIcon {
                                 iconName: modelData.icon
-                                Layout.preferredWidth: Kirigami.Units.iconSizes.small * 1.5
-                                Layout.preferredHeight: Kirigami.Units.iconSizes.small * 1.5
+                                Layout.preferredWidth: Kirigami.Units.iconSizes.medium * 1.5
+                                Layout.preferredHeight: Kirigami.Units.iconSizes.medium * 1.5
                                 Layout.fillWidth: true
+                                Layout.fillHeight: true
                             }
                         }
                         PlasmaComponents.Label {
@@ -247,8 +269,6 @@ PlasmoidItem {
                     }
                 }
             }
-
-            Item { Layout.fillHeight: true }
         }
     }
 }
