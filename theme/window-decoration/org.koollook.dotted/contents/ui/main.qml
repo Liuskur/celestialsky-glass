@@ -11,26 +11,46 @@ Decoration {
     }
 
     readonly property int barH: 28
-    readonly property int gap: 10
-    readonly property int dottedCell: 7
-    readonly property int dottedRows: 3
-    readonly property int dottedH: dottedCell * dottedRows
+    readonly property int gap: 8
+    readonly property int lineH: 2
+    readonly property int lineGap: 2
+    readonly property int gripRows: 3
+    readonly property int gripH: gripRows * lineH + (gripRows - 1) * lineGap
+    readonly property int edge: 4
     readonly property color barColor: "#1d1d27"
     readonly property color textColor: decoration.client.active ? "#e7bf7e" : "#666a73"
 
+    property real marginLeftPct: 0
+    property real marginRightPct: 0
+    property real marginTopPct: 0
+    property real marginBottomPct: 0
+
+    function readConfig() {
+        root.marginLeftPct = decoration.readConfig("marginLeftPct", 0)
+        root.marginRightPct = decoration.readConfig("marginRightPct", 0)
+        root.marginTopPct = decoration.readConfig("marginTopPct", 0)
+        root.marginBottomPct = decoration.readConfig("marginBottomPct", 0)
+    }
+
     Component.onCompleted: {
-        borders.left = 4
-        borders.right = 4
+        borders.left = root.edge
+        borders.right = root.edge
         borders.bottom = 6
-        borders.top = barH
+        borders.top = root.barH
         maximizedBorders.left = 0
         maximizedBorders.right = 0
         maximizedBorders.bottom = 0
-        maximizedBorders.top = barH
+        maximizedBorders.top = root.barH
         padding.left = 0
         padding.right = 0
         padding.top = 0
         padding.bottom = 0
+        readConfig()
+    }
+
+    Connections {
+        target: decoration
+        function onConfigChanged() { root.readConfig() }
     }
 
     Rectangle {
@@ -42,18 +62,21 @@ Decoration {
 
     Item {
         id: titleRow
+        clip: true
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
         height: root.barH
-        anchors.leftMargin: decoration.client.maximized ? 0 : 4
-        anchors.rightMargin: decoration.client.maximized ? 0 : 4
+        anchors.leftMargin: (decoration.client.maximized ? 0 : root.edge) + parent.width * root.marginLeftPct / 100
+        anchors.rightMargin: (decoration.client.maximized ? 0 : root.edge) + parent.width * root.marginRightPct / 100
+        anchors.topMargin: height * root.marginTopPct / 100
+        anchors.bottomMargin: 0
 
         ButtonGroup {
             id: leftButtonGroup
             spacing: 1
             explicitSpacer: 0
-            height: root.barH
+            height: titleRow.height
             buttons: options.titleButtonsLeft
             menuButton: menuComp
             appMenuButton: menuComp
@@ -70,36 +93,65 @@ Decoration {
             anchors.bottom: parent.bottom
         }
 
-        Text {
-            id: caption
-            textFormat: Text.PlainText
-            text: decoration.client.caption
-            color: root.textColor
-            font: options.titleFont
-            elide: Text.ElideRight
-            verticalAlignment: Text.AlignVCenter
-            renderType: Text.NativeRendering
-            height: parent.height
-            x: leftButtonGroup.x + leftButtonGroup.width + 8
-            width: Math.min(implicitWidth, Math.max(0, rightButtonGroup.x - root.gap - x))
-        }
-
         Item {
-            id: grip
+            id: mid
             clip: true
-            visible: width > 6
-            height: root.dottedH
-            anchors.verticalCenter: parent.verticalCenter
-            x: caption.x + caption.width + root.gap
-            width: Math.max(0, rightButtonGroup.x - root.gap - x)
-            Image {
-                anchors.fill: parent
-                fillMode: Image.Tile
-                sourceSize.width: root.dottedCell
-                sourceSize.height: root.dottedCell
-                source: Qt.resolvedUrl("dots.svg")
-                horizontalAlignment: Image.AlignLeft
-                verticalAlignment: Image.AlignTop
+            anchors.left: leftButtonGroup.right
+            anchors.right: rightButtonGroup.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: root.gap
+            anchors.rightMargin: root.gap
+
+            Text {
+                id: caption
+                textFormat: Text.PlainText
+                text: decoration.client.caption
+                color: root.textColor
+                font: options.titleFont
+                elide: Text.ElideRight
+                verticalAlignment: Text.AlignVCenter
+                renderType: Text.NativeRendering
+                height: parent.height
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                width: Math.min(implicitWidth, Math.max(0, parent.width - 24))
+            }
+
+            Item {
+                id: grip
+                clip: true
+                visible: width > 4
+                anchors.left: caption.right
+                anchors.right: parent.right
+                anchors.leftMargin: root.gap
+                anchors.verticalCenter: parent.verticalCenter
+                height: Math.max(0, root.gripH - parent.height * root.marginBottomPct / 50)
+
+                Column {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: root.lineGap
+                    Repeater {
+                        model: root.gripRows
+                        Item {
+                            width: grip.width
+                            height: root.lineH
+                            clip: true
+                            Image {
+                                anchors.fill: parent
+                                fillMode: Image.Tile
+                                sourceSize.width: 4
+                                sourceSize.height: 4
+                                source: Qt.resolvedUrl("dots.svg")
+                                horizontalAlignment: Image.AlignLeft
+                                verticalAlignment: Image.AlignTop
+                                asynchronous: false
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -107,7 +159,7 @@ Decoration {
             id: rightButtonGroup
             spacing: 1
             explicitSpacer: 0
-            height: root.barH
+            height: titleRow.height
             buttons: options.titleButtonsRight
             menuButton: menuComp
             appMenuButton: menuComp
@@ -122,7 +174,6 @@ Decoration {
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-        }
         }
 
         Component.onCompleted: decoration.installTitleItem(titleRow)
