@@ -214,6 +214,70 @@ QtObject {
         return slots
     }
 
+    function _nextSixSlots() {
+        var h = new Date().getHours()
+        var start = Math.ceil(h / 3) * 3
+        var ymd = _todayYmd()
+        if (start >= 24) {
+            start = 0
+            ymd = _shiftYmd(ymd, 1)
+        }
+        var out = []
+        var i, hour
+        hour = start
+        for (i = 0; i < 6; i++) {
+            out.push({ hour: hour, ymd: ymd })
+            hour += 3
+            if (hour >= 24) {
+                hour = 0
+                ymd = _shiftYmd(ymd, 1)
+            }
+        }
+        return out
+    }
+
+    function _bbcHourlyNext(forecasts) {
+        var steps = _nextSixSlots()
+        var hours = []
+        var i, step, pack, byHour, r, ts, hh, hit
+        for (i = 0; i < steps.length; i++) {
+            step = steps[i]
+            pack = _bbcDay(forecasts, step.ymd)
+            byHour = ({})
+            for (r = 0; r < pack.reports.length; r++) {
+                ts = pack.reports[r].timeslot || ""
+                hh = parseInt(ts.split(":")[0], 10)
+                if (hh >= 0 && hh <= 23)
+                    byHour[hh] = pack.reports[r]
+            }
+            hit = byHour[step.hour] || byHour[step.hour + 1] || byHour[step.hour - 1]
+            hours.push({
+                hour: step.hour,
+                label: formatHour(step.hour),
+                icon: hit ? _bbcIcon(hit.weatherType, _hourIsNight(step.hour)) : "weather-none-available",
+                temp: hit ? formatTemp(hit.temperatureC) : "—"
+            })
+        }
+        return hours
+    }
+
+    function _omHourlyNext(byKey) {
+        var steps = _nextSixSlots()
+        var hours = []
+        var i, step, hit
+        for (i = 0; i < steps.length; i++) {
+            step = steps[i]
+            hit = byKey[step.ymd + "-" + step.hour]
+            hours.push({
+                hour: step.hour,
+                label: formatHour(step.hour),
+                icon: hit ? hit.icon : "weather-none-available",
+                temp: hit ? hit.temp : "—"
+            })
+        }
+        return hours
+    }
+
     function _toC(value, unit) {
         if (value === undefined || value === null || value === "")
             return 0
