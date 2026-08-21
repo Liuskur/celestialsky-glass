@@ -9,9 +9,12 @@ DecorationButton {
     property int btnHeight: 28
     width: btnWidth
     height: btnHeight
+    implicitWidth: btnWidth
+    implicitHeight: btnHeight
 
     KSvg.FrameSvgItem {
         anchors.fill: parent
+        enabledBorders: KSvg.FrameSvg.NoBorder
         imagePath: Qt.resolvedUrl(root.svgFile)
         prefix: {
             var act = decoration.client.active
