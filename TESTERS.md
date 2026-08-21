@@ -11,7 +11,7 @@ Download either:
 
 ```bash
 tar -I zstd -xf koollook-2.8.0.tar.zst
-cd koollook-2.7.0
+cd koollook-2.8.0
 chmod +x install.sh
 ./install.sh                 # asks yes/no per piece
 # or:
