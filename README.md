@@ -6,7 +6,7 @@ Plasma 6 widgets, theme, and local accessibility STT. Former Celestial Sky (Glas
 
 | Widget | Plugin ID | Version |
 |--------|-----------|---------|
-| Koollook Celestial Sky | `com.koollook.celestialsky` | 1.4.0 |
+| Koollook Planisphere | `com.koollook.planisphere` | 2.0.0 |
 | Koollook Calendar | `com.koollook.calendar` | 2.0.0 |
 | Koollook Weather | `com.koollook.weather` | 2.0.0 |
 | Koollook STT Clip | `com.koollook.sttclip` | 1.0.0 |
