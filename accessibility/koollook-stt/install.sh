@@ -7,10 +7,14 @@ BINDIR="${XDG_BIN_HOME:-$HOME/.local/bin}"
 APPDIR="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
 KDECONNECT_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/kdeconnect"
 
-mkdir -p "$BINDIR" "$APPDIR"
+mkdir -p "$BINDIR" "$APPDIR" "${XDG_CONFIG_HOME:-$HOME/.config}/koollook"
 install -m 0755 "$SRC/koollook-stt" "$BINDIR/koollook-stt"
 install -m 0755 "$SRC/koollook-stt-toggle" "$BINDIR/koollook-stt-toggle"
 install -m 0644 "$SRC/koollook-stt.desktop" "$APPDIR/koollook-stt.desktop"
+install -m 0644 "$SRC/commands.default.json" "$BINDIR/commands.default.json"
+if [[ ! -f "${XDG_CONFIG_HOME:-$HOME/.config}/koollook/stt-commands.json" ]]; then
+  install -m 0644 "$SRC/commands.default.json" "${XDG_CONFIG_HOME:-$HOME/.config}/koollook/stt-commands.json"
+fi
 # desktop Exec must be on PATH
 sed -i "s|^Exec=.*|Exec=$BINDIR/koollook-stt --toggle|" "$APPDIR/koollook-stt.desktop"
 command -v update-desktop-database >/dev/null && update-desktop-database "$APPDIR" >/dev/null 2>&1 || true
