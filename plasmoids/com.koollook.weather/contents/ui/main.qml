@@ -65,19 +65,30 @@ PlasmoidItem {
     }
 
     fullRepresentation: Item {
-        Layout.preferredWidth: Kirigami.Units.gridUnit * 18
-        Layout.preferredHeight: Kirigami.Units.gridUnit * 16
-        Layout.minimumWidth: Kirigami.Units.gridUnit * 12
-        Layout.minimumHeight: Kirigami.Units.gridUnit * 10
+        id: weatherRoot
+        Layout.preferredWidth: Kirigami.Units.gridUnit * 22
+        Layout.preferredHeight: Kirigami.Units.gridUnit * 22
+        Layout.minimumWidth: Kirigami.Units.gridUnit * 14
+        Layout.minimumHeight: Kirigami.Units.gridUnit * 14
+        clip: true
+
+        readonly property real innerPad: {
+            if (Plasmoid.configuration.hideFrame)
+                return Kirigami.Units.smallSpacing
+            var r = Plasmoid.configuration.cornerRadius || 48
+            return Math.max(Kirigami.Units.largeSpacing, Math.min(36, r * 0.22))
+        }
 
         KoollookFrame {
             anchors.fill: parent
         }
 
         ColumnLayout {
+            id: weatherBody
             anchors.fill: parent
-            anchors.margins: Kirigami.Units.largeSpacing
+            anchors.margins: weatherRoot.innerPad
             spacing: Kirigami.Units.smallSpacing
+            clip: true
 
             PlasmaComponents.Label {
                 Layout.fillWidth: true
@@ -104,7 +115,7 @@ PlasmoidItem {
                     spacing: 0
                     PlasmaComponents.Label {
                         text: wx.hasData ? wx.formatTemp(wx.temperature) : (wx.loading ? i18n("Loading…") : "—")
-                        font.pixelSize: Kirigami.Units.gridUnit * 2.2
+                        font.pixelSize: Kirigami.Units.gridUnit * 2.0
                         font.weight: Font.Light
                         color: colors.foreground
                     }
@@ -127,7 +138,7 @@ PlasmoidItem {
                 visible: wx.error.length > 0
                 Layout.fillWidth: true
                 text: wx.error
-                wrapMode: Text.WordWrap
+                wrapMode: Text.Wrap
                 color: colors.foreground
             }
 
@@ -157,43 +168,57 @@ PlasmoidItem {
                 }
             }
 
-            Kirigami.Separator {
+            RowLayout {
                 Layout.fillWidth: true
                 visible: wx.hourly.length > 0
-                opacity: 0.3
+                Repeater {
+                    model: ["06", "09", "12", "15", "18", "21"]
+                    PlasmaComponents.Label {
+                        Layout.fillWidth: true
+                        horizontalAlignment: Text.AlignHCenter
+                        text: modelData
+                        font.pointSize: Kirigami.Theme.smallFont.pointSize
+                        color: colors.foreground
+                        opacity: 0.45
+                    }
+                }
             }
 
             ListView {
                 id: hourlyView
                 visible: wx.hourly.length > 0
                 Layout.fillWidth: true
-                Layout.preferredHeight: Kirigami.Units.gridUnit * 4
+                Layout.preferredHeight: Kirigami.Units.gridUnit * 3.6
                 orientation: ListView.Horizontal
                 clip: true
-                spacing: Kirigami.Units.smallSpacing
+                spacing: 0
                 model: wx.hourly
-                delegate: ColumnLayout {
-                    width: Kirigami.Units.gridUnit * 2.4
-                    spacing: 2
-                    PlasmaComponents.Label {
-                        Layout.alignment: Qt.AlignHCenter
-                        text: modelData.label
-                        font.pointSize: Kirigami.Theme.smallFont.pointSize
-                        color: colors.foreground
-                        opacity: 0.7
-                    }
-                    Kirigami.Icon {
-                        Layout.alignment: Qt.AlignHCenter
-                        source: modelData.icon
-                        Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
-                        Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
-                        isMask: colors.useLightGlyphs
-                        color: colors.foreground
-                    }
-                    PlasmaComponents.Label {
-                        Layout.alignment: Qt.AlignHCenter
-                        text: modelData.temp
-                        color: colors.foreground
+                delegate: Item {
+                    width: Math.max(Kirigami.Units.gridUnit * 2.2, hourlyView.width / Math.max(1, hourlyView.count))
+                    height: hourlyView.height
+                    Column {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        spacing: 2
+                        PlasmaComponents.Label {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: modelData.label
+                            font.pointSize: Kirigami.Theme.smallFont.pointSize
+                            color: colors.foreground
+                            opacity: 0.7
+                        }
+                        Kirigami.Icon {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            source: modelData.icon
+                            width: Kirigami.Units.iconSizes.smallMedium
+                            height: width
+                            isMask: colors.useLightGlyphs
+                            color: colors.foreground
+                        }
+                        PlasmaComponents.Label {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: modelData.temp
+                            color: colors.foreground
+                        }
                     }
                 }
             }
@@ -206,30 +231,38 @@ PlasmoidItem {
 
             Repeater {
                 model: wx.daily
-                delegate: RowLayout {
+                delegate: ColumnLayout {
                     Layout.fillWidth: true
-                    PlasmaComponents.Label {
-                        text: modelData.name
-                        Layout.preferredWidth: Kirigami.Units.gridUnit * 3
-                        color: colors.foreground
-                    }
-                    Kirigami.Icon {
-                        source: modelData.icon
-                        Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
-                        Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
-                        isMask: colors.useLightGlyphs
-                        color: colors.foreground
-                    }
-                    Item { Layout.fillWidth: true }
-                    PlasmaComponents.Label {
-                        text: modelData.high
-                        color: colors.foreground
-                        font.weight: Font.DemiBold
-                    }
-                    PlasmaComponents.Label {
-                        text: modelData.low
-                        color: colors.foreground
-                        opacity: 0.65
+                    spacing: 2
+                    RowLayout {
+                        Layout.fillWidth: true
+                        PlasmaComponents.Label {
+                            text: modelData.name
+                            Layout.preferredWidth: Kirigami.Units.gridUnit * 2.6
+                            color: colors.foreground
+                            font.weight: Font.DemiBold
+                        }
+                        Repeater {
+                            model: modelData.slots
+                            Kirigami.Icon {
+                                source: modelData.icon
+                                Layout.preferredWidth: Kirigami.Units.iconSizes.small
+                                Layout.preferredHeight: Kirigami.Units.iconSizes.small
+                                Layout.fillWidth: true
+                                isMask: colors.useLightGlyphs
+                                color: colors.foreground
+                            }
+                        }
+                        PlasmaComponents.Label {
+                            text: modelData.high
+                            color: colors.foreground
+                            font.weight: Font.DemiBold
+                        }
+                        PlasmaComponents.Label {
+                            text: modelData.low
+                            color: colors.foreground
+                            opacity: 0.65
+                        }
                     }
                 }
             }
