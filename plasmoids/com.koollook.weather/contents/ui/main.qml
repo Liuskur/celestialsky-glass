@@ -24,7 +24,9 @@ PlasmoidItem {
         id: wx
         source: Plasmoid.configuration.source && Plasmoid.configuration.source.length
             ? Plasmoid.configuration.source
-            : "bbcukmet|weather|Tallinn, Estonia|588409"
+            : "openmeteo"
+        latitude: Plasmoid.configuration.latitude
+        longitude: Plasmoid.configuration.longitude
         temperatureUnit: Plasmoid.configuration.temperatureUnit
     }
 
