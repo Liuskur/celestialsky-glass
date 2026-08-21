@@ -19,6 +19,7 @@ ColumnLayout {
     property alias cfg_specStrengthPct: specStrengthSpin.value
     property alias cfg_blurRadiusPx: blurRadiusSpin.value
     property alias cfg_realtimeRefraction: realtimeCheck.checked
+    property alias cfg_hideFrame: hideFrameCheck.checked
 
     function _serialize() {
         return JSON.stringify({
