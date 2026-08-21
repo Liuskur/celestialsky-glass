@@ -229,13 +229,13 @@ QtObject {
         var sum = (today.summary && today.summary.report) ? today.summary.report : {}
         var reports = (today.detailed && today.detailed.reports) ? today.detailed.reports : []
         var nowR = reports.length ? reports[0] : sum
-        temperature = nowR.temperatureC || sum.maxTempC || 0
-        feelsLike = nowR.feelsLikeTemperatureC || temperature
+        temperature = nowR.temperatureC != null ? nowR.temperatureC : (sum.maxTempC || 0)
+        feelsLike = nowR.feelsLikeTemperatureC != null ? nowR.feelsLikeTemperatureC : temperature
         humidity = nowR.humidity || 0
         pressure = nowR.pressure || 0
         windSpeed = nowR.windSpeedKph || sum.windSpeedKph || 0
         windDirText = nowR.windDirectionAbbreviation || sum.windDirectionAbbreviation || ""
-        conditionText = nowR.weatherTypeText || sum.weatherTypeText || ""
+        conditionText = nowR.enhancedWeatherDescription || nowR.weatherTypeText || sum.weatherTypeText || sum.enhancedWeatherDescription || ""
         iconName = _bbcIcon(nowR.weatherType !== undefined ? nowR.weatherType : sum.weatherType)
         credit = "BBC Weather"
         var hours = []
