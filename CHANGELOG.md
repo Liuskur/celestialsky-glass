@@ -1,5 +1,9 @@
 # Changelog — Koollook Widgets
 
+## 0.7.2
+
+- Suite **0.7.2**
+
 ## 0.7.1
 
 - Suite **0.7.1**: per-piece tarballs + bundle; title-bar pack renamed `koollook-titlebar`
