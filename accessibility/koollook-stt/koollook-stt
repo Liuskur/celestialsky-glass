@@ -1,0 +1,162 @@
+#!/usr/bin/env bash
+# Koollook STT: local English dictation → focused window.
+# Audio from PipeWire/Pulse default, or a KDE Connect / named source.
+set -euo pipefail
+
+RESONIDER="${RESONIDER:-/opt/Grok/ResoNider}"
+WHISPER_BIN="${WHISPER_BIN:-$RESONIDER/third_party/whisper.cpp/build-en-best/bin/whisper-stream}"
+MODEL="${KOOLLOOK_STT_MODEL:-$RESONIDER/models/ggml-tiny.en-q5_1.bin}"
+LANG="${KOOLLOOK_STT_LANG:-en}"
+RUNTIME="${XDG_RUNTIME_DIR:-/tmp}"
+PIDFILE="$RUNTIME/koollook-stt.pid"
+LOG="${KOOLLOOK_STT_LOG:-$RUNTIME/koollook-stt.log}"
+
+usage() {
+  cat <<'U'
+Usage: koollook-stt [--start|--stop|--status|--toggle|--list-sources]
+Env:
+  KOOLLOOK_STT_SOURCE   Pulse/PipeWire source name, or "auto" (default)
+                        auto prefers a source whose name matches kdeconnect
+  KOOLLOOK_STT_MODEL    whisper.cpp English model
+  RESONIDER             ResoNider tree (whisper.cpp + models)
+U
+}
+
+list_sources() {
+  command -v pactl >/dev/null || { echo "pactl not found"; return 1; }
+  pactl list sources short
+}
+
+pick_source() {
+  local want="${KOOLLOOK_STT_SOURCE:-auto}"
+  command -v pactl >/dev/null || return 0
+  if [[ "$want" != "auto" && -n "$want" ]]; then
+    printf '%s' "$want"
+    return 0
+  fi
+  pactl list sources short 2>/dev/null | awk '{print $2}' \
+    | grep -iE 'kdeconnect' | head -1 || true
+}
+
+type_text() {
+  local t="$1"
+  [[ -z "$t" ]] && return 0
+  if command -v wtype >/dev/null; then
+    wtype -- "$t "
+    return 0
+  fi
+  if command -v ydotool >/dev/null; then
+    ydotool type -- "$t "
+    return 0
+  fi
+  if command -v xdotool >/dev/null; then
+    xdotool type --delay 8 -- "$t "
+    return 0
+  fi
+  if command -v wl-copy >/dev/null; then
+    printf '%s' "$t " | wl-copy
+    notify-send -a Koollook "STT" "Copied (install wtype to type into the focused field)" 2>/dev/null || true
+    return 0
+  fi
+  printf 'stt: no wtype/ydotool/xdotool/wl-copy\n' >&2
+  return 1
+}
+
+keep_text() {
+  local t="$1"
+  t="$(printf '%s' "$t" | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+  [[ -z "$t" ]] && return 1
+  case "$t" in
+    "[Start speaking]"|"[BLANK_AUDIO]"|"[blank audio]"|"[Music]"|"[music]"|"[Silence]"|"[BLANK]") return 1 ;;
+  esac
+  [[ "$t" =~ ^\[.*\]$ ]] && return 1
+  printf '%s' "$t"
+}
+
+is_running() {
+  [[ -f "$PIDFILE" ]] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null
+}
+
+do_stop() {
+  if [[ -f "$PIDFILE" ]]; then
+    local p
+    p="$(cat "$PIDFILE")"
+    kill "$p" 2>/dev/null || true
+    pkill -P "$p" 2>/dev/null || true
+    rm -f "$PIDFILE"
+  fi
+  pkill -f "whisper-stream.*koollook-stt" 2>/dev/null || true
+  echo "koollook-stt stopped"
+}
+
+do_status() {
+  if is_running; then
+    echo "running pid=$(cat "$PIDFILE") source=${PULSE_SOURCE:-default}"
+    return 0
+  fi
+  echo "stopped"
+  return 1
+}
+
+do_start() {
+  if is_running; then
+    echo "already running pid=$(cat "$PIDFILE")"
+    return 0
+  fi
+  [[ -x "$WHISPER_BIN" ]] || { echo "missing $WHISPER_BIN" >&2; exit 1; }
+  [[ -f "$MODEL" ]] || { echo "missing model $MODEL" >&2; exit 1; }
+
+  local src
+  src="$(pick_source || true)"
+  if [[ -n "$src" ]]; then
+    export PULSE_SOURCE="$src"
+    echo "audio source: $src (KDE Connect / Pulse)"
+  else
+    echo "audio source: default Pulse/PipeWire input"
+  fi
+
+  export LD_LIBRARY_PATH="$(dirname "$WHISPER_BIN"):${LD_LIBRARY_PATH:-}"
+  mkdir -p "$(dirname "$PIDFILE")"
+  (
+    local buf="" in_block=0
+    "$WHISPER_BIN" -m "$MODEL" -l "$LANG" --step 800 --length 5000 --keep 200 \
+      --threads "${KOOLLOOK_STT_THREADS:-4}" \
+      2>>"$LOG" | while IFS= read -r line; do
+        if [[ "$line" == "### Transcription "*START* ]]; then
+          in_block=1
+          buf=""
+          continue
+        fi
+        if [[ "$line" == "### Transcription "*END* ]]; then
+          in_block=0
+          local out
+          out="$(keep_text "$buf" || true)"
+          if [[ -n "$out" ]]; then
+            type_text "$out" || true
+            printf 'typed: %s\n' "$out" >>"$LOG"
+          fi
+          buf=""
+          continue
+        fi
+        if [[ $in_block -eq 1 ]]; then
+          buf+="$line"
+        fi
+      done
+  ) &
+  echo $! >"$PIDFILE"
+  echo "koollook-stt started pid=$(cat "$PIDFILE") log=$LOG"
+  notify-send -a Koollook "STT" "Listening (English, local)" 2>/dev/null || true
+}
+
+cmd="${1:---start}"
+case "$cmd" in
+  -h|--help) usage ;;
+  --list-sources) list_sources ;;
+  --stop) do_stop ;;
+  --status) do_status ;;
+  --toggle)
+    if is_running; then do_stop; else do_start; fi
+    ;;
+  --start|start) do_start ;;
+  *) usage; exit 2 ;;
+esac
