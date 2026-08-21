@@ -2,6 +2,8 @@
 # Koollook STT: local English dictation → clip buffer → Plasma 6 widget.
 set -euo pipefail
 
+export PATH="/usr/bin:/usr/local/bin:${PATH:-/bin}"
+
 RESONIDER="${RESONIDER:-/opt/Grok/ResoNider}"
 WHISPER_BIN="${WHISPER_BIN:-$RESONIDER/third_party/whisper.cpp/build-en-best/bin/whisper-stream}"
 MODEL="${KOOLLOOK_STT_MODEL:-$RESONIDER/models/ggml-tiny.en-q5_1.bin}"
@@ -12,6 +14,7 @@ LOG="${KOOLLOOK_STT_LOG:-$RUNTIME/koollook-stt.log}"
 STATE="${XDG_STATE_HOME:-$HOME/.local/state}/koollook"
 CLIP="$STATE/clip.txt"
 STATUS_FILE="$STATE/status"
+SESSION_ENV="$STATE/session.env"
 COMMANDS_JSON="${XDG_CONFIG_HOME:-$HOME/.config}/koollook/stt-commands.json"
 
 mkdir -p "$STATE" "$(dirname "$COMMANDS_JSON")"
@@ -24,6 +27,7 @@ Usage: koollook-stt [--start|--stop|--status|--toggle|--list-sources]
                     [--write-commands-json JSON]
 Clip: ~/.local/state/koollook/clip.txt
 Commands: ~/.config/koollook/stt-commands.json
+Send clip types the buffer into the focused field (wtype).
 U
 }
 
@@ -90,17 +94,143 @@ pick_source() {
   pactl list sources short 2>/dev/null | awk '{print $2}' | grep -iE 'kdeconnect' | head -1 || true
 }
 
+save_session_env() {
+  mkdir -p "$STATE"
+  umask 077
+  {
+    printf 'WAYLAND_DISPLAY=%q\n' "${WAYLAND_DISPLAY:-}"
+    printf 'XDG_RUNTIME_DIR=%q\n' "${XDG_RUNTIME_DIR:-}"
+    printf 'DISPLAY=%q\n' "${DISPLAY:-}"
+    printf 'DBUS_SESSION_BUS_ADDRESS=%q\n' "${DBUS_SESSION_BUS_ADDRESS:-}"
+  } >"$SESSION_ENV"
+}
+
+load_session_env() {
+  if [[ -f "$SESSION_ENV" ]]; then
+    local k v
+    while IFS='=' read -r k v; do
+      case "$k" in
+        WAYLAND_DISPLAY|XDG_RUNTIME_DIR|DISPLAY|DBUS_SESSION_BUS_ADDRESS) ;;
+        *) continue ;;
+      esac
+      if [[ -z "${!k:-}" && -n "$v" ]]; then
+        eval "export $k=$v"
+      fi
+    done <"$SESSION_ENV"
+  fi
+  if [[ -z "${WAYLAND_DISPLAY:-}" ]]; then
+    local rd="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+    export XDG_RUNTIME_DIR="$rd"
+    if [[ -S "$rd/wayland-0" ]]; then
+      export WAYLAND_DISPLAY=wayland-0
+    elif [[ -S "$rd/wayland-1" ]]; then
+      export WAYLAND_DISPLAY=wayland-1
+    fi
+  fi
+}
+
+type_via_wtype() {
+  local t="$1" bin out rc
+  bin="$(command -v wtype || true)"
+  [[ -n "$bin" ]] || return 1
+  set +e
+  out="$(printf '%s' "$t" | "$bin" -s 80 - 2>&1)"
+  rc=$?
+  set -e
+  if [[ $rc -eq 0 && "$out" != *"does not support"* ]]; then
+    return 0
+  fi
+  printf 'wtype failed rc=%s %s\n' "$rc" "$out" >>"$LOG"
+  return 1
+}
+
+type_via_atspi() {
+  local t="$1"
+  command -v python3 >/dev/null || return 1
+  python3 - "$t" <<'PY'
+import sys
+text = sys.argv[1]
+if not text:
+    raise SystemExit(0)
+try:
+    import gi
+    gi.require_version("Atspi", "2.0")
+    from gi.repository import Atspi
+except Exception:
+    raise SystemExit(1)
+try:
+    Atspi.init()
+except Exception:
+    pass
+focused = None
+
+def walk(acc, depth):
+    global focused
+    if focused is not None or acc is None or depth > 24:
+        return
+    try:
+        st = acc.get_state_set()
+        if st.contains(Atspi.StateType.FOCUSED):
+            focused = acc
+            return
+    except Exception:
+        pass
+    try:
+        n = acc.get_child_count()
+    except Exception:
+        return
+    for i in range(max(0, int(n))):
+        try:
+            ch = acc.get_child_at_index(i)
+        except Exception:
+            continue
+        walk(ch, depth + 1)
+        if focused is not None:
+            return
+
+try:
+    walk(Atspi.get_desktop(0), 0)
+except Exception:
+    pass
+if focused is not None:
+    try:
+        if focused.is_editable_text():
+            off = 0
+            try:
+                off = focused.get_text_iface().get_caret_offset()
+            except Exception:
+                off = 0
+            if focused.insert_text(int(off), text, len(text)):
+                raise SystemExit(0)
+            if focused.set_text_contents(text):
+                raise SystemExit(0)
+    except SystemExit:
+        raise
+    except Exception:
+        pass
+try:
+    if Atspi.generate_keyboard_event(0, text, Atspi.KeySynthType.STRING):
+        raise SystemExit(0)
+except Exception:
+    pass
+raise SystemExit(1)
+PY
+}
+
 type_text() {
   local t="$1"
   [[ -z "$t" ]] && return 0
-  if command -v wtype >/dev/null; then wtype -- "$t"; return 0; fi
-  if command -v ydotool >/dev/null; then ydotool type -- "$t"; return 0; fi
-  if command -v xdotool >/dev/null; then xdotool type --delay 8 -- "$t"; return 0; fi
-  if command -v wl-copy >/dev/null; then
-    printf '%s' "$t" | wl-copy
-    notify-send -a Koollook "STT" "Clip copied (install wtype to type it)" 2>/dev/null || true
-    return 0
-  fi
+  load_session_env
+  case "${KOOLLOOK_STT_TYPE:-auto}" in
+    wtype) type_via_wtype "$t"; return $? ;;
+    ydotool) command -v ydotool >/dev/null && ydotool type -- "$t"; return $? ;;
+    xdotool) command -v xdotool >/dev/null && xdotool type --delay 8 -- "$t"; return $? ;;
+    atspi) type_via_atspi "$t"; return $? ;;
+  esac
+  type_via_wtype "$t" && return 0
+  if command -v ydotool >/dev/null && ydotool type -- "$t"; then return 0; fi
+  type_via_atspi "$t" && return 0
+  if command -v xdotool >/dev/null && xdotool type --delay 8 -- "$t"; then return 0; fi
   return 1
 }
 
@@ -130,16 +260,22 @@ do_clear_clip() {
 
 do_send_clip() {
   local t
+  load_session_env
   t="$(clip_read)"
   t="${t%"${t##*[![:space:]]}"}"
   if [[ -z "$t" ]]; then echo "clip empty"; return 0; fi
   printf '%s' "$t" >"$STATE/last-sent.txt"
   command -v wl-copy >/dev/null && printf '%s' "$t" | wl-copy || true
-  type_text "$t" || true
-  clip_write ""
-  echo "sent" >"$STATUS_FILE"
-  echo "clip sent"
-  notify-send -a Koollook "STT" "Clip sent" 2>/dev/null || true
+  if type_text "$t"; then
+    clip_write ""
+    echo "sent" >"$STATUS_FILE"
+    echo "clip sent"
+    notify-send -a Koollook "STT" "Clip typed into the focused field" 2>/dev/null || true
+    return 0
+  fi
+  echo "sent-clipboard" >"$STATUS_FILE"
+  echo "clip copied (could not type into focus)"
+  notify-send -a Koollook "STT" "Clip copied — paste with Ctrl+V (wtype blocked by compositor)" 2>/dev/null || true
 }
 
 keep_text() {
@@ -215,6 +351,8 @@ do_start() {
   fi
   [[ -x "$WHISPER_BIN" ]] || { echo "missing $WHISPER_BIN" >&2; exit 1; }
   [[ -f "$MODEL" ]] || { echo "missing model $MODEL" >&2; exit 1; }
+  load_session_env
+  [[ -n "${WAYLAND_DISPLAY:-}" ]] && save_session_env
   local src
   src="$(pick_source || true)"
   if [[ -n "$src" ]]; then
