@@ -1,9 +1,14 @@
 # Changelog — Koollook Widgets
 
+## 2.8.0
+
+- **Koollook Muhurta** (`com.koollook.muhurta`): Vedic 30 named muhūrtas from local sunrise
+- **Koollook Hora** (`com.koollook.hora`): planetary hours, 12 day + 12 night, Chaldean order
+- Shared engine `shared/timekeeping/koollook-time.js` drives both Plasma widgets and standalone sites `web/muhurta/`, `web/hora/`
+
 ## 2.7.0
 
 - Sky widget renamed **Koollook Planisphere** (`com.koollook.planisphere`)
-
 ## 2.6.0
 
 - System tray applet `com.koollook.stt`: start/stop listening, send/delete clip, audio sources
