@@ -253,7 +253,7 @@ QtObject {
         var days = []
         var n = parseInt(d["Total Weather Days"] || "7", 10)
         var i
-        for (i = 0; i < n && i < 8; i++) {
+        for (i = 1; i < n && days.length < 7; i++) {
             var raw = d["Short Forecast Day " + i]
             if (!raw)
                 continue
