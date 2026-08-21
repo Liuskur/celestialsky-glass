@@ -290,10 +290,14 @@ QtObject {
                 hit = null
                 for (r = 0; r < rep.length; r++) {
                     hnum = parseInt((rep[r].timeslot || "99").split(":")[0], 10)
-                    if (hnum === hour) {
-                        hit = rep[r]
-                        break
-                    }
+            days.push({
+                name: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dt.getDay()],
+                ymd: ymd,
+                icon: _bbcIcon(srep.weatherType),
+                high: formatTemp(Number(hi)),
+                low: (lo === null || lo === undefined) ? "—" : formatTemp(Number(lo)),
+                slots: slots
+            })
                 }
                 slots.push({
                     hour: hour,
