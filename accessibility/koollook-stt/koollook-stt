@@ -111,6 +111,7 @@ do_send_clip() {
     echo "clip empty"
     return 0
   fi
+  printf '%s' "$t" >"$STATE/last-sent.txt"
   if command -v wl-copy >/dev/null; then
     printf '%s' "$t" | wl-copy || true
   fi
