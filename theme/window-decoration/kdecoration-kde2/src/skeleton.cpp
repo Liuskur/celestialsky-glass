@@ -41,7 +41,7 @@
 #include <QBitmap>
 
 K_PLUGIN_FACTORY_WITH_JSON(KoollookKde2DecorationFactory,
-    "koollook_kde2.json",
+    "org.koollook.kde2.json",
     registerPlugin<Skeleton::Decoration>();
     registerPlugin<Skeleton::ThemeLister>(QStringLiteral("themes"));
 )
