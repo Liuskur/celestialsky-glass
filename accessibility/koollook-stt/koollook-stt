@@ -253,22 +253,24 @@ do_stop() {
 do_status() {
   if is_running; then
     echo "running pid=$(cat "$PIDFILE") source=${PULSE_SOURCE:-default}"
-    echo "listening" >"$STATUS_FILE"
-    return 0
-  fi
-  echo "stopped"
-  echo "stopped" >"$STATUS_FILE"
-  return 1
-}
-
-do_start() {
-  if is_running; then
-    echo "already running pid=$(cat "$PIDFILE")"
-    return 0
-  fi
-  [[ -x "$WHISPER_BIN" ]] || { echo "missing $WHISPER_BIN" >&2; exit 1; }
-  [[ -f "$MODEL" ]] || { echo "missing model $MODEL" >&2; exit 1; }
-
+cmd="${1:---start}"
+ensure_commands_json
+case "$cmd" in
+  -h|--help) usage ;;
+  --list-sources) list_sources ;;
+  --stop) do_stop ;;
+  --status) do_status ;;
+  --clear-clip|--delete-clip) do_clear_clip ;;
+  --send-clip) do_send_clip ;;
+  --set-phrases) do_set_phrases "${2:-delete clip}" "${3:-send clip}" ;;
+  --write-commands-json) do_write_commands_json "${2:-}" ;;
+  --ingest) handle_utterance "${2:-}" ;;
+  --toggle)
+    if is_running; then do_stop; else do_start; fi
+    ;;
+  --start|start) do_start ;;
+  *) usage; exit 2 ;;
+esac
   local src
   src="$(pick_source || true)"
   if [[ -n "$src" ]]; then
