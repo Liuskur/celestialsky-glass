@@ -5,6 +5,7 @@ LastUsedCustomAccentColor=0,211,184
 
 [kdeglobals][Icons]
 Theme=Koollook
+
 [kdeglobals][KDE]
 widgetStyle=Breeze
 LookAndFeelPackage=org.koollook.desktop
