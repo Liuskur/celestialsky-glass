@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Default: Open-Meteo (former macOS weather widget). Optional Plasma ions: BBC, NOAA, DWD, wetter.com, EnvCan.
+// BBC Weather (same ion as Plasma Weather Report). Optional: NOAA, DWD, wetter.com, EnvCan, Open-Meteo.
 import QtQuick
 import org.kde.plasma.plasma5support as Plasma5Support
 
@@ -34,11 +34,16 @@ QtObject {
     function _isOm() {
         return source === "openmeteo" || source.indexOf("openmeteo|") === 0
     }
+
+    function _isBbc() {
+        return source.indexOf("bbcukmet|") === 0
+    }
+
     property var engine: Plasma5Support.DataSource {
         engine: "weather"
         interval: 30 * 60 * 1000
         connectedSources: {
-            if (root._isOm() || root.source.indexOf("bbcukmet|") === 0)
+            if (root._isOm() || root._isBbc())
                 return []
             return root.source.length ? [root.source] : []
         }
@@ -55,7 +60,7 @@ QtObject {
         onTriggered: {
             if (root.hasData)
                 return
-            if (root.source.indexOf("bbcukmet|") === 0)
+            if (root._isBbc())
                 root._fetchBbc()
             else
                 root.loading = false
@@ -74,7 +79,7 @@ QtObject {
             loading = false
             return
         }
-        if (source.indexOf("bbcukmet|") === 0) {
+        if (_isBbc()) {
             _fetchBbc()
             return
         }
@@ -88,7 +93,12 @@ QtObject {
     }
 
     function formatTemp(celsius) {
-        var v = temperatureUnit === 1 ? (celsius * 9 / 5 + 32) : celsius
+        if (celsius === undefined || celsius === null || celsius === "")
+            return "—"
+        var n = Number(celsius)
+        if (isNaN(n))
+            return "—"
+        var v = temperatureUnit === 1 ? (n * 9 / 5 + 32) : n
         return Math.round(v) + "°"
     }
 
@@ -97,6 +107,25 @@ QtObject {
             return windDirText
         var dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
         return dirs[Math.round(windDir / 45) % 8]
+    }
+
+    function _dayName(dt) {
+        var names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        var i = dt && !isNaN(dt.getTime()) ? dt.getDay() : 0
+        return names[i]
+    }
+
+    function _hourIsNight(hh) {
+        return hh < 6 || hh >= 21
+    }
+
+    function _slotMatch(hh) {
+        var si
+        for (si = 0; si < slotHours.length; si++) {
+            if (slotHours[si] === hh)
+                return true
+        }
+        return false
     }
 
     function _toC(value, unit) {
@@ -183,17 +212,18 @@ QtObject {
             loading = false
             error = ""
         }
-    function _bbcIcon(type) {
-        var n = parseInt(type, 10)
-        if (n === 0 || n === 1) return isNight ? "weather-clear-night" : "weather-clear"
-        if (n === 2 || n === 3) return isNight ? "weather-few-clouds-night" : "weather-few-clouds"
-        if (n >= 4 && n <= 8) return isNight ? "weather-clouds-night" : "weather-clouds"
-        if (n === 9 || n === 10) return isNight ? "weather-showers-scattered-night" : "weather-showers-scattered"
-        if (n >= 11 && n <= 18) return isNight ? "weather-showers-night" : "weather-showers"
-        if (n >= 19 && n <= 22) return "weather-snow"
-        if (n >= 23 && n <= 30) return isNight ? "weather-storm-night" : "weather-storm"
-        return "weather-none-available"
     }
+
+    function _bbcIcon(type, night) {
+        var n = parseInt(type, 10)
+        var dark = night === true
+        if (n === 0 || n === 1) return dark ? "weather-clear-night" : "weather-clear"
+        if (n === 2 || n === 3) return dark ? "weather-few-clouds-night" : "weather-few-clouds"
+        if (n >= 4 && n <= 8) return dark ? "weather-clouds-night" : "weather-clouds"
+        if (n === 9 || n === 10) return dark ? "weather-showers-scattered-night" : "weather-showers-scattered"
+        if (n >= 11 && n <= 18) return dark ? "weather-showers-night" : "weather-showers"
+        if (n >= 19 && n <= 22) return "weather-snow"
+        if (n >= 23 && n <= 30) return dark ? "weather-storm-night" : "weather-storm"
         return "weather-none-available"
     }
 
@@ -211,8 +241,8 @@ QtObject {
                 return
             if (xhr.status !== 200) {
                 if (!root.hasData) {
-                    loading = false
-                    error = i18n("Could not load forecast")
+                    root.loading = false
+                    root.error = i18n("Could not load forecast")
                 }
                 return
             }
@@ -227,7 +257,7 @@ QtObject {
                 }
                 root._applyBbc(JSON.parse(txt))
             } catch (e) {
-                if (root.temperature) {
+                if (root.conditionText.length) {
                     root.hasData = true
                     root.loading = false
                     root.error = ""
@@ -236,6 +266,8 @@ QtObject {
                     root.error = i18n("Could not read forecast")
                 }
             }
+        }
+        xhr.open("GET", "https://weather-broker-cdn.api.bbci.co.uk/en/forecast/aggregated/" + id)
         xhr.send()
     }
 
@@ -248,38 +280,38 @@ QtObject {
         var sum = (today.summary && today.summary.report) ? today.summary.report : {}
         var reports = (today.detailed && today.detailed.reports) ? today.detailed.reports : []
         var nowR = reports.length ? reports[0] : sum
-        temperature = nowR.temperatureC != null ? nowR.temperatureC : (sum.maxTempC || 0)
+        var tC = nowR.temperatureC
+        if (tC === null || tC === undefined)
+            tC = sum.maxTempC
+        temperature = tC || 0
         feelsLike = nowR.feelsLikeTemperatureC != null ? nowR.feelsLikeTemperatureC : temperature
         humidity = nowR.humidity || 0
         pressure = nowR.pressure || 0
-        windSpeed = nowR.windSpeedKph || sum.windSpeedKph || 0
+        var kph = nowR.windSpeedKph || sum.windSpeedKph || 0
+        windSpeed = kph / 3.6
         windDirText = nowR.windDirectionAbbreviation || sum.windDirectionAbbreviation || ""
+        conditionText = nowR.enhancedWeatherDescription || nowR.weatherTypeText
+            || sum.enhancedWeatherDescription || sum.weatherTypeText || ""
+        iconName = _bbcIcon(nowR.weatherType !== undefined ? nowR.weatherType : sum.weatherType, isNight)
+        credit = "BBC Weather"
         var hours = []
-        var r, ts, hh, si, isSlot
+        var r, ts, hh
         for (r = 0; r < reports.length; r++) {
             ts = reports[r].timeslot || ""
             hh = parseInt(ts.split(":")[0], 10)
-            isSlot = false
-            for (si = 0; si < slotHours.length; si++) {
-                if (slotHours[si] === hh)
-                    isSlot = true
-            }
-            if (!isSlot)
-                continue
-            hh = parseInt(ts.split(":")[0], 10)
-            if (slotHours.indexOf(hh) < 0)
+            if (!_slotMatch(hh))
                 continue
             hours.push({
                 label: (hh < 10 ? "0" : "") + hh,
-                icon: _bbcIcon(reports[r].weatherType),
+                icon: _bbcIcon(reports[r].weatherType, _hourIsNight(hh)),
                 temp: formatTemp(reports[r].temperatureC)
             })
         }
         hourly = hours
         todaySlots = hours
         var days = []
-        var d, rep, srep, dt, ymd, slots, s, hour, hit, hnum, hi, lo, seen
-        seen = ({})
+        var d, rep, srep, dt, ymd, slots, s, hour, hit, hnum, hi, lo
+        var seen = ({})
         for (d = 0; d < forecasts.length && days.length < 7; d++) {
             srep = (forecasts[d].summary && forecasts[d].summary.report) ? forecasts[d].summary.report : {}
             ymd = srep.localDate || ""
@@ -302,28 +334,24 @@ QtObject {
                 hit = null
                 for (r = 0; r < rep.length; r++) {
                     hnum = parseInt((rep[r].timeslot || "99").split(":")[0], 10)
-            days.push({
-                name: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dt.getDay()],
-                ymd: ymd,
-                icon: _bbcIcon(srep.weatherType),
-                high: formatTemp(Number(hi)),
-                low: (lo === null || lo === undefined) ? "—" : formatTemp(Number(lo)),
-                slots: slots
-            })
+                    if (hnum === hour) {
+                        hit = rep[r]
+                        break
+                    }
                 }
                 slots.push({
                     hour: hour,
                     label: (hour < 10 ? "0" : "") + hour,
-                    icon: hit ? _bbcIcon(hit.weatherType) : _bbcIcon(srep.weatherType),
+                    icon: hit ? _bbcIcon(hit.weatherType, _hourIsNight(hour)) : _bbcIcon(srep.weatherType, false),
                     temp: hit ? formatTemp(hit.temperatureC) : "—"
                 })
             }
             days.push({
-                name: Qt.locale().dayName(dt.getDay(), Locale.ShortFormat),
+                name: _dayName(dt),
                 ymd: ymd,
-                icon: _bbcIcon(srep.weatherType),
-                high: formatTemp(hi),
-                low: (lo === null || lo === undefined) ? "—" : formatTemp(lo),
+                icon: _bbcIcon(srep.weatherType, false),
+                high: formatTemp(Number(hi)),
+                low: (lo === null || lo === undefined) ? "—" : formatTemp(Number(lo)),
                 slots: slots
             })
         }
@@ -348,19 +376,40 @@ QtObject {
                 return
             if (reqId !== root._reqId)
                 return
-            loading = false
             if (xhr.status !== 200) {
-                error = i18n("Could not load forecast")
+                if (!root.hasData) {
+                    root.loading = false
+                    root.error = i18n("Could not load forecast")
+                }
                 return
             }
             try {
                 root._applyOm(JSON.parse(xhr.responseText))
             } catch (e) {
-                error = i18n("Could not read forecast")
+                if (!root.hasData) {
+                    root.loading = false
+                    root.error = i18n("Could not read forecast")
+                }
             }
         }
         xhr.open("GET", url)
         xhr.send()
+    }
+
+    function _omSlots(ymd, byKey) {
+        var slots = []
+        var s, hour, hit
+        for (s = 0; s < slotHours.length; s++) {
+            hour = slotHours[s]
+            hit = byKey[ymd + "-" + hour]
+            slots.push({
+                hour: hour,
+                label: (hour < 10 ? "0" : "") + hour,
+                icon: hit ? hit.icon : "weather-none-available",
+                temp: hit ? hit.temp : "—"
+            })
+        }
+        return slots
     }
 
     function _applyOm(resp) {
@@ -377,8 +426,8 @@ QtObject {
         conditionText = _condition(weatherCode)
         iconName = _icon(weatherCode, isNight)
         credit = "Open-Meteo"
-        var d = resp.daily || {}
-        var times = d.time || []
+        var dly = resp.daily || {}
+        var times = dly.time || []
         var h = resp.hourly || {}
         var ht = h.time || []
         var byKey = ({})
@@ -393,21 +442,6 @@ QtObject {
                 at: hd
             }
         }
-        function slotsFor(ymd) {
-            var slots = []
-            var s, hour, hit
-            for (s = 0; s < root.slotHours.length; s++) {
-                hour = root.slotHours[s]
-                hit = byKey[ymd + "-" + hour]
-                slots.push({
-                    hour: hour,
-                    label: (hour < 10 ? "0" : "") + hour,
-                    icon: hit ? hit.icon : "weather-none-available",
-                    temp: hit ? hit.temp : "—"
-                })
-            }
-            return slots
-        }
         var days = []
         var i, dt, ymd, noon
         for (i = 0; i < times.length && i < 7; i++) {
@@ -415,20 +449,20 @@ QtObject {
             ymd = times[i]
             noon = byKey[ymd + "-12"] || byKey[ymd + "-15"]
             days.push({
-                name: Qt.locale().dayName(dt.getDay(), Locale.ShortFormat),
+                name: _dayName(dt),
                 ymd: ymd,
-                icon: noon ? noon.icon : _icon(d.weather_code[i], false),
-                high: formatTemp(d.temperature_2m_max[i]),
-                low: formatTemp(d.temperature_2m_min[i]),
-                slots: slotsFor(ymd)
+                icon: noon ? noon.icon : _icon(dly.weather_code[i], false),
+                high: formatTemp(dly.temperature_2m_max[i]),
+                low: formatTemp(dly.temperature_2m_min[i]),
+                slots: _omSlots(ymd, byKey)
             })
         }
         daily = days
         var hours = []
         var now = Date.now()
         var k, sh, today, ymd0, hit0
-        for (k = 0; k < root.slotHours.length; k++) {
-            sh = root.slotHours[k]
+        for (k = 0; k < slotHours.length; k++) {
+            sh = slotHours[k]
             today = new Date()
             ymd0 = today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2)
                 + "-" + ("0" + today.getDate()).slice(-2)
