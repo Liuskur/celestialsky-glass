@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="20" viewBox="0 0 120 20">
+  <defs>
+    <style type="text/css" id="current-color-scheme">
+      .ColorScheme-Text { color:#e7bf7e; }
+      .ColorScheme-Background { color:#1d1d27; }
+      .ColorScheme-Highlight { color:#00d3b8; }
+      .ColorScheme-NegativeText { color:#ff3b30; }
+    </style>
+  </defs>
+<g id="keepbelow-0">
+    <rect class="ColorScheme-Background" fill="currentColor" x="0" y="0" width="20" height="20"/>
+    <rect fill="#ffffff" opacity="0.35" x="0" y="0" width="20" height="1"/>
+    <rect fill="#ffffff" opacity="0.35" x="0" y="0" width="1" height="20"/>
+    <rect fill="#000000" opacity="0.4" x="0" y="19" width="20" height="1"/>
+    <rect fill="#000000" opacity="0.4" x="19" y="0" width="1" height="20"/>
+<path class="ColorScheme-Text" fill="currentColor" d="M10,15 l6,-8 h-12 z"/></g><g id="keepbelow-1">
+    <rect class="ColorScheme-Background" fill="currentColor" x="20" y="0" width="20" height="20"/>
+    <rect fill="#ffffff" opacity="0.35" x="20" y="0" width="20" height="1"/>
+    <rect fill="#ffffff" opacity="0.35" x="20" y="0" width="1" height="20"/>
+    <rect fill="#000000" opacity="0.4" x="20" y="19" width="20" height="1"/>
+    <rect fill="#000000" opacity="0.4" x="39" y="0" width="1" height="20"/>
+<path class="ColorScheme-Highlight" fill="currentColor" d="M30,15 l6,-8 h-12 z"/></g><g id="keepbelow-2">
+    <rect class="ColorScheme-Background" fill="currentColor" x="40" y="0" width="20" height="20"/>
+    <rect fill="#ffffff" opacity="0.12" x="40" y="0" width="20" height="1"/>
+    <rect fill="#ffffff" opacity="0.12" x="40" y="0" width="1" height="20"/>
+    <rect fill="#000000" opacity="0.45" x="40" y="19" width="20" height="1"/>
+    <rect fill="#000000" opacity="0.45" x="59" y="0" width="1" height="20"/>
+<path class="ColorScheme-Text" fill="currentColor" d="M50,15 l6,-8 h-12 z"/></g><g id="keepbelow-3">
+    <rect class="ColorScheme-Background" fill="currentColor" x="60" y="0" width="20" height="20"/>
+    <rect fill="#ffffff" opacity="0.35" x="60" y="0" width="20" height="1"/>
+    <rect fill="#ffffff" opacity="0.35" x="60" y="0" width="1" height="20"/>
+    <rect fill="#000000" opacity="0.4" x="60" y="19" width="20" height="1"/>
+    <rect fill="#000000" opacity="0.4" x="79" y="0" width="1" height="20"/>
+<path class="ColorScheme-Text" fill="currentColor" opacity="0.45" d="M70,15 l6,-8 h-12 z"/></g><g id="keepbelow-4">
+    <rect class="ColorScheme-Background" fill="currentColor" x="80" y="0" width="20" height="20"/>
+    <rect fill="#ffffff" opacity="0.35" x="80" y="0" width="20" height="1"/>
+    <rect fill="#ffffff" opacity="0.35" x="80" y="0" width="1" height="20"/>
+    <rect fill="#000000" opacity="0.4" x="80" y="19" width="20" height="1"/>
+    <rect fill="#000000" opacity="0.4" x="99" y="0" width="1" height="20"/>
+<path class="ColorScheme-Highlight" fill="currentColor" opacity="0.70" d="M90,15 l6,-8 h-12 z"/></g><g id="keepbelow-5">
+    <rect class="ColorScheme-Background" fill="currentColor" x="100" y="0" width="20" height="20"/>
+    <rect fill="#ffffff" opacity="0.12" x="100" y="0" width="20" height="1"/>
+    <rect fill="#ffffff" opacity="0.12" x="100" y="0" width="1" height="20"/>
+    <rect fill="#000000" opacity="0.45" x="100" y="19" width="20" height="1"/>
+    <rect fill="#000000" opacity="0.45" x="119" y="0" width="1" height="20"/>
+<path class="ColorScheme-Text" fill="currentColor" opacity="0.45" d="M110,15 l6,-8 h-12 z"/></g></svg>

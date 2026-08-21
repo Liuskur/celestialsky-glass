@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Koollook Dotted
+Comment=KDE 2-style dotted title bar for Koollook
+X-KDE-PluginInfo-Author=Koollook
+X-KDE-PluginInfo-Name=org.koollook.dotted
+X-KDE-PluginInfo-Version=1.0.0
+X-KDE-PluginInfo-License=MIT
+X-KDE-PluginInfo-EnabledByDefault=false
