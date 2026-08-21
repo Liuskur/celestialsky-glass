@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import "astronomy.js" as Astronomy
-import org.koollook.glass
+import "org/koollook/glass"
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
