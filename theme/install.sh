@@ -8,6 +8,7 @@ APPLY_LAYOUT="${APPLY_LAYOUT:-0}"
 mkdir -p "$HOME_SHARE/color-schemes" \
          "$HOME_SHARE/aurorae/themes" \
          "$HOME_SHARE/plasma/look-and-feel" \
+         "$HOME_SHARE/plasma/desktoptheme" \
          "$HOME_SHARE/icons" \
          "$HOME_SHARE/wallpapers" \
          "$HOME_SHARE/sddm/themes"
