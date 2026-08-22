@@ -1,5 +1,12 @@
 # Changelog — Koollook Widgets
 
+## 0.7.4
+
+- Suite **0.7.4**
+- **Koollook Light** color scheme + global theme `org.koollook.light` (one Plasma style; Dark remains default)
+- Aqua: Rachel Alucard / observer (cream, crimson, gold, gothic burgundy)
+- Eesti: white body, classy gray text, xenon-blue stripes, black wheels/chrome
+
 ## 0.7.3
 
 - Suite **0.7.3**
