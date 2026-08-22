@@ -4,7 +4,7 @@ Plasma 6 look pieces.
 
 | Piece | Id | Source |
 |-------|-----|--------|
-| Color schemes | `Koollook` (dark), `KoollookAqua`, `KoollookEesti`, `KoollookLiwi` | Stone2 + aqua / Eesti / Liwi flags |
+| Color schemes | Dark, Light, Aqua, Eesti, Liwi | Dark/Light pair + named flavors |
 | Plasma style | `Koollook` | Stone desktop theme, rebranded |
 | Icons | `Koollook` | Teal griffin; light tile in `src/griffin-light.png`; launcher is `start-here-kde` |
 | Wallpaper | `Koollook` | Same griffin, Koollook Dark |
