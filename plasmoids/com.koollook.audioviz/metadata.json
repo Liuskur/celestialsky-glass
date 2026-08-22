@@ -11,7 +11,7 @@
     "Id": "com.koollook.audioviz",
     "License": "MIT",
     "Name": "Koollook Wavebar",
-    "Version": "0.7.2",
+    "Version": "0.7.3",
     "Website": "https://github.com/Liuskur/KoollooK"
   },
   "X-Plasma-API-Minimum-Version": "6.0"
