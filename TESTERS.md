@@ -6,12 +6,12 @@ Plasma 6. Installs into **this user’s** `~/.local` (no root). You choose what 
 
 Download either:
 
-- `koollook-0.7.2.tar.zst` — everything + chooser `install.sh`
+- `koollook-0.7.3.tar.zst` — everything + chooser `install.sh`
 - only the pieces you want (`com.koollook.*.plasmoid`, `koollook-colors-*.tar.zst`, `koollook-splash-*.tar.zst`, wallpapers, …)
 
 ```bash
-tar -I zstd -xf koollook-0.7.2.tar.zst
-cd koollook-0.7.2
+tar -I zstd -xf koollook-0.7.3.tar.zst
+cd koollook-0.7.3
 chmod +x install.sh
 ./install.sh                 # asks yes/no per piece
 # or:
