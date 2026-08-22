@@ -1,0 +1,14 @@
+{
+    "KPackageStructure": "Plasma/Theme",
+    "KPlugin": {
+        "Authors": [{"Name": "Koollook", "Email": ""}],
+        "Description": "Koollook Plasma style (Stone layout, follows the active color scheme).",
+        "EnabledByDefault": true,
+        "Id": "Koollook",
+        "License": "LGPL-2.1-or-later",
+        "Name": "Koollook",
+        "Version": "0.7.2",
+        "Website": "https://github.com/Liuskur/KoollooK"
+    },
+    "X-Plasma-API": "5.0"
+}
