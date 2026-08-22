@@ -66,7 +66,7 @@ Decoration {
         if (!caption)
             return 0
         if (caption.horizontalAlignment === Text.AlignRight)
-    readonly property color dottedInk: tooltipColors.Kirigami.Theme.backgroundColor
+            return caption.x + caption.width - captionTextW
         if (caption.horizontalAlignment === Text.AlignHCenter)
             return caption.x + (caption.width - captionTextW) / 2
         return caption.x
@@ -74,8 +74,8 @@ Decoration {
     readonly property int dottedCell: 4
     readonly property int dottedRows: 3
     readonly property int dottedH: 10
-    readonly property color dottedInk: Kirigami.Theme.tooltipTextColor
-            var a = decoration.client.active ? 1.0 : 0.55
+    readonly property color dottedInk: tooltipColors.Kirigami.Theme.backgroundColor
+    readonly property real barTop: decoration.client.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
     readonly property real barH: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
     readonly property bool dottedBar: String(auroraeTheme.decorationPath || "").indexOf("KoollookDotted") >= 0
     component Stipple: Canvas {
@@ -83,7 +83,7 @@ Decoration {
             var ctx = getContext("2d")
             ctx.clearRect(0, 0, width, height)
             var t = root.dottedInk
-            var a = decoration.client.active ? 0.55 : 0.28
+            var a = decoration.client.active ? 1.0 : 0.55
             ctx.fillStyle = Qt.rgba(t.r, t.g, t.b, a)
             var step = 4
             var y
