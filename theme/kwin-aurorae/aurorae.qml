@@ -62,11 +62,13 @@ Decoration {
         if (caption.horizontalAlignment === Text.AlignHCenter)
             return caption.x + (caption.width - captionTextW) / 2
         return caption.x
-    }
     readonly property int dottedCell: 4
     readonly property int dottedRows: 3
     readonly property int dottedH: 10
+    readonly property color dottedInk: Kirigami.Theme.tooltipTextColor
     readonly property real barTop: decoration.client.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
+    readonly property real barH: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
+    readonly property bool dottedBar: String(auroraeTheme.decorationPath || "").indexOf("KoollookDotted") >= 0
     readonly property real barH: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
 
 
