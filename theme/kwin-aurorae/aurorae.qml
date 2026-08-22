@@ -32,6 +32,14 @@ Decoration {
         id: options
         deco: decoration
     }
+    Item {
+        id: tooltipColors
+        visible: false
+        width: 0
+        height: 0
+        Kirigami.Theme.inherit: false
+        Kirigami.Theme.colorSet: Kirigami.Theme.Tooltip
+    }
     readonly property bool koollookTheme: String(auroraeTheme.decorationPath || "").indexOf("Koollook") >= 0
     readonly property bool dottedSpacer: {
         if (!root.koollookTheme)
