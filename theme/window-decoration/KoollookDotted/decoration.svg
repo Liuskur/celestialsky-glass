@@ -5,7 +5,7 @@
       .ColorScheme-Text { color:#e7bf7e; }
       .ColorScheme-Background { color:#1d1d27; }
       .ColorScheme-Highlight { color:#00d3b8; }
-      .ColorScheme-TooltipText { color:#e7bf7e; }
+      .ColorScheme-TooltipBackground { color:#353945; }
     </style>
   </defs>
   <rect id="decoration-center" class="ColorScheme-Background" fill="currentColor" x="8" y="22" width="50" height="50"/>
