@@ -13,7 +13,7 @@
         "Id": "com.koollook.stt",
         "License": "MIT",
         "Name": "Koollook STT",
-        "Version": "0.7.3",
+        "Version": "0.7.4",
         "Website": "https://github.com/Liuskur/KoollooK"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
