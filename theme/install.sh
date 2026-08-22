@@ -50,10 +50,11 @@ if command -v plasma-apply-colorscheme >/dev/null; then
   plasma-apply-colorscheme Koollook >/dev/null || true
 fi
 if command -v plasma-apply-icontheme >/dev/null; then
-  plasma-apply-icontheme Koollook >/dev/null || true
-fi
-
 kwriteconfig6 --file kdeglobals --group General --key ColorScheme Koollook
+kwriteconfig6 --file kdeglobals --group General --key AccentColor "0,211,184"
+kwriteconfig6 --file kdeglobals --group Icons --key Theme Koollook
+kwriteconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage org.koollook.desktop
+kwriteconfig6 --file plasmarc --group Theme --key name Koollook
 kwriteconfig6 --file kdeglobals --group General --key AccentColor "0,211,184"
 kwriteconfig6 --file kdeglobals --group Icons --key Theme Koollook
 kwriteconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage org.koollook.desktop
