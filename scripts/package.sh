@@ -60,6 +60,7 @@ package_one com.koollook.hora
 
 pack_zst "$DIST/koollook-colors-${SUITE_VER}.tar.zst" theme/color-schemes
 pack_zst "$DIST/koollook-icons-${SUITE_VER}.tar.zst" theme/icons/Koollook
+pack_zst "$DIST/koollook-plasma-${SUITE_VER}.tar.zst" theme/plasma/desktoptheme/Koollook
 pack_zst "$DIST/koollook-titlebar-${SUITE_VER}.tar.zst" \
   theme/window-decoration/Koollook theme/kwin-aurorae theme/kwin
 pack_zst "$DIST/koollook-dotted-${SUITE_VER}.tar.zst" \
