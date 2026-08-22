@@ -45,7 +45,7 @@ Rectangle {
             radius: 28
             color: "transparent"
             border.width: 2
-            border.color: "#00d3b8"
+            border.color: "#e8be7d"
             opacity: 0
         }
 
