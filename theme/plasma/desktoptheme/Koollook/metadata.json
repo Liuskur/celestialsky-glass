@@ -7,7 +7,7 @@
         "Id": "Koollook",
         "License": "LGPL-2.1-or-later",
         "Name": "Koollook",
-        "Version": "0.7.2",
+        "Version": "0.7.3",
         "Website": "https://github.com/Liuskur/KoollooK"
     },
     "X-Plasma-API": "5.0"
