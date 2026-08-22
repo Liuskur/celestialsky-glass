@@ -223,6 +223,7 @@ Decoration {
             horizontalAlignment: Image.AlignLeft
             verticalAlignment: Image.AlignTop
             asynchronous: false
+            opacity: decoration.client.active ? 0.7 : 0.35
         }
     }
     Text {
