@@ -148,7 +148,7 @@ Decoration {
                         ctx.clearRect(0, 0, w, h)
                         var t = root.dotColor
                         var step = 4
-                        var a = decoration.client.active ? 0.55 : 0.28
+                        var a = decoration.client.active ? 1.0 : 0.55
                         ctx.fillStyle = Qt.rgba(t.r, t.g, t.b, a)
                         var y
                         var x
