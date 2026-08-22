@@ -82,7 +82,7 @@ Rectangle {
         width: stageBox.width * 0.55
         height: 3
         radius: 1.5
-        color: "#00d3b8"
+        color: "#0aa0a8"
         opacity: 0.85
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: stageBox.bottom
