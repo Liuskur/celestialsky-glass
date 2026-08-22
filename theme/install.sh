@@ -30,8 +30,10 @@ if [[ -d "$SYS_AURORAE" ]]; then
 fi
 mkdir -p "$HOME_SHARE/kwin/decorations"
 rm -rf "$HOME_SHARE/kwin/decorations/org.koollook.dotted"
-cp -a "$ROOT/theme/window-decoration/org.koollook.dotted" "$HOME_SHARE/kwin/decorations/org.koollook.dotted"
 rm -rf "$HOME_SHARE/plasma/look-and-feel/org.koollook.desktop"
+cp -a "$ROOT/theme/look-and-feel/org.koollook.desktop" "$HOME_SHARE/plasma/look-and-feel/"
+rm -rf "$HOME_SHARE/plasma/desktoptheme/Koollook"
+cp -a "$ROOT/theme/plasma/desktoptheme/Koollook" "$HOME_SHARE/plasma/desktoptheme/Koollook"
 cp -a "$ROOT/theme/look-and-feel/org.koollook.desktop" "$HOME_SHARE/plasma/look-and-feel/"
 rm -rf "$HOME_SHARE/icons/Koollook"
 cp -a "$ROOT/theme/icons/Koollook" "$HOME_SHARE/icons/Koollook"
