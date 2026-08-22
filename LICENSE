@@ -51,3 +51,13 @@ Licensed under the GNU General Public License v2.0 or later.
 A copy of GPL-2.0 is at
 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Local Koollook edits to those files use the same license.
+
+
+LGPL-2.1-or-later — Plasma style
+--------------------------------
+
+theme/plasma/desktoptheme/Koollook/
+
+Derived from the Stone Plasma style (Dharam Dhurandhar).
+Licensed under the GNU Lesser General Public License v2.1 or later.
+A copy of LGPL-2.1 is at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
