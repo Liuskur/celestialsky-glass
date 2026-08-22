@@ -100,10 +100,10 @@ if command -v cmake >/dev/null && [[ -f "$DECO/CMakeLists.txt" ]]; then
     -DCMAKE_BUILD_TYPE=Release >/tmp/koollook-kde2-cmake.log 2>&1 \
     && cmake --build "$DECO/build" -j"$(nproc)" >/tmp/koollook-kde2-build.log 2>&1 \
     && cmake --install "$DECO/build" >/tmp/koollook-kde2-install.log 2>&1 \
-    && echo "Koollook KDE 2 decoration installed to ~/.local" \
-    || echo "KDE 2 decoration build skipped (see /tmp/koollook-kde2-*.log)"
-fi
-
+echo "KoollooK theme installed (4 color schemes, griffin icons, Plasma style, title bar, KWin)."
+echo "Window decorations: Koollook (default) and Koollook Dotted (System Settings → Window Decorations)."
+echo "Plasma style: Koollook (Stone layout). Global theme: org.koollook.desktop  (APPLY_LAYOUT=1 to also load layout)"
+echo "Colors: Koollook Dark (default), Koollook Aqua, Koollook Eesti, Koollook Liwi"
 echo "KoollooK theme installed (4 color schemes, griffin icons, title bar, KWin)."
 echo "Window decorations: Koollook (default) and Koollook Dotted (System Settings → Window Decorations)."
 echo "Global theme: org.koollook.desktop  (APPLY_LAYOUT=1 to also load layout)"
