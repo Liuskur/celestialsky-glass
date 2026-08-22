@@ -3,12 +3,12 @@
 ## 0.7.3
 
 - Suite **0.7.3**
-- Koollook Dotted title bar follows system WM colors (light and dark)
-- Dotted dots use Common Colors **Tooltip Background** from the active scheme
-- Aqua: cloudy, desaturated, transitional sea-mist palette
-- Eesti: black/white swapped (white field, black text); progress/scroll/ticks black; blue titlebar
-- Liwi: button face white; symbolic griffin white on transparent
-- Light griffin (`src/griffin-light.png`) and wallpaper `Koollook-Light`
+- **Koollook Light** color scheme + global theme (one Plasma style; Dark remains default)
+- Koollook Dotted follows system WM colors; dots = Common Colors Tooltip Background
+- Aqua: Rachel Alucard / observer (cream, crimson, gold, gothic burgundy)
+- Eesti: white body, classy gray text, xenon-blue stripes, black wheels/chrome
+- Liwi: white buttons; white symbolic griffin
+- Light griffin + wallpaper `Koollook-Light`
 - Plasma style **Koollook** (Stone layout)
 - LICENSE recast: MIT default; Willow title-bar GPL-3.0-only; Aurorae QML GPL-2.0-or-later; Plasma style LGPL-2.1-or-later
 
