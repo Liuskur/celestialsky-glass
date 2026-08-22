@@ -112,6 +112,14 @@ Decoration {
             decoration.installTitleItem(titleRect);
         }
     }
+    Stipple {
+        visible: root.dottedBar
+        z: 0
+        x: decoration.client.maximized ? 0 : root.borders.left
+        y: decoration.client.maximized ? 0 : root.padding.top
+        width: Math.max(0, root.width - x - (decoration.client.maximized ? 0 : root.borders.right))
+        height: root.barH
+    }
     KSvg.FrameSvg {
         property bool supportsInactive: hasElementPrefix("decoration-inactive")
         property bool supportsMask: hasElementPrefix("mask")
