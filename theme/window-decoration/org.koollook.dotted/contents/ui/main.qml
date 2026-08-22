@@ -137,9 +137,9 @@ Decoration {
                         var w = width
                         var h = height
                         ctx.clearRect(0, 0, w, h)
-                        var t = root.textColor
+                        var t = root.dotColor
                         var step = 4
-                        var a = decoration.client.active ? 0.42 : 0.22
+                        var a = decoration.client.active ? 0.55 : 0.28
                         ctx.fillStyle = Qt.rgba(t.r, t.g, t.b, a)
                         var y
                         var x
@@ -155,7 +155,7 @@ Decoration {
                     onHeightChanged: requestPaint()
                     Connections {
                         target: root
-                        function onTextColorChanged() { stipple.requestPaint() }
+                        function onDotColorChanged() { stipple.requestPaint() }
                     }
                     Connections {
                         target: decoration.client
