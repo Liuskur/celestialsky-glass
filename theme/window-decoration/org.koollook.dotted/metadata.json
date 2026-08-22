@@ -6,7 +6,7 @@
         "Id": "org.koollook.dotted",
         "License": "MIT",
         "Name": "Koollook Dotted",
-        "Version": "0.7.3",
+        "Version": "0.7.4",
         "EnabledByDefault": true
     },
     "X-Plasma-API": "declarativeappletscript",
