@@ -27,16 +27,17 @@ Writes `dist/`:
 
 - KDE Store: `com.koollook.*.plasmoid`
 - One tarball per piece (download only what you want):
-  - `koollook-colors-0.7.2.tar.zst`
-  - `koollook-icons-0.7.2.tar.zst`
-  - `koollook-titlebar-0.7.2.tar.zst` (KoollooK title bar)
-  - `koollook-dotted-0.7.2.tar.zst` (Koollook Dotted)
-  - `koollook-splash-0.7.2.tar.zst` (Plasma splash, wordmark **KoollooK**)
-  - `koollook-sddm-0.7.2.tar.zst`
-  - `koollook-plymouth-0.7.2.tar.zst`
-  - `koollook-wallpaper-0.7.2.tar.zst` plus `koollook-wallpaper-1` … `7`
-  - `koollook-accessibility-0.7.2.tar.zst`
-- Full bundle: `koollook-0.7.2.tar.zst` (every piece + `install.sh`)
+  - `koollook-colors-0.7.3.tar.zst`
+  - `koollook-icons-0.7.3.tar.zst`
+  - `koollook-plasma-0.7.3.tar.zst` (Plasma style)
+  - `koollook-titlebar-0.7.3.tar.zst` (KoollooK title bar)
+  - `koollook-dotted-0.7.3.tar.zst` (Koollook Dotted)
+  - `koollook-splash-0.7.3.tar.zst` (Plasma splash, wordmark **KoollooK**)
+  - `koollook-sddm-0.7.3.tar.zst`
+  - `koollook-plymouth-0.7.3.tar.zst`
+  - `koollook-wallpaper-0.7.3.tar.zst` plus `koollook-wallpaper-1` … `7`
+  - `koollook-accessibility-0.7.3.tar.zst`
+- Full bundle: `koollook-0.7.3.tar.zst` (every piece + `install.sh`)
 
 ```bash
 ./scripts/install.sh
