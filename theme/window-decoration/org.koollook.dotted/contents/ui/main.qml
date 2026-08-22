@@ -17,8 +17,9 @@ Decoration {
     readonly property int gripRows: 3
     readonly property int gripH: gripRows * lineH + (gripRows - 1) * lineGap
     readonly property int edge: 4
-    readonly property color barColor: "#1d1d27"
-    readonly property color textColor: decoration.client.active ? "#e7bf7e" : "#666a73"
+    readonly property color barColor: options.titleBarColor
+    readonly property color textColor: options.fontColor
+    readonly property color frameColor: options.borderColor
 
     property real marginLeftPct: 0
     property real marginRightPct: 0
