@@ -62,6 +62,7 @@ Decoration {
         if (caption.horizontalAlignment === Text.AlignHCenter)
             return caption.x + (caption.width - captionTextW) / 2
         return caption.x
+    }
     readonly property int dottedCell: 4
     readonly property int dottedRows: 3
     readonly property int dottedH: 10
