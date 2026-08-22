@@ -6,6 +6,7 @@
 import QtQuick
 import org.kde.kwin.decoration
 import org.kde.ksvg 1.0 as KSvg
+import org.kde.kirigami as Kirigami
 
 Decoration {
     id: root
