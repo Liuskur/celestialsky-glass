@@ -69,7 +69,6 @@ Decoration {
     readonly property real barTop: decoration.client.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
     readonly property real barH: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
     readonly property bool dottedBar: String(auroraeTheme.decorationPath || "").indexOf("KoollookDotted") >= 0
-    readonly property real barH: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
     component Stipple: Canvas {
         onPaint: {
             var ctx = getContext("2d")
