@@ -232,7 +232,7 @@ Decoration {
         verticalAlignment: auroraeTheme.verticalAlignment
         elide: Text.ElideRight
         height: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
-        color: decoration.client.active ? auroraeTheme.activeTextColor : auroraeTheme.inactiveTextColor
+        color: root.koollookTheme ? options.fontColor : (decoration.client.active ? auroraeTheme.activeTextColor : auroraeTheme.inactiveTextColor)
         font: options.titleFont
         renderType: Text.NativeRendering
         anchors {
