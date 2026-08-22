@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="7" height="7" viewBox="0 0 7 7">
+  <style type="text/css" id="current-color-scheme">
+    .ColorScheme-TooltipText { color:#e7bf7e; }
+  </style>
+  <circle class="ColorScheme-TooltipText" fill="currentColor" cx="3.35" cy="3.35" r="1.35" opacity="0.7"/>
+</svg>
