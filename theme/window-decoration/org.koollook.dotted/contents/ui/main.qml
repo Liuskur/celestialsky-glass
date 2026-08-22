@@ -59,7 +59,6 @@ Decoration {
         border.width: decoration.client.maximized ? 0 : 1
         border.color: root.frameColor
     }
-    }
 
     Item {
         id: titleRow
