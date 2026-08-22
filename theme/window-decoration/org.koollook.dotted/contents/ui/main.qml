@@ -53,12 +53,12 @@ Decoration {
         target: decoration
         function onConfigChanged() { root.readConfig() }
     }
-
     Rectangle {
         anchors.fill: parent
         color: root.barColor
         border.width: decoration.client.maximized ? 0 : 1
-        border.color: "#000000"
+        border.color: root.frameColor
+    }
     }
 
     Item {
