@@ -10,6 +10,15 @@ Decoration {
         deco: decoration
     }
 
+    Item {
+        id: tooltipColors
+        visible: false
+        width: 0
+        height: 0
+        Kirigami.Theme.inherit: false
+        Kirigami.Theme.colorSet: Kirigami.Theme.Tooltip
+    }
+
     readonly property int barH: 28
     readonly property int gap: 8
     readonly property int lineH: 2
@@ -20,7 +29,7 @@ Decoration {
     readonly property color barColor: options.titleBarColor
     readonly property color textColor: options.fontColor
     readonly property color frameColor: options.borderColor
-    readonly property color dotColor: Kirigami.Theme.tooltipTextColor
+    readonly property color dotColor: tooltipColors.Kirigami.Theme.backgroundColor
 
     property real marginLeftPct: 0
     property real marginRightPct: 0
