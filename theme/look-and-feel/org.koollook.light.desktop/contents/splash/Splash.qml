@@ -55,7 +55,7 @@ Rectangle {
             radius: lockFrame.radius
             color: "transparent"
             border.width: 6
-            border.color: "#00d3b8"
+            border.color: "#c49a50"
             opacity: 0
         }
     }
