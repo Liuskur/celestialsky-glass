@@ -42,11 +42,11 @@ Writes `dist/`:
 ```bash
 ./scripts/install.sh
 # or, from a downloaded bundle / piece dir:
-# ./install.sh --help
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.planisphere-0.7.2.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.calendar-0.7.2.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.weather-0.7.2.plasmoid
-kpackagetool6 -t Plasma/Applet -i dist/com.koollook.muhurta-0.7.2.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.planisphere-0.7.3.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.calendar-0.7.3.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.weather-0.7.3.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.muhurta-0.7.3.plasmoid
+kpackagetool6 -t Plasma/Applet -i dist/com.koollook.hora-0.7.3.plasmoid
 kpackagetool6 -t Plasma/Applet -i dist/com.koollook.hora-0.7.2.plasmoid
 ```
 
