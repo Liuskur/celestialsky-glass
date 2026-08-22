@@ -1,0 +1,27 @@
+[AdaptiveTransparency]
+enabled=true
+
+[ContrastEffect]
+contrast=0.2
+enabled=false
+intensity=0.4
+saturation=1.7
+
+[Desktop Entry]
+Name=Koollook
+Comment=Koollook Plasma style
+X-KDE-PluginInfo-Author=Koollook
+X-KDE-PluginInfo-Category=
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-Email=
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-PluginInfo-License=LGPL
+X-KDE-PluginInfo-Name=Koollook
+X-KDE-PluginInfo-Version=0.7.2
+X-KDE-PluginInfo-Website=https://github.com/Liuskur/KoollooK
+
+[Wallpaper]
+defaultFileSuffix=.png
+defaultHeight=1080
+defaultWallpaperTheme=Koollook
+defaultWidth=1920
