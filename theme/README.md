@@ -17,7 +17,7 @@ Plasma 6 look pieces.
 ./theme/install.sh
 ```
 
-Schemes: **Koollook Dark**, **Koollook Aqua** (light, cloudy sea-mist), **Koollook Eesti** (white field, black chrome, blue banner), **Koollook Liwi** (green windows, white buttons, blue selection). Apply in System Settings → Colors.
+Schemes: **Koollook Dark** / **Koollook Light** (same gold/teal), **Aqua** (Rachel Alucard / observer: cream, crimson, gold), **Eesti** (white car, classy gray, xenon blue, black wheels), **Liwi** (green/white/blue). Apply in System Settings → Colors. Global themes: **Koollook** and **Koollook Light**.
 
 Icons: regular griffin on gules, white glyph, charcoal glyph, ColorScheme symbolic (white). Application launcher uses the regular griffin (`start-here-kde`).
 
