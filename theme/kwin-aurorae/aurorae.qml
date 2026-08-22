@@ -70,6 +70,36 @@ Decoration {
     readonly property real barH: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
     readonly property bool dottedBar: String(auroraeTheme.decorationPath || "").indexOf("KoollookDotted") >= 0
     readonly property real barH: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
+    component Stipple: Canvas {
+        onPaint: {
+            var ctx = getContext("2d")
+            ctx.clearRect(0, 0, width, height)
+            var t = root.dottedInk
+            var a = decoration.client.active ? 0.55 : 0.28
+            ctx.fillStyle = Qt.rgba(t.r, t.g, t.b, a)
+            var step = 4
+            var y
+            var x
+            for (y = 1; y < height; y += step) {
+                for (x = 1; x < width; x += step) {
+                    ctx.beginPath()
+                    ctx.arc(x, y, 1.05, 0, 6.28318530718)
+                    ctx.fill()
+                }
+            }
+        }
+        onWidthChanged: requestPaint()
+        onHeightChanged: requestPaint()
+        Connections {
+            target: root
+            function onDottedInkChanged() { requestPaint() }
+        }
+        Connections {
+            target: decoration.client
+            function onActiveChanged() { requestPaint() }
+        }
+    }
+
 
 
     Item {
