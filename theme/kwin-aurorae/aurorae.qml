@@ -66,7 +66,7 @@ Decoration {
         if (!caption)
             return 0
         if (caption.horizontalAlignment === Text.AlignRight)
-            return caption.x + caption.width - captionTextW
+    readonly property color dottedInk: tooltipColors.Kirigami.Theme.backgroundColor
         if (caption.horizontalAlignment === Text.AlignHCenter)
             return caption.x + (caption.width - captionTextW) / 2
         return caption.x
