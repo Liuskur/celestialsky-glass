@@ -129,28 +129,37 @@ Decoration {
                 anchors.verticalCenter: parent.verticalCenter
                 height: Math.max(0, root.gripH - parent.height * root.marginBottomPct / 50)
 
-                Column {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: root.lineGap
-                    Repeater {
-                        model: root.gripRows
-                        Item {
-                            width: grip.width
-                            height: root.lineH
-                            clip: true
-                            Image {
-                                anchors.fill: parent
-                                fillMode: Image.Tile
-                                sourceSize.width: 4
-                                sourceSize.height: 4
-                                source: Qt.resolvedUrl("dots.svg")
-                                horizontalAlignment: Image.AlignLeft
-                                verticalAlignment: Image.AlignTop
-                                asynchronous: false
+                Canvas {
+                    id: stipple
+                    anchors.fill: parent
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        var w = width
+                        var h = height
+                        ctx.clearRect(0, 0, w, h)
+                        var t = root.textColor
+                        var step = 4
+                        var a = decoration.client.active ? 0.42 : 0.22
+                        ctx.fillStyle = Qt.rgba(t.r, t.g, t.b, a)
+                        var y
+                        var x
+                        for (y = 1; y < h; y += step) {
+                            for (x = 1; x < w; x += step) {
+                                ctx.beginPath()
+                                ctx.arc(x, y, 1.05, 0, 6.28318530718)
+                                ctx.fill()
                             }
                         }
+                    }
+                    onWidthChanged: requestPaint()
+                    onHeightChanged: requestPaint()
+                    Connections {
+                        target: root
+                        function onTextColorChanged() { stipple.requestPaint() }
+                    }
+                    Connections {
+                        target: decoration.client
+                        function onActiveChanged() { stipple.requestPaint() }
                     }
                 }
             }
