@@ -20,6 +20,7 @@ Decoration {
     readonly property color barColor: options.titleBarColor
     readonly property color textColor: options.fontColor
     readonly property color frameColor: options.borderColor
+    readonly property color dotColor: Kirigami.Theme.tooltipTextColor
 
     property real marginLeftPct: 0
     property real marginRightPct: 0
