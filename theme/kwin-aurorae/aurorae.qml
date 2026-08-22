@@ -75,7 +75,7 @@ Decoration {
     readonly property int dottedRows: 3
     readonly property int dottedH: 10
     readonly property color dottedInk: Kirigami.Theme.tooltipTextColor
-    readonly property real barTop: decoration.client.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
+            var a = decoration.client.active ? 1.0 : 0.55
     readonly property real barH: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
     readonly property bool dottedBar: String(auroraeTheme.decorationPath || "").indexOf("KoollookDotted") >= 0
     component Stipple: Canvas {
