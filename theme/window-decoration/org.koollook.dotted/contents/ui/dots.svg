@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4">
+  <style type="text/css" id="current-color-scheme">
+    .ColorScheme-Text { color:#e7bf7e; }
+  </style>
+  <circle class="ColorScheme-Text" fill="currentColor" cx="2" cy="2" r="1.05" opacity="0.45"/>
+</svg>
